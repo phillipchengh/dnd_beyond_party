@@ -1,0 +1,49 @@
+{
+  "name": "dnd_beyond_party",
+  "version": "1.0.0",
+  "description": "partay",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phillipchengh/dnd_beyond_party.git"
+  },
+  "keywords": [
+    "dnd",
+    "beyond",
+    "party"
+  ],
+  "author": "phillip",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/phillipchengh/dnd_beyond_party/issues"
+  },
+  "homepage": "https://github.com/phillipchengh/dnd_beyond_party#readme",
+  "devDependencies": {
+    "babel-loader": "^8.1.0",
+    "css-loader": "^4.3.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-loader": "^4.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest-dom": "^3.2.4",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-testing-library": "^3.10.0",
+    "file-loader": "^6.2.0",
+    "glob": "^7.1.6",
+    "less": "^3.12.2",
+    "less-loader": "^7.0.2",
+    "mini-css-extract-plugin": "^1.2.1",
+    "postcss-loader": "^3.0.0",
+    "terser-webpack-plugin": "^4.2.2",
+    "url-loader": "^4.1.1",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  }
+}
