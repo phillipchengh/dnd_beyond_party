@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: src/frontend/Dockerfile.dev
+    image: frontend
+    volumes:
+      - './src/frontend:/dnd_beyond_party/frontend'
+      - './.eslintrc.js:/dnd_beyond_party/.eslintrc.js'
+      - './babel.config.js:/dnd_beyond_party/babel.config.js'
+      - './package-lock.json:/dnd_beyond_party/package.lock.json'
+      - './package.json:/dnd_beyond_party/package.json'
+      - './postcss.config.js:/dnd_beyond_party/postcss.config.js'
+      - './webpack.config.js:/dnd_beyond_party/webpack.config.js'
