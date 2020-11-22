@@ -3,8 +3,6 @@ const browsers = require('./package.json').browserslist;
 module.exports = function preset(api) {
   const env = process.env.BABEL_ENV || process.env.NODE_ENV || api.env();
 
-  console.log(`babel.config.js env: ${env}`);
-
   return {
     presets: [
       [
