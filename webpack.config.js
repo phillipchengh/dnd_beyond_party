@@ -12,6 +12,13 @@ module.exports = function config(env = { development: true }) {
   const sourceMap = true;
 
   return {
+    devServer: {
+      contentBase: buildPath,
+      compress: true,
+      // make accessible outside of container
+      host: '0.0.0.0',
+      port: 8080,
+    },
     // webpack does builtin optimizations accordingly
     mode: env.production ? 'production' : 'development',
     // make every js file in src/entrypoints an entrypoint

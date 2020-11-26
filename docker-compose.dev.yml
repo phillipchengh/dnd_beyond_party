@@ -13,3 +13,5 @@ services:
       - './package.json:/dnd_beyond_party/package.json'
       - './postcss.config.js:/dnd_beyond_party/postcss.config.js'
       - './webpack.config.js:/dnd_beyond_party/webpack.config.js'
+    ports:
+      - '8080:8080'

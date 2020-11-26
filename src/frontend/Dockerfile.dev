@@ -3,4 +3,4 @@ WORKDIR /dnd_beyond_party
 COPY ./package.json .
 COPY ./package-lock.json .
 RUN ["npm", "install"]
-CMD ["sleep", "infinity"]
+CMD ["npm", "run", "dev"]
