@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --config ./webpack.config.js",
+    "relock": "rm package-lock.json && npm install --package-lock-only",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
