@@ -15,3 +15,21 @@ services:
       - './webpack.config.js:/dnd_beyond_party/webpack.config.js'
     ports:
       - '8080:8080'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8080/', '||', 'exit', '1']
+      interval: 10s
+      timeout: 1m
+      retries: 24
+      start_period: 1m
+  backend:
+    build:
+      context: .
+      dockerfile: src/server/Dockerfile.dev
+    image: backend
+    volumes:
+      - './src/server:/dnd_beyond_party/server'
+      - './src/frontend/public:/dnd_beyond_party/server/public'
+    ports:
+      - '1337:1337'
+    depends_on:
+      - frontend

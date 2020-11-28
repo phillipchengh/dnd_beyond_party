@@ -1,0 +1,6 @@
+FROM golang:latest
+WORKDIR /dnd_beyond_party
+RUN ["env", "GO111MODULE=on", "go", "get", "github.com/cortesi/modd/cmd/modd"]
+COPY ./src/server/wait-for-assets-modd.sh .
+RUN ["chmod", "+x", "./wait-for-assets-modd.sh"]
+CMD ["./wait-for-assets-modd.sh"]
