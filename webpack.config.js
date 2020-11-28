@@ -18,6 +18,9 @@ module.exports = function config(env = { development: true }) {
       // make accessible outside of container
       host: '0.0.0.0',
       port: 8080,
+      // permits backend's service to webpack-dev-server
+      // https://stackoverflow.com/a/43621275
+      public: 'frontend',
     },
     // webpack does builtin optimizations accordingly
     mode: env.production ? 'production' : 'development',
