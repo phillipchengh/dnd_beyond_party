@@ -1,4 +1,5 @@
 const glob = require('glob');
+const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -7,9 +8,55 @@ module.exports = function config(env = { development: true }) {
   const distPath = 'frontend/public/dist';
   const buildPath = `${__dirname}/${distPath}`;
   const entrypointsPath = './frontend/entrypoints';
+  const hotUpdatePath = 'hot-update';
   const outputCssName = '[name].css';
   const outputJsName = '[name].js';
   const sourceMap = true;
+
+  const plugins = [
+    new MiniCssExtractPlugin({
+      filename: outputCssName,
+    }),
+    new ManifestPlugin({
+      fileName: 'asset-manifest.json',
+      publicPath: '/',
+      generate: (seed, files, entrypoints) => {
+        const manifestFiles = files.reduce((manifest, file) => {
+          return {
+            ...manifest,
+            [file.name]: file.path,
+          };
+        }, seed);
+        const manifestEntrypoints = Object.keys(entrypoints).reduce((manifest, entrypoint) => {
+          return {
+            ...manifest,
+            [entrypoint]: entrypoints[entrypoint].reduce((entrypointFiles, file) => {
+              // filtering like this will always ignore .map files
+              if (file.endsWith('.css')) {
+                entrypointFiles.css.push(file);
+              }
+              if (file.endsWith('.js')) {
+                entrypointFiles.js.push(file);
+              }
+              return entrypointFiles;
+            }, {
+              css: [],
+              js: [],
+            }),
+          };
+        }, {});
+
+        return {
+          files: manifestFiles,
+          entrypoints: manifestEntrypoints,
+        };
+      },
+    }),
+  ];
+
+  if (!env.production) {
+    plugins.push(new webpack.HotModuleReplacementPlugin());
+  }
 
   return {
     devServer: {
@@ -45,6 +92,10 @@ module.exports = function config(env = { development: true }) {
     output: {
       path: buildPath,
       filename: outputJsName,
+      // https://webpack.js.org/configuration/output/#outputhotupdatechunkfilename
+      hotUpdateChunkFilename: `${hotUpdatePath}/[id].[hash].hot-update.js`,
+      // https://webpack.js.org/configuration/output/#outputhotupdatemainfilename
+      hotUpdateMainFilename: `${hotUpdatePath}/[hash].hot-update.json`,
     },
     // use source maps
     devtool: 'source-map',
@@ -124,48 +175,12 @@ module.exports = function config(env = { development: true }) {
       },
     },
     resolve: {
+      alias: {
+        'react-dom': '@hot-loader/react-dom',
+      },
       extensions: ['.js', '.jsx'],
     },
-    plugins: [
-      new MiniCssExtractPlugin({
-        filename: outputCssName,
-      }),
-      new ManifestPlugin({
-        fileName: 'asset-manifest.json',
-        publicPath: '/',
-        generate: (seed, files, entrypoints) => {
-          const manifestFiles = files.reduce((manifest, file) => {
-            return {
-              ...manifest,
-              [file.name]: file.path,
-            };
-          }, seed);
-          const manifestEntrypoints = Object.keys(entrypoints).reduce((manifest, entrypoint) => {
-            return {
-              ...manifest,
-              [entrypoint]: entrypoints[entrypoint].reduce((entrypointFiles, file) => {
-                // filtering like this will always ignore .map files
-                if (file.endsWith('.css')) {
-                  entrypointFiles.css.push(file);
-                }
-                if (file.endsWith('.js')) {
-                  entrypointFiles.js.push(file);
-                }
-                return entrypointFiles;
-              }, {
-                css: [],
-                js: [],
-              }),
-            };
-          }, {});
-
-          return {
-            files: manifestFiles,
-            entrypoints: manifestEntrypoints,
-          };
-        },
-      }),
-    ],
+    plugins,
   };
 };
 
