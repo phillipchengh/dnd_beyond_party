@@ -9,8 +9,6 @@ import (
 	"net/http"
 )
 
-var templates = template.Must(template.New("index.html").ParseFiles("public/index.html"))
-
 func requestJSON(url string) interface{} {
 	response, err := http.Get(url)
 	if err != nil {
@@ -30,11 +28,23 @@ func requestJSON(url string) interface{} {
 }
 
 func requestAssetManifest() interface{} {
-	return requestJSON("http://frontend:8080/asset-manifest.json")
+	return requestJSON("http://nginx/asset/asset-manifest.json")
+}
+
+func getEntrypointAssets(entrypoint string) interface{} {
+	manifest := requestAssetManifest()
+	entrypoints := manifest.(map[string]interface{})["entrypoints"].(map[string]interface{})[entrypoint]
+	return entrypoints
 }
 
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		templates := template.Must(
+			template.New("index.html").Funcs(template.FuncMap{
+				"getEntrypointAssets": getEntrypointAssets,
+			}).ParseFiles("public/index.html"),
+		)
+
 		templates.ExecuteTemplate(w, "index.html", nil)
 	})
 

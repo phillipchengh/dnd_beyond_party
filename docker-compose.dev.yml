@@ -1,5 +1,15 @@
 version: "3.8"
 services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - './src/nginx/nginx.dev.conf:/etc/nginx/nginx.conf'
+    ports:
+      - '80:80'
+    depends_on:
+      - frontend
+      - backend
   frontend:
     build:
       context: .
@@ -31,5 +41,3 @@ services:
       - './src/frontend/public:/dnd_beyond_party/server/public'
     ports:
       - '1337:1337'
-    depends_on:
-      - frontend
