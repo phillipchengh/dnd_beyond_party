@@ -1,11 +1,19 @@
 <!doctype html>
+{{ $entrypoint := getEntrypointAssets "test" }}
 <html>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Dnd Beyond Party</title>
+    {{ range $css := $entrypoint.css }}
+      <link rel="stylesheet" href="/asset/{{ $css }}" type="text/css" media="all">
+    {{ end }}
   </head>
   <body>
     <h1>Dnd Beyond Party</h1>
+    <div id="test"></div>
+    {{ range $js := $entrypoint.js }}
+      <script src="/asset/{{ $js }}"></script>
+    {{ end }}
   </body>
 </html>
