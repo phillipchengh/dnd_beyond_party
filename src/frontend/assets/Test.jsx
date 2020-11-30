@@ -1,3 +1,4 @@
+import { hot } from 'react-hot-loader/root';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -10,7 +11,11 @@ export function Test({ zesty }) {
 }
 
 Test.propTypes = {
-  zesty: PropTypes.string.isRequired,
+  zesty: PropTypes.string,
 };
 
-export default Test;
+Test.defaultProps = {
+  zesty: 'test3',
+};
+
+export default hot(Test);
