@@ -1,6 +1,8 @@
 const browsers = require('./package.json').browserslist;
 
 module.exports = function preset(api) {
+  api.cache(true);
+
   const env = process.env.BABEL_ENV || process.env.NODE_ENV || api.env();
 
   return {
