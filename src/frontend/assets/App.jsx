@@ -2,20 +2,20 @@ import { hot } from 'react-hot-loader/root';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import './Test.less';
+import './App.less';
 
-export function Test({ zesty }) {
+export function App({ zesty }) {
   return (
     <div>{zesty}</div>
   );
 }
 
-Test.propTypes = {
+App.propTypes = {
   zesty: PropTypes.string,
 };
 
-Test.defaultProps = {
+App.defaultProps = {
   zesty: 'test3',
 };
 
-export default hot(Test);
+export default hot(App);

@@ -176,6 +176,7 @@ module.exports = function config(env = { development: true }) {
     },
     resolve: {
       alias: {
+        '@assets': `${__dirname}/src/frontend/assets`,
         'react-dom': '@hot-loader/react-dom',
       },
       extensions: ['.js', '.jsx'],
