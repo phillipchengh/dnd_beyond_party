@@ -4,7 +4,7 @@
   "description": "partay",
   "main": "index.js",
   "scripts": {
-    "clean": "rm -rf frontend/assets/public/dist",
+    "clean": "rm -rf src/frontend/assets/public/dist",
     "dev": "npm run clean && webpack-dev-server --config ./webpack.config.js",
     "build": "webpack --config ./webpack.config.js",
     "relock": "rm package-lock.json && npm install --package-lock-only",

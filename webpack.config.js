@@ -5,9 +5,9 @@ const ManifestPlugin = require('webpack-manifest-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = function config(env = { development: true }) {
-  const distPath = 'frontend/public/dist';
+  const distPath = 'src/frontend/public/dist';
   const buildPath = `${__dirname}/${distPath}`;
-  const entrypointsPath = './frontend/entrypoints';
+  const entrypointsPath = './src/frontend/entrypoints';
   const hotUpdatePath = 'hot-update';
   const outputCssName = '[name].css';
   const outputJsName = '[name].js';
