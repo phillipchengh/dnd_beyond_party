@@ -59,6 +59,8 @@ func main() {
 		fmt.Fprintf(w, string(assetManifest))
 	})
 
+	http.HandleFunc("/character", characterHTTPHandler)
+
 	http.ListenAndServe(":1337", nil)
 
 	log.Println("Listening on port 1337.")
