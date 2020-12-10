@@ -22,6 +22,8 @@ module.exports = function preset(api) {
       ],
       require.resolve('@babel/preset-react'),
     ],
-    plugins: ['react-hot-loader/babel'],
+    plugins: [
+      'react-hot-loader/babel',
+    ],
   };
 };
