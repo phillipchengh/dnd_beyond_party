@@ -1,3 +1,7 @@
+// https://babeljs.io/docs/en/babel-polyfill
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
+
 import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
 import { getCLS, getFID, getLCP } from 'web-vitals';
