@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { App } from '@assets/App';
+import { App } from '@assets/components/App';
 
 describe('App', () => {
   it('renders without crashing', () => {
