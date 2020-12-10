@@ -1,21 +1,12 @@
 import { hot } from 'react-hot-loader/root';
 import React from 'react';
-import PropTypes from 'prop-types';
 
-import './App.less';
+import DndBeyondPartyApp from './DnDBeyondPartyApp';
 
-export function App({ zesty }) {
+export function App() {
   return (
-    <div>{zesty}</div>
+    <DndBeyondPartyApp />
   );
 }
-
-App.propTypes = {
-  zesty: PropTypes.string,
-};
-
-App.defaultProps = {
-  zesty: 'test3',
-};
 
 export default hot(App);
