@@ -11,4 +11,4 @@ getCLS(consoleLog);
 getFID(consoleLog);
 getLCP(consoleLog);
 
-ReactDOM.render(<App />, document.getElementById('test'));
+ReactDOM.render(<App />, document.getElementById('dnd_beyond_party_app'));
