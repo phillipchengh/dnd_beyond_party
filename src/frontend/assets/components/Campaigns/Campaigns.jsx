@@ -7,7 +7,7 @@ export function Campaigns({ campaigns }) {
   return (
     <ol>
       {Object.entries(campaigns).map(([campaignId, campaign]) => (
-        <li>
+        <li key={campaignId}>
           {campaignId}
           {Object.entries(campaign).map(([characterId, character]) => (
             <div key={characterId}>
