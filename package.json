@@ -28,6 +28,8 @@
   "homepage": "https://github.com/phillipchengh/dnd_beyond_party#readme",
   "devDependencies": {
     "@babel/core": "^7.12.3",
+    "@babel/eslint-parser": "^7.12.1",
+    "@babel/plugin-proposal-optional-chaining": "^7.12.7",
     "@babel/preset-env": "^7.12.1",
     "@babel/preset-react": "^7.12.1",
     "@hot-loader/react-dom": "^17.0.0",
@@ -38,7 +40,7 @@
     "babel-loader": "^8.1.0",
     "css-loader": "^4.3.0",
     "cssnano": "^4.1.10",
-    "eslint": "^6.8.0",
+    "eslint": "^7.15.0",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-import-resolver-node": "^0.3.4",
