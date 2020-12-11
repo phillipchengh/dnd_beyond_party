@@ -3,19 +3,19 @@
  */
 
 /**
- * This tests the DnD rules/calculations in selectors.js derived from DDB's character service json.
+ * This tests the DnD rules/calculations in calcs.js derived from DDB's character service json.
  * The test compares the above with the corresponding display value on the DDB character html page.
  * I verify with the character html page because those stats represent a character's expected stats.
  * And the uncertainty that I'm testing is if I coded the rules/calculations correctly.
  *
- * This will test every exported function in selectors.js...
+ * This will test every exported function in calcs.js...
  * against the same named function in dnd_beyond_dom_selectors.
  *
  * It will run each calculation test for each .mht file under dnd_beyond_character_mht.
  * Each .mht file represents a character downloaded from chrome's save as single webpage.
  * It will have the expected output/stats that I'll scrape to get the test answers.
  *
- * NOTE the data that my selectors runs on is derived from a live request using the
+ * NOTE the data that my calcs runs on is derived from a live request using the
  * character id scraped from each .mht file.
  * This means that values could change if the character was updated AFTER saving the webpage.
  */
@@ -32,7 +32,7 @@ import { Parser } from 'fast-mhtml';
 import { JSDOM } from 'jsdom';
 import axios from 'axios';
 
-import * as mySelectors from '@assets/character/selectors';
+import * as calcs from '@assets/character/calcs';
 import * as ddbDomSelectors from './dnd_beyond_dom_selectors';
 
 const DDB_CHAR_DIR = path.resolve(__dirname, './dnd_beyond_character_mht');
@@ -56,13 +56,13 @@ const loadDdbDocument = (mhtFile) => {
   return dom.window.document;
 };
 
-// all the selectors to test
-const mySelectorKeys = Object.keys(mySelectors);
+// all the calcs to test
+const myCalcsKeys = Object.keys(calcs);
 
 const DESCRIBE_TEST = `\
-Testing my character selectors against D&D Beyond archived pages\n\
-  Selectors to test:\n\
-    * ${mySelectorKeys.join('()\n    * ')}() 
+Testing my character calcs against D&D Beyond archived pages\n\
+  Calcs to test:\n\
+    * ${myCalcsKeys.join('()\n    * ')}() 
 `;
 
 describe(DESCRIBE_TEST, () => {
@@ -79,16 +79,16 @@ describe(DESCRIBE_TEST, () => {
     const { data } = response;
     expect(data).toBeInstanceOf(Object);
 
-    // compare each selector output using character-service data with the expected value in the .mht
-    mySelectorKeys.forEach((selector) => {
-      expect(ddbDomSelectors[selector]).toBeInstanceOf(Function);
-      // using an object with selector and value outputs which selector failed if it does fail
+    // compare each calc output using character-service data with the expected value in the .mht
+    myCalcsKeys.forEach((calc) => {
+      expect(ddbDomSelectors[calc]).toBeInstanceOf(Function);
+      // using an object with calc and value outputs which calc failed if it does fail
       expect({
-        selector,
-        value: mySelectors[selector](data),
+        calc,
+        value: calcs[calc](data),
       }).toEqual({
-        selector,
-        value: ddbDomSelectors[selector](document),
+        calc,
+        value: ddbDomSelectors[calc](document),
       });
     });
   });

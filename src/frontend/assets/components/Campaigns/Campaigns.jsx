@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { getName } from '@assets/character/selectors';
+import { getName } from '@assets/character/calcs';
 
 export function Campaigns({ campaigns }) {
   return (
