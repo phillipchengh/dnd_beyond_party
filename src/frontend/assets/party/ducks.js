@@ -1,3 +1,7 @@
+import { getId } from '@assets/character/calcs';
+import { getCampaignId } from '@assets/character/selectors';
+import { getCampaign } from './selectors';
+
 // increment this when the state structure changes to force update stored values
 const schemaVersion = 1;
 const LOCAL_STORAGE_KEY = 'party';
@@ -37,15 +41,17 @@ export const actions = {
 export function reducer(state = initialState, action) {
   switch (action.type) {
     case ActionTypes.IMPORT_CHARACTER: {
-      const campaignId = action.character.campaign.id || 0;
-      const campaign = state.campaigns[campaignId] || {};
+      const { character } = action;
+      const { campaigns } = state;
+      const campaignId = getCampaignId(character);
+      const campaign = getCampaign(state, campaignId);
       return {
         ...state,
         campaigns: {
-          ...state.campaigns,
+          ...campaigns,
           [campaignId]: {
             ...campaign,
-            [action.character.id]: action.character,
+            [getId(character)]: character,
           },
         },
       };
