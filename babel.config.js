@@ -25,6 +25,7 @@ module.exports = function preset(api) {
     plugins: [
       'react-hot-loader/babel',
       '@babel/plugin-proposal-optional-chaining',
+      '@babel/plugin-proposal-nullish-coalescing-operator',
     ],
   };
 };
