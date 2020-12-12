@@ -2,6 +2,7 @@
 
 import BISMUTH from './dnd_beyond_character_json/28364322.json';
 import GARUDA from './dnd_beyond_character_json/28364554.json';
+import SUKU from './dnd_beyond_character_json/24118073.json';
 
 export default [
   {
@@ -17,6 +18,12 @@ export default [
     character: GARUDA.data,
     expectedValues: {
       getCampaignId: 1106078,
+    },
+  },
+  {
+    character: SUKU.data,
+    expectedValues: {
+      getCampaignId: 0,
     },
   },
 ];
