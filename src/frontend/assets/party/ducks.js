@@ -30,6 +30,7 @@ export const initialState = getInitialState();
 export const ActionTypes = {
   IMPORT_CHARACTER: 'import_character',
   IMPORT_CHARACTERS: 'import_characters',
+  DELETE_CAMPAIGN: 'delete_campaign',
 };
 
 export const actions = {
@@ -40,6 +41,10 @@ export const actions = {
   importCharacters: (characters) => ({
     type: ActionTypes.IMPORT_CHARACTERS,
     characters,
+  }),
+  deleteCampaign: (campaignId) => ({
+    type: ActionTypes.DELETE_CAMPAIGN,
+    campaignId,
   }),
 };
 
@@ -80,6 +85,13 @@ export function reducer(state = initialState, action) {
         ...state,
         campaigns,
       };
+    }
+    case ActionTypes.DELETE_CAMPAIGN: {
+      // make a copy of state and delete the copy's campaign
+      const { campaignId } = action;
+      const nextState = { ...state };
+      delete nextState.campaigns[campaignId];
+      return nextState;
     }
     default:
       throw new Error('No action type specified!');
