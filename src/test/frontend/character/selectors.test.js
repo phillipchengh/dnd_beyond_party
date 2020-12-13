@@ -35,24 +35,31 @@ describe.each(describeEachInput)('Testing selectors on %s', (name, id, { charact
   test.each(Object.entries(expectedValues))('Selector: %s', (selector, expectedValue) => {
     // check if selector in selectors_expected_values actually exists in my selectors
     expect(selectors[selector]).toBeInstanceOf(Function);
+    // if we're dealing with arrays, we should sort them to properly toEqual
+    const isArray = Array.isArray(expectedValue);
+    const expected = isArray ? expectedValue.sort() : expectedValue;
     // does my selector match the hardcoded expected value derived from the saved json?
+    let calculated = selectors[selector](character);
+    calculated = isArray ? calculated.sort() : calculated;
     // { source, value } structure is easier to diagnose if a failure occurs
     expect({
       source: 'selectors_expected_values.js',
-      value: selectors[selector](character),
+      value: calculated,
     }).toEqual({
       source: 'selectors_expected_values.js',
-      value: expectedValue,
+      value: expected,
     });
     // does the hardcoded expected value match the character-service from ddb?
     // this would fail if ddb changes their service or perhaps the character was updated
+    calculated = selectors[selector](response.data);
+    calculated = isArray ? calculated.sort() : calculated;
     expect({
       source: 'character-service',
       // response.data should be the character data
       value: selectors[selector](response.data),
     }).toEqual({
       source: 'character-service',
-      value: expectedValue,
+      value: expected,
     });
   });
 });

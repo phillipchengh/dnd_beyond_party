@@ -12,6 +12,14 @@ export default [
       // key is a selector in character/selectors.js
       // value is the expected value in the json
       getCampaignId: 1106078,
+      getCampaignMembersIds: [
+        28364322,
+        28364554,
+        28398380,
+        28433810,
+        29925598,
+        32377709,
+      ],
     },
   },
   {
@@ -24,6 +32,8 @@ export default [
     character: SUKU.data,
     expectedValues: {
       getCampaignId: 0,
+      getCampaignMembers: [],
+      getCampaignMembersIds: [],
     },
   },
 ];

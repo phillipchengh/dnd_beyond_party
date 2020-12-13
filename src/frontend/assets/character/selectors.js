@@ -6,4 +6,12 @@ export function getCampaignId(character) {
   return character.campaign?.id ?? 0;
 }
 
+export function getCampaignMembers(character) {
+  return character.campaign?.characters ?? [];
+}
+
+export function getCampaignMembersIds(character) {
+  return getCampaignMembers(character).map((member) => (member.characterId));
+}
+
 export default getCampaignId;
