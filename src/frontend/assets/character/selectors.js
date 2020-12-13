@@ -13,5 +13,3 @@ export function getCampaignMembers(character) {
 export function getCampaignMembersIds(character) {
   return getCampaignMembers(character).map((member) => (member.characterId));
 }
-
-export default getCampaignId;
