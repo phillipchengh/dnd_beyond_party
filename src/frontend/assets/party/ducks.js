@@ -29,12 +29,17 @@ export const initialState = getInitialState();
 
 export const ActionTypes = {
   IMPORT_CHARACTER: 'import_character',
+  IMPORT_CHARACTERS: 'import_characters',
 };
 
 export const actions = {
   importCharacter: (character) => ({
     type: ActionTypes.IMPORT_CHARACTER,
     character,
+  }),
+  importCharacters: (characters) => ({
+    type: ActionTypes.IMPORT_CHARACTERS,
+    characters,
   }),
 };
 
@@ -54,6 +59,26 @@ export function reducer(state = initialState, action) {
             [getId(character)]: character,
           },
         },
+      };
+    }
+    case ActionTypes.IMPORT_CHARACTERS: {
+      const { characters } = action;
+      let { campaigns } = state;
+      // add each character into their campaign
+      characters.forEach((character) => {
+        const campaignId = getCampaignId(character);
+        campaigns = {
+          ...campaigns,
+          [campaignId]: {
+            // make sure we use the campaigns data we're building on, not from the stale state
+            ...campaigns[campaignId],
+            [getId(character)]: character,
+          },
+        };
+      });
+      return {
+        ...state,
+        campaigns,
       };
     }
     default:

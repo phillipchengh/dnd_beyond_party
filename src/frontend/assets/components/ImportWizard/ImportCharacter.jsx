@@ -1,17 +1,12 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
-import getCharacter from '@assets/api';
-import { actions } from '@assets/party/ducks';
-import PartyContext from '@assets/party/Context';
-
-export function ImportCharacter() {
-  const { dispatch } = useContext(PartyContext);
+export function ImportCharacter({ onSubmit }) {
   const [ddbCharacterId, setDdbCharacterId] = useState(null);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const character = await getCharacter(ddbCharacterId);
-    dispatch(actions.importCharacter(character));
+    onSubmit(ddbCharacterId);
   };
 
   const handleChange = (event) => {
@@ -28,5 +23,9 @@ export function ImportCharacter() {
     </form>
   );
 }
+
+ImportCharacter.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};
 
 export default ImportCharacter;
