@@ -1,5 +1,9 @@
 import { characterSelectors as char } from '@assets/character/characterSelectors';
 
+export function hasCampaigns(state) {
+  return !!Object.keys(state.campaigns).length;
+}
+
 export function getCampaign(state, campaignId) {
   return state.campaigns[campaignId] ?? {};
 }

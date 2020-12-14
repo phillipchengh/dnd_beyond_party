@@ -1,14 +1,16 @@
 import React, { useContext, useState } from 'react';
+import PropTypes from 'prop-types';
 
 import getCharacter from '@assets/api';
 import { actions } from '@assets/party/ducks';
 import { getUnimportedCampaignCharacters } from '@assets/party/selectors';
 import PartyContext from '@assets/party/Context';
 
+import Modal from './Modal';
 import ImportCharacter from './ImportCharacter';
 import ImportCharactersConfirm from './ImportCharactersConfirm';
 
-export function ImportWizard() {
+export function ImportWizardModal({ isOpen, onRequestClose }) {
   const { dispatch, state } = useContext(PartyContext);
   const [campaignMembersToImport, setCampaignMembersToImport] = useState([]);
 
@@ -32,7 +34,10 @@ export function ImportWizard() {
   };
 
   return (
-    <>
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={onRequestClose}
+    >
       {!campaignMembersToImport.length && <ImportCharacter onSubmit={handleCharacterImport} />}
       {!!campaignMembersToImport.length && (
         <ImportCharactersConfirm
@@ -40,8 +45,18 @@ export function ImportWizard() {
           onConfirm={handleCharactersImport}
         />
       )}
-    </>
+    </Modal>
   );
 }
 
-export default ImportWizard;
+ImportWizardModal.propTypes = {
+  isOpen: PropTypes.bool,
+  onRequestClose: PropTypes.func,
+};
+
+ImportWizardModal.defaultProps = {
+  isOpen: false,
+  onRequestClose: null,
+};
+
+export default ImportWizardModal;
