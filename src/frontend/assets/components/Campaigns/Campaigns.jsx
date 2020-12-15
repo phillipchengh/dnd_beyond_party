@@ -3,29 +3,40 @@ import PropTypes from 'prop-types';
 
 import { actions } from '@assets/party/ducks';
 import PartyContext from '@assets/party/Context';
-import { getName } from '@assets/character/calcs';
+import { getActiveCampaignCharacters } from '@assets/party/selectors';
+import { getId, getName } from '@assets/character/calcs';
 
 export function Campaigns({ campaigns }) {
-  const { dispatch } = useContext(PartyContext);
+  const { dispatch, state } = useContext(PartyContext);
 
   const handleDelete = (campaignId) => () => {
     dispatch(actions.deleteCampaign(campaignId));
   };
 
+  const handleSetActiveCampaign = (campaignId) => () => {
+    dispatch(actions.setActiveCampaign(campaignId));
+  };
+
+  const activeCampaignCharacters = getActiveCampaignCharacters(state);
+
   return (
-    <ol>
-      {Object.entries(campaigns).map(([campaignId, campaign]) => (
-        <li key={campaignId}>
-          {campaignId}
-          <button onClick={handleDelete(campaignId)} type="button">Delete</button>
-          {Object.entries(campaign).map(([characterId, character]) => (
-            <div key={characterId}>
-              {`${characterId}: ${getName(character)}`}
-            </div>
-          ))}
-        </li>
-      ))}
-    </ol>
+    <>
+      <ol>
+        {Object.entries(campaigns).map(([campaignId]) => (
+          <li key={campaignId}>
+            <button onClick={handleSetActiveCampaign(campaignId)} type="button">{campaignId}</button>
+            <button onClick={handleDelete(campaignId)} type="button">Delete</button>
+          </li>
+        ))}
+      </ol>
+      <ol>
+        {activeCampaignCharacters.map((character) => (
+          <li key={getId(character)}>
+            {`${getId(character)}: ${getName(character)}`}
+          </li>
+        ))}
+      </ol>
+    </>
   );
 }
 

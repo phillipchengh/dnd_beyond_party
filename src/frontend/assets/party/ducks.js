@@ -3,7 +3,7 @@ import { getCampaignId } from '@assets/character/selectors';
 import { getCampaign } from './selectors';
 
 // increment this when the state structure changes to force update stored values
-const schemaVersion = 1;
+const schemaVersion = 2;
 const LOCAL_STORAGE_KEY = 'party';
 
 function getInitialState() {
@@ -18,6 +18,7 @@ function getInitialState() {
   }
   // empty case, start anew
   return {
+    activeCampaignId: null,
     campaigns: {},
     meta: {
       schemaVersion,
@@ -31,6 +32,7 @@ export const ActionTypes = {
   IMPORT_CHARACTER: 'import_character',
   IMPORT_CHARACTERS: 'import_characters',
   DELETE_CAMPAIGN: 'delete_campaign',
+  SET_ACTIVE_CAMPAIGN_ID: 'set_active_campaign_id',
 };
 
 export const actions = {
@@ -46,6 +48,10 @@ export const actions = {
     type: ActionTypes.DELETE_CAMPAIGN,
     campaignId,
   }),
+  setActiveCampaign: (campaignId) => ({
+    type: ActionTypes.SET_ACTIVE_CAMPAIGN_ID,
+    campaignId,
+  }),
 };
 
 export function reducer(state = initialState, action) {
@@ -57,6 +63,7 @@ export function reducer(state = initialState, action) {
       const campaign = getCampaign(state, campaignId);
       return {
         ...state,
+        activeCampaignId: campaignId,
         campaigns: {
           ...campaigns,
           [campaignId]: {
@@ -69,9 +76,10 @@ export function reducer(state = initialState, action) {
     case ActionTypes.IMPORT_CHARACTERS: {
       const { characters } = action;
       let { campaigns } = state;
+      let campaignId;
       // add each character into their campaign
       characters.forEach((character) => {
-        const campaignId = getCampaignId(character);
+        campaignId = getCampaignId(character);
         campaigns = {
           ...campaigns,
           [campaignId]: {
@@ -83,6 +91,7 @@ export function reducer(state = initialState, action) {
       });
       return {
         ...state,
+        activeCampaignId: campaignId,
         campaigns,
       };
     }
@@ -92,6 +101,13 @@ export function reducer(state = initialState, action) {
       const nextState = { ...state };
       delete nextState.campaigns[campaignId];
       return nextState;
+    }
+    case ActionTypes.SET_ACTIVE_CAMPAIGN_ID: {
+      const { campaignId } = action;
+      return {
+        ...state,
+        activeCampaignId: campaignId,
+      };
     }
     default:
       throw new Error('No action type specified!');
