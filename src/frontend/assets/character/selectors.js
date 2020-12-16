@@ -6,6 +6,10 @@ export function getCampaignId(character) {
   return character.campaign?.id ?? 0;
 }
 
+export function getCampaignName(character) {
+  return character.campaign?.name ?? 'Solo Adventurers';
+}
+
 export function getCampaignMembers(character) {
   return character.campaign?.characters ?? [];
 }

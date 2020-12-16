@@ -5,17 +5,20 @@ export function hasCampaigns(state) {
   return !!Object.keys(state.campaigns).length;
 }
 
+export function getCampaigns(state) {
+  return state.campaigns;
+}
+
 export function getCampaign(state, campaignId) {
-  return state.campaigns[campaignId] ?? {};
+  // either retrieve the existing campaign, or return a new campaign object
+  return state.campaigns[campaignId] ?? {
+    characters: {},
+  };
 }
 
-export function getActiveCampaign(state) {
-  return getCampaign(state, state.activeCampaignId);
-}
-
-export function getActiveCampaignCharacters(state) {
+export function getCampaignCharacters(state, campaignId) {
   return Object.entries(
-    getActiveCampaign(state),
+    getCampaign(state, campaignId).characters,
   ).map(
     // just return an array of character objects
     // eslint complains about unused characterId
@@ -25,6 +28,14 @@ export function getActiveCampaignCharacters(state) {
     // sort by character name
     getName(a).localeCompare(getName(b))
   ));
+}
+
+export function getActiveCampaign(state) {
+  return getCampaign(state, state.activeCampaignId);
+}
+
+export function getActiveCampaignCharacters(state) {
+  return getCampaignCharacters(state, state.activeCampaignId);
 }
 
 export function getCampaignMembersIds(state, campaignId) {

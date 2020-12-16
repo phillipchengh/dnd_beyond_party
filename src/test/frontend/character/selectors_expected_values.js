@@ -12,6 +12,7 @@ export default [
       // key is a selector in character/selectors.js
       // value is the expected value in the json
       getCampaignId: 1106078,
+      getCampaignName: 'Scrub\'s World',
       getCampaignMembersIds: [
         28364322,
         28364554,
@@ -32,6 +33,8 @@ export default [
     character: SUKU.data,
     expectedValues: {
       getCampaignId: 0,
+      // default name for no assigned campaign
+      getCampaignName: 'Solo Adventurers',
       getCampaignMembers: [],
       getCampaignMembersIds: [],
     },

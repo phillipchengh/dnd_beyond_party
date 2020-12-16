@@ -1,9 +1,9 @@
 import { getId } from '@assets/character/calcs';
-import { getCampaignId } from '@assets/character/selectors';
-import { getCampaign } from './selectors';
+import { getCampaignId, getCampaignName } from '@assets/character/selectors';
+import { getCampaign, getCampaignCharacters } from './selectors';
 
 // increment this when the state structure changes to force update stored values
-const schemaVersion = 2;
+const schemaVersion = 3;
 const LOCAL_STORAGE_KEY = 'party';
 
 function getInitialState() {
@@ -60,7 +60,10 @@ export function reducer(state = initialState, action) {
       const { character } = action;
       const { campaigns } = state;
       const campaignId = getCampaignId(character);
+      const campaignName = getCampaignName(character);
+      // will create or retrieve existing campaign
       const campaign = getCampaign(state, campaignId);
+      const campaignCharacters = getCampaignCharacters(state, campaignId);
       return {
         ...state,
         activeCampaignId: campaignId,
@@ -68,7 +71,13 @@ export function reducer(state = initialState, action) {
           ...campaigns,
           [campaignId]: {
             ...campaign,
-            [getId(character)]: character,
+            // update the campaign name with latest known name
+            name: campaignName,
+            characters: {
+              // add this character among existing campaign characters
+              ...campaignCharacters,
+              [getId(character)]: character,
+            },
           },
         },
       };
@@ -80,17 +89,25 @@ export function reducer(state = initialState, action) {
       // add each character into their campaign
       characters.forEach((character) => {
         campaignId = getCampaignId(character);
+        const campaignName = getCampaignName(character);
+        // make sure we use the campaigns data we're building on, not from the stale state
+        const campaign = campaigns[campaignId];
+        const campaignCharacters = campaign.characters;
         campaigns = {
           ...campaigns,
           [campaignId]: {
-            // make sure we use the campaigns data we're building on, not from the stale state
-            ...campaigns[campaignId],
-            [getId(character)]: character,
+            ...campaign,
+            name: campaignName,
+            characters: {
+              ...campaignCharacters,
+              [getId(character)]: character,
+            },
           },
         };
       });
       return {
         ...state,
+        // default select last character's campaign
         activeCampaignId: campaignId,
         campaigns,
       };
