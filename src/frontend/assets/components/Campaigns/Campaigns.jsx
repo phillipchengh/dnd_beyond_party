@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
 
 import { actions } from '@assets/party/ducks';
 import PartyContext from '@assets/party/Context';
