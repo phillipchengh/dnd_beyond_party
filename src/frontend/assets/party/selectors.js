@@ -26,7 +26,7 @@ export function getCampaignCharacters(state, campaignId) {
     ([characterId, character]) => (character),
   ).sort((a, b) => (
     // sort by character name
-    getName(a).localeCompare(getName(b))
+    getName(a.data).localeCompare(getName(b.data))
   ));
 }
 
@@ -39,7 +39,7 @@ export function getActiveCampaignCharacters(state) {
 }
 
 export function getCampaignMembersIds(state, campaignId) {
-  return Object.keys(getCampaign(state, campaignId)).map((id) => parseInt(id, 10));
+  return getCampaignCharacters(state, campaignId).map(({ data: { id } }) => parseInt(id, 10));
 }
 
 export function getUnimportedCampaignCharacters(state, character) {

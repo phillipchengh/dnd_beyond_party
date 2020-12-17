@@ -1,4 +1,6 @@
 import React, { useContext } from 'react';
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+// import { formatDistanceToNow } from 'date-fns';
 
 import { actions } from '@assets/party/ducks';
 import PartyContext from '@assets/party/Context';
@@ -22,19 +24,22 @@ export function Campaigns() {
   return (
     <>
       <ol>
-        {Object.entries(campaigns).map(([campaignId, { name }]) => (
+        {Object.entries(campaigns).map(([campaignId, { lastUpdate, name }]) => (
           <li key={campaignId}>
             <button onClick={handleSetActiveCampaign(campaignId)} type="button">
               {`${campaignId}: ${name}`}
             </button>
             <button onClick={handleDelete(campaignId)} type="button">Delete</button>
+            <span>{`Last Update: ${formatDistanceToNow(lastUpdate)}`}</span>
           </li>
         ))}
       </ol>
       <ol>
-        {activeCampaignCharacters.map((character) => (
-          <li key={getId(character)}>
-            {`${getId(character)}: ${getName(character)}`}
+        {activeCampaignCharacters.map(({ lastUpdate, data }) => (
+          <li key={getId(data)}>
+            {`${getId(data)}: ${getName(data)}`}
+            <br />
+            {`Last Update: ${formatDistanceToNow(lastUpdate)}`}
           </li>
         ))}
       </ol>

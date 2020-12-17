@@ -3,7 +3,7 @@ import { getCampaignId, getCampaignName } from '@assets/character/selectors';
 import { getCampaign, getCampaignCharacters } from './selectors';
 
 // increment this when the state structure changes to force update stored values
-const schemaVersion = 3;
+const schemaVersion = 4;
 const LOCAL_STORAGE_KEY = 'party';
 
 function getInitialState() {
@@ -64,6 +64,7 @@ export function reducer(state = initialState, action) {
       // will create or retrieve existing campaign
       const campaign = getCampaign(state, campaignId);
       const campaignCharacters = getCampaignCharacters(state, campaignId);
+      const lastUpdate = new Date().getTime();
       return {
         ...state,
         activeCampaignId: campaignId,
@@ -71,12 +72,16 @@ export function reducer(state = initialState, action) {
           ...campaigns,
           [campaignId]: {
             ...campaign,
+            lastUpdate,
             // update the campaign name with latest known name
             name: campaignName,
             characters: {
               // add this character among existing campaign characters
               ...campaignCharacters,
-              [getId(character)]: character,
+              [getId(character)]: {
+                lastUpdate,
+                data: character,
+              },
             },
           },
         },
@@ -93,14 +98,19 @@ export function reducer(state = initialState, action) {
         // make sure we use the campaigns data we're building on, not from the stale state
         const campaign = campaigns[campaignId];
         const campaignCharacters = campaign.characters;
+        const lastUpdate = new Date().getTime();
         campaigns = {
           ...campaigns,
           [campaignId]: {
             ...campaign,
+            lastUpdate,
             name: campaignName,
             characters: {
               ...campaignCharacters,
-              [getId(character)]: character,
+              [getId(character)]: {
+                lastUpdate,
+                data: character,
+              },
             },
           },
         };

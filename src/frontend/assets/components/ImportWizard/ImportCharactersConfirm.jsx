@@ -7,7 +7,7 @@ export function ImportCharactersConfirm({ characters, onConfirm }) {
       <h2>We will import these characters:</h2>
       <ul>
         {characters.map((character) => (
-          <li key={character.characterId}>{character.characterName}</li>
+          <li key={character.characterId}>{`${character.characterId}: ${character.characterName}`}</li>
         ))}
       </ul>
       <button onClick={onConfirm} type="button">Confirm</button>
