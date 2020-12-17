@@ -21,30 +21,26 @@ module.exports = function config(env = { development: true }) {
       fileName: 'asset-manifest.json',
       publicPath: '/',
       generate: (seed, files, entrypoints) => {
-        const manifestFiles = files.reduce((manifest, file) => {
-          return {
-            ...manifest,
-            [file.name]: file.path,
-          };
-        }, seed);
-        const manifestEntrypoints = Object.keys(entrypoints).reduce((manifest, entrypoint) => {
-          return {
-            ...manifest,
-            [entrypoint]: entrypoints[entrypoint].reduce((entrypointFiles, file) => {
-              // filtering like this will always ignore .map files
-              if (file.endsWith('.css')) {
-                entrypointFiles.css.push(file);
-              }
-              if (file.endsWith('.js')) {
-                entrypointFiles.js.push(file);
-              }
-              return entrypointFiles;
-            }, {
-              css: [],
-              js: [],
-            }),
-          };
-        }, {});
+        const manifestFiles = files.reduce((manifest, file) => ({
+          ...manifest,
+          [file.name]: file.path,
+        }), seed);
+        const manifestEntrypoints = Object.keys(entrypoints).reduce((manifest, entrypoint) => ({
+          ...manifest,
+          [entrypoint]: entrypoints[entrypoint].reduce((entrypointFiles, file) => {
+            // filtering like this will always ignore .map files
+            if (file.endsWith('.css')) {
+              entrypointFiles.css.push(file);
+            }
+            if (file.endsWith('.js')) {
+              entrypointFiles.js.push(file);
+            }
+            return entrypointFiles;
+          }, {
+            css: [],
+            js: [],
+          }),
+        }), {});
 
         return {
           files: manifestFiles,
