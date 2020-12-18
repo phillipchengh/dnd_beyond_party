@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
-// import { formatDistanceToNow } from 'date-fns';
 
 import { actions } from '@assets/party/ducks';
 import PartyContext from '@assets/party/Context';
