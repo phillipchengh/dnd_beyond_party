@@ -32,7 +32,7 @@ export const ActionTypes = {
   IMPORT_CHARACTER: 'import_character',
   IMPORT_CHARACTERS: 'import_characters',
   DELETE_CAMPAIGN: 'delete_campaign',
-  SET_ACTIVE_CAMPAIGN_ID: 'set_active_campaign_id',
+  SET_CURRENT_CAMPAIGN_ID: 'set_current_campaign_id',
 };
 
 export const actions = {
@@ -48,8 +48,8 @@ export const actions = {
     type: ActionTypes.DELETE_CAMPAIGN,
     campaignId,
   }),
-  setActiveCampaign: (campaignId) => ({
-    type: ActionTypes.SET_ACTIVE_CAMPAIGN_ID,
+  setCurrentCampaign: (campaignId) => ({
+    type: ActionTypes.SET_CURRENT_CAMPAIGN_ID,
     campaignId,
   }),
 };
@@ -129,7 +129,7 @@ export function reducer(state = initialState, action) {
       delete nextState.campaigns[campaignId];
       return nextState;
     }
-    case ActionTypes.SET_ACTIVE_CAMPAIGN_ID: {
+    case ActionTypes.SET_CURRENT_CAMPAIGN_ID: {
       const { campaignId } = action;
       return {
         ...state,

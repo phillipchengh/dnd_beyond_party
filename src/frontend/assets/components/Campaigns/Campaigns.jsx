@@ -13,8 +13,8 @@ export function Campaigns() {
     dispatch(actions.deleteCampaign(campaignId));
   };
 
-  const handleSetActiveCampaign = (campaignId) => () => {
-    dispatch(actions.setActiveCampaign(campaignId));
+  const handleSetCurrentCampaign = (campaignId) => () => {
+    dispatch(actions.setCurrentCampaign(campaignId));
   };
 
   const campaigns = getCampaigns(state);
@@ -25,7 +25,7 @@ export function Campaigns() {
       <ol>
         {Object.entries(campaigns).map(([campaignId, { lastUpdate, name }]) => (
           <li key={campaignId}>
-            <button onClick={handleSetActiveCampaign(campaignId)} type="button">
+            <button onClick={handleSetCurrentCampaign(campaignId)} type="button">
               {`${campaignId}: ${name}`}
             </button>
             <button onClick={handleDelete(campaignId)} type="button">Delete</button>
