@@ -21,6 +21,8 @@ export default [
         29925598,
         32377709,
       ],
+      isActiveInOwnCampaign: true,
+      isSoloAdventurer: false,
     },
   },
   {
@@ -37,6 +39,8 @@ export default [
       getCampaignName: 'Solo Adventurers',
       getCampaignMembers: [],
       getCampaignMembersIds: [],
+      isActiveInOwnCampaign: false,
+      isSoloAdventurer: true,
     },
   },
 ];

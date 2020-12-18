@@ -4,6 +4,7 @@ import PartyContext from '@assets/party/Context';
 import { hasCampaigns } from '@assets/party/selectors';
 
 import ImportWizardModal from './ImportWizard/ImportWizardModal';
+import Updater from './Updater/Updater';
 import Campaigns from './Campaigns/Campaigns';
 
 export function Main() {
@@ -28,6 +29,7 @@ export function Main() {
         isOpen={showImportWizard}
         onRequestClose={handleCloseImportWizard}
       />
+      <Updater />
       <Campaigns campaigns={state.campaigns} />
     </main>
   );

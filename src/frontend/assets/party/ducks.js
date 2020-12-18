@@ -32,6 +32,7 @@ export const ActionTypes = {
   IMPORT_CHARACTER: 'import_character',
   IMPORT_CHARACTERS: 'import_characters',
   DELETE_CAMPAIGN: 'delete_campaign',
+  UPDATE_CAMPAIGN: 'update_campaign',
   SET_CURRENT_CAMPAIGN_ID: 'set_current_campaign_id',
 };
 
@@ -47,6 +48,11 @@ export const actions = {
   deleteCampaign: (campaignId) => ({
     type: ActionTypes.DELETE_CAMPAIGN,
     campaignId,
+  }),
+  updateCampaign: (campaignId, characters) => ({
+    type: ActionTypes.UPDATE_CAMPAIGN,
+    campaignId,
+    characters,
   }),
   setCurrentCampaign: (campaignId) => ({
     type: ActionTypes.SET_CURRENT_CAMPAIGN_ID,
@@ -129,11 +135,45 @@ export function reducer(state = initialState, action) {
       delete nextState.campaigns[campaignId];
       return nextState;
     }
+    case ActionTypes.UPDATE_CAMPAIGN: {
+      const { campaignId, characters } = action;
+      const { campaigns } = state;
+      const campaign = getCampaign(state, campaignId);
+      const updatedCampaign = characters.reduce((next, character) => {
+        const lastUpdate = new Date().getTime();
+        const campaignName = getCampaignName(character);
+        return {
+          ...next,
+          lastUpdate,
+          name: campaignName,
+          characters: {
+            ...next.characters,
+            [getId(character)]: {
+              lastUpdate,
+              data: character,
+            },
+          },
+        };
+      }, {
+        // clear out old character data, action.characters will have all the updated data
+        ...campaign,
+        characters: {},
+      });
+      return {
+        ...state,
+        campaigns: {
+          ...campaigns,
+          [campaignId]: updatedCampaign,
+        },
+      };
+    }
     case ActionTypes.SET_CURRENT_CAMPAIGN_ID: {
       const { campaignId } = action;
       return {
         ...state,
-        currentCampaignId: campaignId,
+        // json keys are strings, so let's cast it to a number as a value
+        // i.e. when we compare campaign ids, we should compare them as numbers
+        currentCampaignId: parseInt(campaignId, 10),
       };
     }
     default:
