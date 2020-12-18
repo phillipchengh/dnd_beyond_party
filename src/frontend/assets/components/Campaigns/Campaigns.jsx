@@ -3,7 +3,7 @@ import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 
 import { actions } from '@assets/party/ducks';
 import PartyContext from '@assets/party/Context';
-import { getActiveCampaignCharacters, getCampaigns } from '@assets/party/selectors';
+import { getCurrentCampaignCharacters, getCampaigns } from '@assets/party/selectors';
 import { getId, getName } from '@assets/character/calcs';
 
 export function Campaigns() {
@@ -18,7 +18,7 @@ export function Campaigns() {
   };
 
   const campaigns = getCampaigns(state);
-  const activeCampaignCharacters = getActiveCampaignCharacters(state);
+  const currentCampaignCharacters = getCurrentCampaignCharacters(state);
 
   return (
     <>
@@ -34,7 +34,7 @@ export function Campaigns() {
         ))}
       </ol>
       <ol>
-        {activeCampaignCharacters.map(({ lastUpdate, data }) => (
+        {currentCampaignCharacters.map(({ lastUpdate, data }) => (
           <li key={getId(data)}>
             {`${getId(data)}: ${getName(data)}`}
             <br />

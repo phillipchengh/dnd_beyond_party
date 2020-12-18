@@ -3,7 +3,7 @@ import { getCampaignId, getCampaignName } from '@assets/character/selectors';
 import { getCampaign, getCampaignCharacters } from './selectors';
 
 // increment this when the state structure changes to force update stored values
-const schemaVersion = 4;
+const schemaVersion = 5;
 const LOCAL_STORAGE_KEY = 'party';
 
 function getInitialState() {
@@ -18,7 +18,7 @@ function getInitialState() {
   }
   // empty case, start anew
   return {
-    activeCampaignId: null,
+    currentCampaignId: null,
     campaigns: {},
     meta: {
       schemaVersion,
@@ -67,7 +67,7 @@ export function reducer(state = initialState, action) {
       const lastUpdate = new Date().getTime();
       return {
         ...state,
-        activeCampaignId: campaignId,
+        currentCampaignId: campaignId,
         campaigns: {
           ...campaigns,
           [campaignId]: {
@@ -118,7 +118,7 @@ export function reducer(state = initialState, action) {
       return {
         ...state,
         // default select last character's campaign
-        activeCampaignId: campaignId,
+        currentCampaignId: campaignId,
         campaigns,
       };
     }
@@ -133,7 +133,7 @@ export function reducer(state = initialState, action) {
       const { campaignId } = action;
       return {
         ...state,
-        activeCampaignId: campaignId,
+        currentCampaignId: campaignId,
       };
     }
     default:

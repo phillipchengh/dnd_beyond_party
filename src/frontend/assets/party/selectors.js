@@ -30,12 +30,12 @@ export function getCampaignCharacters(state, campaignId) {
   ));
 }
 
-export function getActiveCampaign(state) {
-  return getCampaign(state, state.activeCampaignId);
+export function getCurrentCampaign(state) {
+  return getCampaign(state, state.currentCampaignId);
 }
 
-export function getActiveCampaignCharacters(state) {
-  return getCampaignCharacters(state, state.activeCampaignId);
+export function getCurrentCampaignCharacters(state) {
+  return getCampaignCharacters(state, state.currentCampaignId);
 }
 
 export function getCampaignMembersIds(state, campaignId) {
