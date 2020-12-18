@@ -54,5 +54,3 @@ export function getUnimportedCampaignCharacters(state, character) {
     !importedCampaignMemberIds.includes(characterId)
   ));
 }
-
-export default getCampaign;
