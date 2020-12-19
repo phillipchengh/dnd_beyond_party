@@ -20,6 +20,12 @@ export function getCampaignMembersIds(character) {
   return getCampaignMembers(character).map((member) => (member.characterId));
 }
 
+export function getOtherCampaignMembersIds(character) {
+  return getCampaignMembersIds(character).filter(
+    (characterId) => (characterId !== getId(character)),
+  );
+}
+
 export function isInCampaign(character, campaignId) {
   return getCampaignId(character) === campaignId;
 }

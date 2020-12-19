@@ -1,11 +1,47 @@
 import getCharacter from '@assets/api';
-import { isActiveInCampaign, isInCampaign } from '@assets/character/selectors';
+import {
+  getCampaignId,
+  getOtherCampaignMembersIds,
+  isActiveInCampaign,
+  isInCampaign,
+  isSoloAdventurer,
+} from '@assets/character/selectors';
 import { actions } from './ducks';
 import {
   getCurrentCampaignId,
   getCampaignMembersIds,
   getUnimportedCampaignCharacters,
 } from './selectors';
+
+export async function importCampaign({ dispatch }, character) {
+  // if solo adventurer, just add them to the campaign
+  if (isSoloAdventurer(character)) {
+    dispatch(actions.importCharacter(character));
+    return;
+  }
+  const characters = [];
+  const campaignId = getCampaignId(character);
+  if (isActiveInCampaign(character, campaignId)) {
+    characters.push(character);
+  }
+  // we're importing from a specific and fresh character, trust the campaign data in it
+  // trust as in just get the characters listed under the character's campaign
+  // updateCampaign below handles character transactions with a lot more nuance
+  const otherCharacterIds = getOtherCampaignMembersIds(character);
+  await Promise.all(otherCharacterIds.map(async (characterId) => {
+    const otherCharacter = await getCharacter(characterId);
+    // at least check if they're active
+    if (isActiveInCampaign(otherCharacter, campaignId)) {
+      characters.push(otherCharacter);
+    }
+    // updateCampaign would also check for newly assigned characters
+    // however, character data is probably fresh, so skip that
+  }));
+  if (characters.length) {
+    dispatch(actions.updateCampaign(campaignId, characters));
+  }
+  // TODO if no characters, we need to bubble an error message or something
+}
 
 export async function updateCampaign({ dispatch, state }, campaignId) {
   // access the current campaign id only here, in case state changes while this is going on

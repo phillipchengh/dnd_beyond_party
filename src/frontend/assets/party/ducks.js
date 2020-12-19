@@ -1,6 +1,7 @@
 import { getId } from '@assets/character/calcs';
 import { getCampaignId, getCampaignName } from '@assets/character/selectors';
 import { getCampaign, getCampaignCharacters } from './selectors';
+import { getEmptyCampaign } from './utilities';
 
 // increment this when the state structure changes to force update stored values
 const schemaVersion = 5;
@@ -73,11 +74,11 @@ export function reducer(state = initialState, action) {
       const lastUpdate = new Date().getTime();
       return {
         ...state,
-        currentCampaignId: campaignId,
         campaigns: {
           ...campaigns,
           [campaignId]: {
             ...campaign,
+            campaignId,
             lastUpdate,
             // update the campaign name with latest known name
             name: campaignName,
@@ -138,12 +139,12 @@ export function reducer(state = initialState, action) {
     case ActionTypes.UPDATE_CAMPAIGN: {
       const { campaignId, characters } = action;
       const { campaigns } = state;
-      const campaign = getCampaign(state, campaignId);
       const updatedCampaign = characters.reduce((next, character) => {
         const lastUpdate = new Date().getTime();
         const campaignName = getCampaignName(character);
         return {
           ...next,
+          campaignId,
           lastUpdate,
           name: campaignName,
           characters: {
@@ -154,11 +155,7 @@ export function reducer(state = initialState, action) {
             },
           },
         };
-      }, {
-        // clear out old character data, action.characters will have all the updated data
-        ...campaign,
-        characters: {},
-      });
+      }, getEmptyCampaign());
       return {
         ...state,
         campaigns: {

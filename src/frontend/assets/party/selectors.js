@@ -1,5 +1,9 @@
 import { characterSelectors as char } from '@assets/character/characterSelectors';
-import { getName } from '@assets/character/calcs';
+import {
+  getEmptyCampaign,
+  formatCampaignCharacters,
+  isImportedCampaign,
+} from './utilities';
 
 export function hasCampaigns(state) {
   return !!Object.keys(state.campaigns).length;
@@ -11,27 +15,23 @@ export function getCampaigns(state) {
 
 export function getCampaign(state, campaignId) {
   // either retrieve the existing campaign, or return a new campaign object
-  return state.campaigns[campaignId] ?? {
-    characters: {},
-  };
+  return state.campaigns[campaignId] ?? getEmptyCampaign();
 }
 
 export function getCampaignCharacters(state, campaignId) {
-  return Object.entries(
-    getCampaign(state, campaignId).characters,
-  ).map(
-    // just return an array of character objects
-    // eslint complains about unused characterId
-    // eslint-disable-next-line no-unused-vars
-    ([characterId, character]) => (character),
-  ).sort((a, b) => (
-    // sort by character name
-    getName(a.data).localeCompare(getName(b.data))
-  ));
+  return getCampaign(state, campaignId).characters ?? {};
+}
+
+export function getSortedCampaignCharacters(state, campaignId) {
+  return formatCampaignCharacters(getCampaignCharacters(state, campaignId));
 }
 
 export function getCurrentCampaign(state) {
   return getCampaign(state, state.currentCampaignId);
+}
+
+export function hasCurrentCampaign(state) {
+  return isImportedCampaign(getCurrentCampaign(state));
 }
 
 export function getCurrentCampaignName(state) {
@@ -42,12 +42,13 @@ export function getCurrentCampaignId(state) {
   return state.currentCampaignId;
 }
 
-export function getCurrentCampaignCharacters(state) {
-  return getCampaignCharacters(state, state.currentCampaignId);
+export function getSortedCurrentCampaignCharacters(state) {
+  return getSortedCampaignCharacters(state, state.currentCampaignId);
 }
 
 export function getCampaignMembersIds(state, campaignId) {
-  return getCampaignCharacters(state, campaignId).map(({ data: { id } }) => parseInt(id, 10));
+  return Object.keys(getCampaignCharacters(state, campaignId)).map((id) => parseInt(id, 10));
+  // return getCampaignCharacters(state, campaignId).map(({ data: { id } }) => parseInt(id, 10));
 }
 
 export function getUnimportedCampaignCharacters(state, character) {

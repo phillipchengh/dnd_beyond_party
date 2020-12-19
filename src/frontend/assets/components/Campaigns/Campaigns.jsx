@@ -6,7 +6,8 @@ import PartyContext from '@assets/party/Context';
 import {
   getCampaigns,
   getCurrentCampaignName,
-  getCurrentCampaignCharacters,
+  getSortedCurrentCampaignCharacters,
+  hasCurrentCampaign,
 } from '@assets/party/selectors';
 import { getId, getName } from '@assets/character/calcs';
 
@@ -22,8 +23,13 @@ export function Campaigns() {
   };
 
   const campaigns = getCampaigns(state);
-  const currentCampaignName = getCurrentCampaignName(state);
-  const currentCampaignCharacters = getCurrentCampaignCharacters(state);
+  const showCurrentCampaign = hasCurrentCampaign(state);
+  let currentCampaignName;
+  let currentCampaignCharacters;
+  if (showCurrentCampaign) {
+    currentCampaignName = getCurrentCampaignName(state);
+    currentCampaignCharacters = getSortedCurrentCampaignCharacters(state);
+  }
 
   return (
     <>
@@ -45,20 +51,24 @@ export function Campaigns() {
           </li>
         ))}
       </ol>
-      <h2>{`Current Campaign: ${currentCampaignName}`}</h2>
-      <ol>
-        {currentCampaignCharacters.map(({ lastUpdate, data }) => (
-          <li key={getId(data)}>
-            <div><strong>{getName(data)}</strong></div>
-            <dl>
-              <dt>Character ID</dt>
-              <dd>{getId(data)}</dd>
-              <dt>Last Update</dt>
-              <dd>{formatDistanceToNow(lastUpdate)}</dd>
-            </dl>
-          </li>
-        ))}
-      </ol>
+      {showCurrentCampaign && (
+        <>
+          <h2>{`Current Campaign: ${currentCampaignName}`}</h2>
+          <ol>
+            {currentCampaignCharacters.map(({ lastUpdate, data }) => (
+              <li key={getId(data)}>
+                <div><strong>{getName(data)}</strong></div>
+                <dl>
+                  <dt>Character ID</dt>
+                  <dd>{getId(data)}</dd>
+                  <dt>Last Update</dt>
+                  <dd>{formatDistanceToNow(lastUpdate)}</dd>
+                </dl>
+              </li>
+            ))}
+          </ol>
+        </>
+      )}
     </>
   );
 }
