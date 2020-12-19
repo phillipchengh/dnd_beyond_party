@@ -20,6 +20,7 @@ export function ImportCharacter({ onSubmit }) {
         placeholder="D&D Beyond Character ID"
         type="text"
       />
+      <button type="submit">Import</button>
     </form>
   );
 }
