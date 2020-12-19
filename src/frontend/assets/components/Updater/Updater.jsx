@@ -54,7 +54,7 @@ export function Updater() {
   };
 
   return (
-    <button onClick={handleUpdate} type="button">Update</button>
+    <button onClick={handleUpdate} type="button">Update Current Campaign</button>
   );
 }
 
