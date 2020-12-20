@@ -1,6 +1,7 @@
 module.exports = {
   extends: [
     'eslint-config-airbnb',
+    'eslint-config-airbnb/hooks',
   ],
   ignorePatterns: [
     'dist',
