@@ -18,6 +18,8 @@ export function ImportWizardModal({ isOpen, onRequestClose }) {
   const { dispatch, state } = useContext(PartyContext);
   const [characterToImport, setCharacterToImport] = useState(null);
   const [isExistingCampaign, setIsExistingCampaign] = useState(false);
+  const [requestError, setRequestError] = useState(null);
+
   let characterCampaign = null;
   let campaignId = null;
   if (characterToImport) {
@@ -27,15 +29,19 @@ export function ImportWizardModal({ isOpen, onRequestClose }) {
   const importedCampaign = isImportedCampaign(characterCampaign);
 
   const handleCharacterImport = async (ddbCharacterId) => {
-    const character = await getCharacter(ddbCharacterId);
-    // show character details while we sift through the campaign data
-    setCharacterToImport(character);
-    // different logic if campaign already exists
-    if (isImportedCampaign(getCampaign(state, getCampaignId(character)))) {
-      setIsExistingCampaign(true);
+    try {
+      const character = await getCharacter(ddbCharacterId);
+      // show character details while we sift through the campaign data
+      setCharacterToImport(character);
+      // different logic if campaign already exists
+      if (isImportedCampaign(getCampaign(state, getCampaignId(character)))) {
+        setIsExistingCampaign(true);
+      }
+      // parse and import campaign characters from the character's campaign data
+      await importCampaign({ dispatch, state }, character);
+    } catch (e) {
+      setRequestError(e.message);
     }
-    // parse and import campaign characters from the character's campaign data
-    await importCampaign({ dispatch, state }, character);
   };
 
   const reset = () => {
@@ -59,7 +65,12 @@ export function ImportWizardModal({ isOpen, onRequestClose }) {
       isOpen={isOpen}
       onRequestClose={onRequestClose}
     >
-      {!characterToImport && <ImportCharacter onSubmit={handleCharacterImport} />}
+      {!characterToImport && (
+        <ImportCharacter
+          onSubmit={handleCharacterImport}
+          requestError={requestError}
+        />
+      )}
       {characterToImport && <FoundCharacterInfo character={characterToImport} />}
       {importedCampaign && (
         <ImportedCampaignInfo
