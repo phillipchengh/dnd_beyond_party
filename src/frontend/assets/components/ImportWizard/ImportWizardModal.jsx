@@ -29,6 +29,7 @@ export function ImportWizardModal({ isOpen, onRequestClose }) {
   const importedCampaign = isImportedCampaign(characterCampaign);
 
   const handleCharacterImport = async (ddbCharacterId) => {
+    setRequestError(null);
     try {
       const character = await getCharacter(ddbCharacterId);
       // show character details while we sift through the campaign data
