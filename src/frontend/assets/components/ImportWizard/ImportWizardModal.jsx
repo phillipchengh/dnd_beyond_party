@@ -48,6 +48,9 @@ export function ImportWizardModal({ isOpen, onRequestClose }) {
     if (importedCampaign) {
       dispatch(actions.setCurrentCampaign(campaignId));
     }
+  }, [dispatch, importedCampaign, campaignId]);
+
+  useEffect(() => {
     reset();
   }, [isOpen]);
 
