@@ -31,7 +31,6 @@ export const initialState = getInitialState();
 
 export const ActionTypes = {
   IMPORT_CHARACTER: 'import_character',
-  IMPORT_CHARACTERS: 'import_characters',
   DELETE_CAMPAIGN: 'delete_campaign',
   UPDATE_CAMPAIGN: 'update_campaign',
   SET_CURRENT_CAMPAIGN_ID: 'set_current_campaign_id',
@@ -41,10 +40,6 @@ export const actions = {
   importCharacter: (character) => ({
     type: ActionTypes.IMPORT_CHARACTER,
     character,
-  }),
-  importCharacters: (characters) => ({
-    type: ActionTypes.IMPORT_CHARACTERS,
-    characters,
   }),
   deleteCampaign: (campaignId) => ({
     type: ActionTypes.DELETE_CAMPAIGN,
@@ -92,41 +87,6 @@ export function reducer(state = initialState, action) {
             },
           },
         },
-      };
-    }
-    case ActionTypes.IMPORT_CHARACTERS: {
-      const { characters } = action;
-      let { campaigns } = state;
-      let campaignId;
-      // add each character into their campaign
-      characters.forEach((character) => {
-        campaignId = getCampaignId(character);
-        const campaignName = getCampaignName(character);
-        // make sure we use the campaigns data we're building on, not from the stale state
-        const campaign = campaigns[campaignId];
-        const campaignCharacters = campaign.characters;
-        const lastUpdate = new Date().getTime();
-        campaigns = {
-          ...campaigns,
-          [campaignId]: {
-            ...campaign,
-            lastUpdate,
-            name: campaignName,
-            characters: {
-              ...campaignCharacters,
-              [getId(character)]: {
-                lastUpdate,
-                data: character,
-              },
-            },
-          },
-        };
-      });
-      return {
-        ...state,
-        // default select last character's campaign
-        currentCampaignId: campaignId,
-        campaigns,
       };
     }
     case ActionTypes.DELETE_CAMPAIGN: {
