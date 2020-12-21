@@ -12,6 +12,9 @@ module.exports = {
     // complains about importing devDependencies but this is pretty opinionated
     // i.e. create-react-app believes webpack, etc. are devDependencies
     'import/no-extraneous-dependencies': 'off',
+    'jsx-a11y/label-has-associated-control': [2, {
+      assert: 'either',
+    }],
   },
   settings: {
     // make eslint understand node and webpack imports
