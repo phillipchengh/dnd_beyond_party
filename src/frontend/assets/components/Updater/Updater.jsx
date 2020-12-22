@@ -21,19 +21,20 @@ export function Updater() {
   const [autoUpdate, setAutoUpdate] = useState(null);
   const [requestError, setRequestError] = useState(null);
 
-  const handleUpdate = useCallback(() => {
+  const clearErrors = useCallback(() => {
+    dispatch(actions.clearError());
+    setRequestError(null);
+  }, [dispatch]);
+
+  const handleUpdate = useCallback(async () => {
+    clearErrors();
     try {
-      updateCurrentCampaign(context);
+      await updateCurrentCampaign(context);
       setSecondsElapsed(0);
     } catch (e) {
       setRequestError(e.message);
     }
-  }, [context]);
-
-  const clearErrors = () => {
-    dispatch(actions.clearError());
-    setRequestError(null);
-  };
+  }, [clearErrors, context]);
 
   const handleAutoUpdate = (intervalSeconds) => () => {
     clearErrors();

@@ -84,5 +84,5 @@ export async function updateCampaign({ dispatch, state }, campaignId) {
 
 export async function updateCurrentCampaign({ dispatch, state }) {
   const campaignId = getCurrentCampaignId(state);
-  updateCampaign({ dispatch, state }, campaignId);
+  await updateCampaign({ dispatch, state }, campaignId);
 }
