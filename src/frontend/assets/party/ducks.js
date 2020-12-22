@@ -1,18 +1,28 @@
+import lzutf8 from 'lzutf8';
 import { getId } from '@assets/character/calcs';
 import { getCampaignId, getCampaignName } from '@assets/character/selectors';
 import { getCampaign, getCampaignCharacters } from './selectors';
 import { getEmptyCampaign } from './utilities';
 
 // increment this when the state structure changes to force update stored values
-const schemaVersion = 5;
+const schemaVersion = 6;
+// campaign data is compressed and stored under the campaigns key
+// everything else is uncompressed and stored under the party key
 const LOCAL_STORAGE_KEY = 'party';
+const LOCAL_STORAGE_CAMPAIGNS = 'campaigns';
 
 function getInitialState() {
   try {
     const localStorageState = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
     // if our versions match, use the cached data
-    if (parseInt(localStorageState?.meta?.schemaVersion, 10) === schemaVersion) {
-      return localStorageState;
+    if (parseInt(localStorageState?.schemaVersion, 10) === schemaVersion) {
+      // campaigns is stored specially compressed under the campaigns key
+      const campaigns = JSON.parse(lzutf8.decompress(localStorage.getItem(LOCAL_STORAGE_CAMPAIGNS), { inputEncoding: 'Base64' }));
+      // our state schema should look like one object like the empty case below
+      return {
+        ...localStorageState,
+        campaigns,
+      };
     }
   } catch (e) {
     // guess this could happen if parse fails?
@@ -22,9 +32,7 @@ function getInitialState() {
     currentCampaignId: null,
     campaigns: {},
     error: null,
-    meta: {
-      schemaVersion,
-    },
+    schemaVersion,
   };
 }
 
@@ -39,20 +47,26 @@ export const ActionTypes = {
   CLEAR_ERROR: 'clear_error',
 };
 
+// specially wrap action with storeCampaigns to store updated campaigns changes to localStorage
+const storeCampaigns = (action) => ({
+  ...action,
+  storeCampaigns: true,
+});
+
 export const actions = {
-  importCharacter: (character) => ({
+  importCharacter: (character) => (storeCampaigns({
     type: ActionTypes.IMPORT_CHARACTER,
     character,
-  }),
-  deleteCampaign: (campaignId) => ({
+  })),
+  deleteCampaign: (campaignId) => (storeCampaigns({
     type: ActionTypes.DELETE_CAMPAIGN,
     campaignId,
-  }),
-  updateCampaign: (campaignId, characters) => ({
+  })),
+  updateCampaign: (campaignId, characters) => (storeCampaigns({
     type: ActionTypes.UPDATE_CAMPAIGN,
     campaignId,
     characters,
-  }),
+  })),
   setCurrentCampaign: (campaignId) => ({
     type: ActionTypes.SET_CURRENT_CAMPAIGN_ID,
     campaignId,
@@ -173,9 +187,31 @@ const withLocalStorage = (wrappedReducer) => (
   (state, action) => {
     const nextState = wrappedReducer(state, action);
     try {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(nextState));
+      // make a copy of state to not mess with base reducer logic
+      const localStorageState = { ...nextState };
+      // separate out campaigns data to store that specially
+      const { campaigns } = localStorageState;
+      delete localStorageState.campaigns;
+      // if storing campaigns changes, compress that in the background to avoid hogging main thread
+      // compressing is an expensive operation, so we want to avoid it as much as possible
+      // action.storeCampaigns is specially set by the storeCampaigns function above
+      if (action.storeCampaigns) {
+        lzutf8.compressAsync(JSON.stringify(campaigns), { outputEncoding: 'Base64' }, (compressedCampaigns, error) => {
+          if (error) {
+            throw error;
+          }
+          // campaigns data
+          localStorage.setItem(LOCAL_STORAGE_CAMPAIGNS, compressedCampaigns);
+          // everything else in party state
+          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(localStorageState));
+        });
+      } else {
+        // if not storing any new campaigns, just store everything else in party state
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(localStorageState));
+      }
       return nextState;
     } catch (e) {
+      // localStorage.setItem can hit a browser storage quota
       const errorState = wrappedReducer(state, actions.setError(LOCAL_STORAGE_ERROR));
       return errorState;
     }
