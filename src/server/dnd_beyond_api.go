@@ -27,7 +27,7 @@ func characterHTTPHandler(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 	statusCode, bodyJSON := requestCharacter(id)
-	writer.WriteHeader(statusCode)
 	writer.Header().Set("Content-Type", "application/json")
+	writer.WriteHeader(statusCode)
 	fmt.Fprintf(writer, bodyJSON)
 }
