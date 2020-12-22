@@ -59,3 +59,7 @@ export function getUnimportedCampaignCharacters(state, character) {
     !importedCampaignMemberIds.includes(characterId)
   ));
 }
+
+export function getError(state) {
+  return state.error;
+}

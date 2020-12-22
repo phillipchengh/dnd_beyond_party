@@ -10,7 +10,7 @@ const validateCharacterId = (id) => {
   return urlId ?? null;
 };
 
-export function ImportCharacter({ onSubmit, requestError }) {
+export function ImportCharacter({ onSubmit, error }) {
   const [input, setInput] = useState(null);
   const [validCharacterId, setValidCharacterId] = useState(null);
 
@@ -80,8 +80,8 @@ export function ImportCharacter({ onSubmit, requestError }) {
       {input && !validCharacterId && (
         <p>Not a valid input.</p>
       )}
-      {requestError && (
-        <p>{requestError}</p>
+      {error && (
+        <p>{error}</p>
       )}
     </form>
   );
@@ -89,11 +89,11 @@ export function ImportCharacter({ onSubmit, requestError }) {
 
 ImportCharacter.propTypes = {
   onSubmit: PropTypes.func.isRequired,
-  requestError: PropTypes.string,
+  error: PropTypes.string,
 };
 
 ImportCharacter.defaultProps = {
-  requestError: null,
+  error: null,
 };
 
 export default ImportCharacter;

@@ -21,6 +21,7 @@ function getInitialState() {
   return {
     currentCampaignId: null,
     campaigns: {},
+    error: null,
     meta: {
       schemaVersion,
     },
@@ -34,6 +35,8 @@ export const ActionTypes = {
   DELETE_CAMPAIGN: 'delete_campaign',
   UPDATE_CAMPAIGN: 'update_campaign',
   SET_CURRENT_CAMPAIGN_ID: 'set_current_campaign_id',
+  SET_ERROR: 'set_error',
+  CLEAR_ERROR: 'clear_error',
 };
 
 export const actions = {
@@ -54,6 +57,13 @@ export const actions = {
     type: ActionTypes.SET_CURRENT_CAMPAIGN_ID,
     campaignId,
   }),
+  setError: (error) => ({
+    type: ActionTypes.SET_ERROR,
+    error,
+  }),
+  clearError: () => ({
+    type: ActionTypes.CLEAR_ERROR,
+  }),
 };
 
 export function reducer(state = initialState, action) {
@@ -69,6 +79,7 @@ export function reducer(state = initialState, action) {
       const lastUpdate = new Date().getTime();
       return {
         ...state,
+        error: null,
         campaigns: {
           ...campaigns,
           [campaignId]: {
@@ -92,7 +103,10 @@ export function reducer(state = initialState, action) {
     case ActionTypes.DELETE_CAMPAIGN: {
       // make a copy of state and delete the copy's campaign
       const { campaignId } = action;
-      const nextState = { ...state };
+      const nextState = {
+        error: null,
+        ...state,
+      };
       delete nextState.campaigns[campaignId];
       return nextState;
     }
@@ -118,6 +132,7 @@ export function reducer(state = initialState, action) {
       }, getEmptyCampaign());
       return {
         ...state,
+        error: null,
         campaigns: {
           ...campaigns,
           [campaignId]: updatedCampaign,
@@ -133,17 +148,37 @@ export function reducer(state = initialState, action) {
         currentCampaignId: parseInt(campaignId, 10),
       };
     }
+    case ActionTypes.SET_ERROR: {
+      const { error } = action;
+      return {
+        ...state,
+        error,
+      };
+    }
+    case ActionTypes.CLEAR_ERROR: {
+      return {
+        ...state,
+        error: null,
+      };
+    }
     default:
       throw new Error('No action type specified!');
   }
 }
 
+const LOCAL_STORAGE_ERROR = 'Sorry, we could not save to your browser\'s local storage. Try removing some campaigns if it\'s full, or confirming your browser can store data.';
+
 // this will save state to localStorage, so if the page is revisited, initialState can get it
 const withLocalStorage = (wrappedReducer) => (
   (state, action) => {
     const nextState = wrappedReducer(state, action);
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(nextState));
-    return nextState;
+    try {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(nextState));
+      return nextState;
+    } catch (e) {
+      const errorState = wrappedReducer(state, actions.setError(LOCAL_STORAGE_ERROR));
+      return errorState;
+    }
   }
 );
 

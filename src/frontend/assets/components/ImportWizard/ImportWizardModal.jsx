@@ -1,9 +1,14 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import PropTypes from 'prop-types';
 
 import getCharacter from '@assets/api';
 import { actions } from '@assets/party/ducks';
-import { getCampaign } from '@assets/party/selectors';
+import { getCampaign, getError } from '@assets/party/selectors';
 import PartyContext from '@assets/party/Context';
 import { importCampaign } from '@assets/party/sideEffects';
 import { isImportedCampaign } from '@assets/party/utilities';
@@ -45,10 +50,11 @@ export function ImportWizardModal({ isOpen, onRequestClose }) {
     }
   };
 
-  const reset = () => {
+  const reset = useCallback(() => {
+    dispatch(actions.clearError());
     setCharacterToImport(null);
     setIsExistingCampaign(false);
-  };
+  }, [dispatch]);
 
   useEffect(() => {
     // set current campaign as the last campaign they've touched
@@ -59,7 +65,9 @@ export function ImportWizardModal({ isOpen, onRequestClose }) {
 
   useEffect(() => {
     reset();
-  }, [isOpen]);
+  }, [isOpen, reset]);
+
+  const error = requestError || getError(state);
 
   return (
     <Modal
@@ -69,10 +77,17 @@ export function ImportWizardModal({ isOpen, onRequestClose }) {
       {!characterToImport && (
         <ImportCharacter
           onSubmit={handleCharacterImport}
-          requestError={requestError}
+          error={error}
         />
       )}
-      {characterToImport && <FoundCharacterInfo character={characterToImport} />}
+      {characterToImport && (
+        <FoundCharacterInfo
+          character={characterToImport}
+          error={error}
+        />
+      )}
+      {/* Case where character was retrieved, but something borked importing/saving the campaign */}
+      {characterToImport && error && <button onClick={reset} type="button">Start Over</button>}
       {importedCampaign && (
         <ImportedCampaignInfo
           campaign={characterCampaign}
