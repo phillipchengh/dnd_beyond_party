@@ -12,6 +12,16 @@ import {
   getCampaignMembersIds,
   getUnimportedCampaignCharacters,
 } from './selectors';
+import DndBeyondError from '../DndBeyondError';
+
+function allowDndBeyondError(error) {
+  // DnDBeyondErrors could be an Auth Error that we would just keep hitting for each update
+  // if we're importing a campaign of characters, 1 character shouldn't block the rest
+  if (!(error instanceof DndBeyondError)) {
+    // now if something unexpected happened, like a network error/other errors, abort
+    throw error;
+  }
+}
 
 export async function importCampaign({ dispatch }, character) {
   // if solo adventurer, just add them to the campaign
@@ -29,13 +39,17 @@ export async function importCampaign({ dispatch }, character) {
   // updateCampaign below handles character transactions with a lot more nuance
   const otherCharacterIds = getOtherCampaignMembersIds(character);
   await Promise.all(otherCharacterIds.map(async (characterId) => {
-    const otherCharacter = await getCharacter(characterId);
-    // at least check if they're active
-    if (isActiveInCampaign(otherCharacter, campaignId)) {
-      characters.push(otherCharacter);
+    try {
+      const otherCharacter = await getCharacter(characterId);
+      // at least check if they're active
+      if (isActiveInCampaign(otherCharacter, campaignId)) {
+        characters.push(otherCharacter);
+      }
+      // updateCampaign would also check for newly assigned characters
+      // however, character data is probably fresh, so skip that
+    } catch (error) {
+      allowDndBeyondError(error);
     }
-    // updateCampaign would also check for newly assigned characters
-    // however, character data is probably fresh, so skip that
   }));
   if (characters.length) {
     dispatch(actions.updateCampaign(campaignId, characters));
@@ -54,25 +68,33 @@ export async function updateCampaign({ dispatch, state }, campaignId) {
   // dropped chararacters can still refer to the campaign, but are unlisted in campaign.characters
   // moved characters can refer to a new or no campaign
   await Promise.all(characterIds.map(async (characterId) => {
-    const character = await getCharacter(characterId);
-    // filter out newly unassigned/moved/dropped chararacters, just lose them forever
-    if (isActiveInCampaign(character, campaignId)) {
-      characters.push(character);
-    }
-    // if they're still in the campaign, whether unassigned or active, they'll have campaign data
-    // a crazy scenario is all original characters are now unassigned
-    if (isInCampaign(character, campaignId)) {
-      // gather newly assigned characters we don't have any data on
-      getUnimportedCampaignCharacters(state, character).forEach(({
-        characterId: newCharacterId,
-      }) => {
-        newCharacterIdsToRequest.add(newCharacterId);
-      });
+    try {
+      const character = await getCharacter(characterId);
+      // filter out newly unassigned/moved/dropped chararacters, just lose them forever
+      if (isActiveInCampaign(character, campaignId)) {
+        characters.push(character);
+      }
+      // if they're still in the campaign, whether unassigned or active, they'll have campaign data
+      // a crazy scenario is all original characters are now unassigned
+      if (isInCampaign(character, campaignId)) {
+        // gather newly assigned characters we don't have any data on
+        getUnimportedCampaignCharacters(state, character).forEach(({
+          characterId: newCharacterId,
+        }) => {
+          newCharacterIdsToRequest.add(newCharacterId);
+        });
+      }
+    } catch (error) {
+      allowDndBeyondError(error);
     }
   }));
   await Promise.all(Array.from(newCharacterIdsToRequest).map(async (characterId) => {
-    const character = await getCharacter(characterId);
-    characters.push(character);
+    try {
+      const character = await getCharacter(characterId);
+      characters.push(character);
+    } catch (error) {
+      allowDndBeyondError(error);
+    }
   }));
   // if the campaign has got no more active characters, delete it
   if (!characters.length) {
