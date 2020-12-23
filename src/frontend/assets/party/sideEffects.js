@@ -6,8 +6,10 @@ import {
   isInCampaign,
   isSoloAdventurer,
 } from '@assets/character/selectors';
+import { characterSelectors as char } from '@assets/character/characterSelectors';
 import { actions } from './ducks';
 import {
+  getCampaignName,
   getCurrentCampaignId,
   getCampaignMembersIds,
   getUnimportedCampaignCharacters,
@@ -51,10 +53,10 @@ export async function importCampaign({ dispatch }, character) {
       allowDndBeyondError(error);
     }
   }));
-  if (characters.length) {
-    dispatch(actions.updateCampaign(campaignId, characters));
+  if (!characters.length) {
+    throw new Error(`${char.getCampaignName(character)} seems to have no active characters. Please check your campaign on D&D Beyond!`);
   }
-  // TODO if no characters, we need to bubble an error message or something
+  dispatch(actions.updateCampaign(campaignId, characters));
 }
 
 export async function updateCampaign({ dispatch, state }, campaignId) {
@@ -98,7 +100,9 @@ export async function updateCampaign({ dispatch, state }, campaignId) {
   }));
   // if the campaign has got no more active characters, delete it
   if (!characters.length) {
+    const deletedCampaignName = getCampaignName(state, campaignId);
     dispatch(actions.deleteCampaign(campaignId));
+    throw new Error(`${deletedCampaignName} has no active characters so it was removed. Please check your campaign on D&D Beyond!`);
   } else {
     dispatch(actions.updateCampaign(campaignId, characters));
   }

@@ -18,6 +18,10 @@ export function getCampaign(state, campaignId) {
   return state.campaigns[campaignId] ?? getEmptyCampaign();
 }
 
+export function getCampaignName(state, campaignId) {
+  return getCampaign(state, campaignId).name;
+}
+
 export function getCampaignCharacters(state, campaignId) {
   return getCampaign(state, campaignId).characters ?? {};
 }
