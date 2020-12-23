@@ -8,7 +8,7 @@ import React, {
 import PartyContext from '@assets/party/Context';
 import { actions } from '@assets/party/ducks';
 import { updateCurrentCampaign } from '@assets/party/sideEffects';
-import { getError } from '@assets/party/selectors';
+import { getError, hasCurrentCampaign } from '@assets/party/selectors';
 
 // units in seconds
 const TEN_SECONDS = 10;
@@ -21,6 +21,8 @@ export function Updater() {
   const [autoUpdate, setAutoUpdate] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
   const [requestError, setRequestError] = useState(null);
+  // checks if there's actually a current campaign selected
+  const hasCurrentCampaignToUpdate = hasCurrentCampaign(state);
 
   const clearErrors = useCallback(() => {
     dispatch(actions.clearError());
@@ -28,7 +30,7 @@ export function Updater() {
   }, [dispatch]);
 
   const handleUpdate = useCallback(async () => {
-    if (isUpdating) {
+    if (isUpdating || !hasCurrentCampaignToUpdate) {
       return;
     }
     setIsUpdating(true);
@@ -41,7 +43,7 @@ export function Updater() {
     } finally {
       setIsUpdating(false);
     }
-  }, [clearErrors, context, isUpdating]);
+  }, [clearErrors, context, hasCurrentCampaignToUpdate, isUpdating]);
 
   const handleAutoUpdate = (intervalSeconds) => () => {
     clearErrors();
@@ -50,7 +52,7 @@ export function Updater() {
 
   const error = requestError || getError(state);
   // don't continue auto update if there's an error
-  const runAutoUpdate = autoUpdate && !error;
+  const runAutoUpdate = autoUpdate && !error && hasCurrentCampaignToUpdate;
 
   useEffect(() => {
     let intervalId = null;
