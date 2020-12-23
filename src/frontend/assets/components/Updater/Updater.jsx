@@ -19,6 +19,7 @@ export function Updater() {
   const { dispatch, state } = context;
   const [secondsElapsed, setSecondsElapsed] = useState(0);
   const [autoUpdate, setAutoUpdate] = useState(null);
+  const [isUpdating, setIsUpdating] = useState(false);
   const [requestError, setRequestError] = useState(null);
 
   const clearErrors = useCallback(() => {
@@ -27,14 +28,20 @@ export function Updater() {
   }, [dispatch]);
 
   const handleUpdate = useCallback(async () => {
+    if (isUpdating) {
+      return;
+    }
+    setIsUpdating(true);
     clearErrors();
     try {
       await updateCurrentCampaign(context);
       setSecondsElapsed(0);
     } catch (e) {
       setRequestError(e.message);
+    } finally {
+      setIsUpdating(false);
     }
-  }, [clearErrors, context]);
+  }, [clearErrors, context, isUpdating]);
 
   const handleAutoUpdate = (intervalSeconds) => () => {
     clearErrors();
@@ -75,7 +82,7 @@ export function Updater() {
       <button onClick={handleAutoUpdate(ONE_MINUTE)} type="button">Auto-Update Every Minute</button>
       <button onClick={handleAutoUpdate(null)} type="button">Turn off Auto-Update</button>
       {autoUpdate && <p>{`Auto updating current campaign in ${autoUpdate - secondsElapsed} seconds.`}</p>}
-      <p>{`Waited ${secondsElapsed} seconds.`}</p>
+      <p>{`Waited ${secondsElapsed} seconds.${isUpdating ? ' Updating now!' : ''}`}</p>
       {error && (
         <p>{error}</p>
       )}
