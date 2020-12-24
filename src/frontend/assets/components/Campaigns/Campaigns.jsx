@@ -19,6 +19,9 @@ import {
   getName,
   getRace,
 } from '@assets/character/calcs';
+import {
+  getAvatarUrl,
+} from '@assets/character/selectors';
 
 export function Campaigns() {
   const { dispatch, state } = useContext(PartyContext);
@@ -84,6 +87,8 @@ export function Campaigns() {
                   <dd>{getLevelDisplay(data)}</dd>
                   <dt>Race</dt>
                   <dd>{getRace(data)}</dd>
+                  <dt>Avatar</dt>
+                  <dd><img height="60" width="60" src={getAvatarUrl(data)} alt="Avatar" /></dd>
                 </dl>
               </li>
             ))}

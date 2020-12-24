@@ -71,3 +71,7 @@ export function isActiveInCampaign(character, campaignId) {
 export function isActiveInOwnCampaign(character) {
   return isActiveInCampaign(character, getCampaignId(character));
 }
+
+export function getAvatarUrl(character) {
+  return character.avatarUrl || '/static/d20.svg';
+}
