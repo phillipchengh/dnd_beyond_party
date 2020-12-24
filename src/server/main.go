@@ -8,6 +8,9 @@ import (
 func main() {
 	http.HandleFunc("/", indexHTTPHandler)
 
+	fs := http.StripPrefix("/static/", http.FileServer(http.Dir("./public")));
+	http.Handle("/static/", fs)
+
 	http.HandleFunc("/asset-manifest.json", assetManifestHTTPHandler)
 
 	http.HandleFunc("/character", characterHTTPHandler)
