@@ -75,3 +75,7 @@ export function isActiveInOwnCampaign(character) {
 export function getAvatarUrl(character) {
   return character.avatarUrl || '/static/d20.svg';
 }
+
+export function getLink({ readonlyUrl }) {
+  return readonlyUrl;
+}

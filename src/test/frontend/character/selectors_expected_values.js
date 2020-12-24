@@ -30,6 +30,7 @@ export default [
       ],
       isActiveInOwnCampaign: true,
       isSoloAdventurer: false,
+      getLink: 'https://dndbeyond.com/characters/28364322',
     },
   },
   {

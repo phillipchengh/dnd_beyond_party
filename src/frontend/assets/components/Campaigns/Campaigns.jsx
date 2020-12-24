@@ -21,6 +21,7 @@ import {
 } from '@assets/character/calcs';
 import {
   getAvatarUrl,
+  getLink,
 } from '@assets/character/selectors';
 
 export function Campaigns() {
@@ -89,6 +90,8 @@ export function Campaigns() {
                   <dd>{getRace(data)}</dd>
                   <dt>Avatar</dt>
                   <dd><img height="60" width="60" src={getAvatarUrl(data)} alt="Avatar" /></dd>
+                  <dt>Link</dt>
+                  <dd><a href={getLink(data)}>Here</a></dd>
                 </dl>
               </li>
             ))}
