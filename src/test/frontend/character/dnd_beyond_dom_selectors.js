@@ -7,4 +7,7 @@ export function getName(document) {
   return document.querySelector('.ddbc-character-name').textContent;
 }
 
+export function getClassDisplay(document) {
+  return document.querySelector('.ddbc-character-summary__classes').textContent;
+}
 // dom.window.document.getElementsByClassName('ddbc-armor-class-box__value')[0].textContent

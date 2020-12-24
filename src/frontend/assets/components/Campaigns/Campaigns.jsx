@@ -9,7 +9,11 @@ import {
   getSortedCurrentCampaignCharacters,
   hasCurrentCampaign,
 } from '@assets/party/selectors';
-import { getId, getName } from '@assets/character/calcs';
+import {
+  getClassDisplay,
+  getId,
+  getName,
+} from '@assets/character/calcs';
 
 export function Campaigns() {
   const { dispatch, state } = useContext(PartyContext);
@@ -63,6 +67,8 @@ export function Campaigns() {
                   <dd>{getId(data)}</dd>
                   <dt>Last Update</dt>
                   <dd>{formatDistanceToNow(lastUpdate)}</dd>
+                  <dt>Class</dt>
+                  <dd>{getClassDisplay(data)}</dd>
                 </dl>
               </li>
             ))}
