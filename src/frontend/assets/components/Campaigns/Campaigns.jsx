@@ -5,6 +5,9 @@ import { actions } from '@assets/party/ducks';
 import PartyContext from '@assets/party/Context';
 import {
   getCampaigns,
+  getCampaignName,
+  getCampaignLastUpdate,
+  getCampaignLink,
   getCurrentCampaignName,
   getSortedCurrentCampaignCharacters,
   hasCurrentCampaign,
@@ -39,9 +42,9 @@ export function Campaigns() {
     <>
       <h2>Campaigns</h2>
       <ol>
-        {Object.entries(campaigns).map(([campaignId, { lastUpdate, name }]) => (
+        {Object.keys(campaigns).map((campaignId) => (
           <li key={campaignId}>
-            <div><strong>{name}</strong></div>
+            <div><strong>{getCampaignName(state, campaignId)}</strong></div>
             <button onClick={handleSetCurrentCampaign(campaignId)} type="button">
               View
             </button>
@@ -50,7 +53,13 @@ export function Campaigns() {
               <dt>Campaign ID</dt>
               <dd>{campaignId}</dd>
               <dt>Last Update</dt>
-              <dd>{formatDistanceToNow(lastUpdate)}</dd>
+              <dd>{getCampaignLastUpdate(state, campaignId)}</dd>
+              {getCampaignLink(state, campaignId) && (
+                <>
+                  <dt>Link</dt>
+                  <dd><a href={getCampaignLink(state, campaignId)}>Here</a></dd>
+                </>
+              )}
             </dl>
           </li>
         ))}

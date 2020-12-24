@@ -1,3 +1,4 @@
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { characterSelectors as char } from '@assets/character/characterSelectors';
 import {
   getEmptyCampaign,
@@ -20,6 +21,15 @@ export function getCampaign(state, campaignId) {
 
 export function getCampaignName(state, campaignId) {
   return getCampaign(state, campaignId).name;
+}
+
+export function getCampaignLastUpdate(state, campaignId) {
+  return formatDistanceToNow(getCampaign(state, campaignId).lastUpdate);
+}
+
+export function getCampaignLink(state, campaignId) {
+  const path = getCampaign(state, campaignId).link;
+  return path ? `https://www.dndbeyond.com${path}` : null;
 }
 
 export function getCampaignCharacters(state, campaignId) {
