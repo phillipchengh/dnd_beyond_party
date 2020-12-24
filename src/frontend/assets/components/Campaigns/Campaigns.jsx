@@ -17,6 +17,7 @@ import {
   getLevelDisplay,
   getId,
   getName,
+  getRace,
 } from '@assets/character/calcs';
 
 export function Campaigns() {
@@ -81,6 +82,8 @@ export function Campaigns() {
                   <dd>{getClassDisplay(data)}</dd>
                   <dt>Level</dt>
                   <dd>{getLevelDisplay(data)}</dd>
+                  <dt>Race</dt>
+                  <dd>{getRace(data)}</dd>
                 </dl>
               </li>
             ))}

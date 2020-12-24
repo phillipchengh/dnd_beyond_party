@@ -14,3 +14,7 @@ export function getClassDisplay(document) {
 export function getLevelDisplay(document) {
   return document.querySelector('.ddbc-character-progression-summary__level').textContent;
 }
+
+export function getRace(document) {
+  return document.querySelector('.ddbc-character-summary__race').textContent;
+}

@@ -37,3 +37,10 @@ export function getLevelDisplay({ classes }) {
     totalLevel + level
   ), 0)}`;
 }
+
+export function getRace({ race }) {
+  if (!race) {
+    return '';
+  }
+  return race.fullName || race.baseName;
+}
