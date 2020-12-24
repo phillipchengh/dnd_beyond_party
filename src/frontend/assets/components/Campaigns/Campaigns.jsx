@@ -14,6 +14,7 @@ import {
 } from '@assets/party/selectors';
 import {
   getClassDisplay,
+  getLevelDisplay,
   getId,
   getName,
 } from '@assets/character/calcs';
@@ -78,6 +79,8 @@ export function Campaigns() {
                   <dd>{formatDistanceToNow(lastUpdate)}</dd>
                   <dt>Class</dt>
                   <dd>{getClassDisplay(data)}</dd>
+                  <dt>Level</dt>
+                  <dd>{getLevelDisplay(data)}</dd>
                 </dl>
               </li>
             ))}

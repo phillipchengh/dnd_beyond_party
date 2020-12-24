@@ -28,3 +28,12 @@ export function getClassDisplay({ classes }) {
   )).sort();
   return [startingClassDisplay, ...multiClassDisplays].join(' / ');
 }
+
+export function getLevelDisplay({ classes }) {
+  if (!classes.length) {
+    return 'Level 0';
+  }
+  return `Level ${classes.reduce((totalLevel, { level }) => (
+    totalLevel + level
+  ), 0)}`;
+}
