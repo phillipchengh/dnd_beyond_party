@@ -1,11 +1,11 @@
 import lzutf8 from 'lzutf8';
 import { getId } from '@assets/character/calcs';
-import { getCampaignId, getCampaignName } from '@assets/character/selectors';
-import { getCampaign, getCampaignCharacters } from './selectors';
+import { getCampaignId, getCampaignInfo } from '@assets/character/selectors';
+import { getCampaignCharacters } from './selectors';
 import { getEmptyCampaign } from './utilities';
 
 // increment this when the state structure changes to force update stored values
-const schemaVersion = 6;
+const schemaVersion = 7;
 // campaign data is compressed and stored under the campaigns key
 // everything else is uncompressed and stored under the party key
 const LOCAL_STORAGE_KEY = 'party';
@@ -86,9 +86,9 @@ export function reducer(state = initialState, action) {
       const { character } = action;
       const { campaigns } = state;
       const campaignId = getCampaignId(character);
-      const campaignName = getCampaignName(character);
-      // will create or retrieve existing campaign
-      const campaign = getCampaign(state, campaignId);
+      // always update campaign with latest campaign info
+      const campaignInfo = getCampaignInfo(character);
+      // merge with any existing campaign characters
       const campaignCharacters = getCampaignCharacters(state, campaignId);
       const lastUpdate = new Date().getTime();
       return {
@@ -97,11 +97,8 @@ export function reducer(state = initialState, action) {
         campaigns: {
           ...campaigns,
           [campaignId]: {
-            ...campaign,
-            campaignId,
+            ...campaignInfo,
             lastUpdate,
-            // update the campaign name with latest known name
-            name: campaignName,
             characters: {
               // add this character among existing campaign characters
               ...campaignCharacters,
@@ -129,12 +126,12 @@ export function reducer(state = initialState, action) {
       const { campaigns } = state;
       const updatedCampaign = characters.reduce((next, character) => {
         const lastUpdate = new Date().getTime();
-        const campaignName = getCampaignName(character);
+        // always update campaign with latest campaign info
+        const campaignInfo = getCampaignInfo(character);
         return {
           ...next,
-          campaignId,
+          ...campaignInfo,
           lastUpdate,
-          name: campaignName,
           characters: {
             ...next.characters,
             [getId(character)]: {

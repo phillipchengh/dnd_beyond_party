@@ -16,6 +16,20 @@ export function getCampaignMembers(character) {
   return character.campaign?.characters ?? [];
 }
 
+// get what's in character.campaigns, except the list of characters
+// party ducks stores the entire character data in campaign.characters instead
+export function getCampaignInfo(character) {
+  const campaign = character.campaign ?? {};
+  const campaignInfo = {
+    ...campaign,
+    // handle Solo Adventurers specially
+    id: getCampaignId(character),
+    name: getCampaignName(character),
+  };
+  delete campaignInfo.characters;
+  return campaignInfo;
+}
+
 export function getCampaignMembersIds(character) {
   return getCampaignMembers(character).map((member) => (member.characterId));
 }

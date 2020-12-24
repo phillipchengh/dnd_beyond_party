@@ -21,7 +21,7 @@ export function ImportedCampaignInfo({
     );
   }
   const {
-    campaignId, characters, lastUpdate, name,
+    id, characters, lastUpdate, name,
   } = campaign;
   let title;
   if (areSoloAdventurers(campaign)) {
@@ -36,7 +36,7 @@ export function ImportedCampaignInfo({
       <h3>{title}</h3>
       <dl>
         <dt>Campaign ID</dt>
-        <dd>{campaignId}</dd>
+        <dd>{id}</dd>
         <dt>Last Update</dt>
         <dd>{formatDistanceToNow(lastUpdate)}</dd>
       </dl>
@@ -59,8 +59,8 @@ export function ImportedCampaignInfo({
 
 ImportedCampaignInfo.propTypes = {
   campaign: PropTypes.shape({
-    campaignId: PropTypes.number.isRequired,
     characters: PropTypes.shape({}).isRequired,
+    id: PropTypes.number.isRequired,
     lastUpdate: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
   }).isRequired,
