@@ -72,8 +72,8 @@ export function isActiveInOwnCampaign(character) {
   return isActiveInCampaign(character, getCampaignId(character));
 }
 
-export function getAvatarUrl(character) {
-  return character.avatarUrl || '/static/d20.svg';
+export function getAvatarUrl({ avatarUrl }) {
+  return avatarUrl || '/static/d20.svg';
 }
 
 export function getLink({ readonlyUrl }) {
