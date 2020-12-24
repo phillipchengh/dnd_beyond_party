@@ -14,4 +14,3 @@ export function getClassDisplay(document) {
 export function getLevelDisplay(document) {
   return document.querySelector('.ddbc-character-progression-summary__level').textContent;
 }
-// dom.window.document.getElementsByClassName('ddbc-armor-class-box__value')[0].textContent
