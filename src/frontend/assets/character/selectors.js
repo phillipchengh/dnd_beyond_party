@@ -79,3 +79,7 @@ export function getAvatarUrl({ avatarUrl }) {
 export function getLink({ readonlyUrl }) {
   return readonlyUrl;
 }
+
+export function getRaw(character) {
+  return `/character?id=${getId(character)}`;
+}

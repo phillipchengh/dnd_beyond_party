@@ -22,6 +22,7 @@ import {
 import {
   getAvatarUrl,
   getLink,
+  getRaw,
 } from '@assets/character/selectors';
 
 export function Campaigns() {
@@ -92,6 +93,8 @@ export function Campaigns() {
                   <dd><img height="60" width="60" src={getAvatarUrl(data)} alt="Avatar" /></dd>
                   <dt>Link</dt>
                   <dd><a href={getLink(data)}>Here</a></dd>
+                  <dt>Raw</dt>
+                  <dd><a href={getRaw(data)}>Here</a></dd>
                 </dl>
               </li>
             ))}
