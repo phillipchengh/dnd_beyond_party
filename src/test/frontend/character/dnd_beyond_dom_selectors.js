@@ -18,3 +18,27 @@ export function getLevelDisplay(document) {
 export function getRace(document) {
   return document.querySelector('.ddbc-character-summary__race').textContent;
 }
+
+export function getStrengthAbilityScore(document) {
+  return parseInt(document.querySelectorAll('.ddbc-ability-summary__secondary')[0].textContent, 10);
+}
+
+export function getDexterityAbilityScore(document) {
+  return parseInt(document.querySelectorAll('.ddbc-ability-summary__secondary')[1].textContent, 10);
+}
+
+export function getConstitutionAbilityScore(document) {
+  return parseInt(document.querySelectorAll('.ddbc-ability-summary__secondary')[2].textContent, 10);
+}
+
+export function getIntelligenceAbilityScore(document) {
+  return parseInt(document.querySelectorAll('.ddbc-ability-summary__secondary')[3].textContent, 10);
+}
+
+export function getWisdomAbilityScore(document) {
+  return parseInt(document.querySelectorAll('.ddbc-ability-summary__secondary')[4].textContent, 10);
+}
+
+export function getCharismaAbilityScore(document) {
+  return parseInt(document.querySelectorAll('.ddbc-ability-summary__secondary')[5].textContent, 10);
+}

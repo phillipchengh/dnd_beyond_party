@@ -18,6 +18,12 @@ import {
   getId,
   getName,
   getRace,
+  getStrengthAbilityScore,
+  getDexterityAbilityScore,
+  getConstitutionAbilityScore,
+  getIntelligenceAbilityScore,
+  getWisdomAbilityScore,
+  getCharismaAbilityScore,
 } from '@assets/character/calcs';
 import {
   getAvatarUrl,
@@ -95,6 +101,18 @@ export function Campaigns() {
                   <dd><a href={getLink(data)}>Here</a></dd>
                   <dt>Raw</dt>
                   <dd><a href={getRaw(data)}>Here</a></dd>
+                  <dt>Strength</dt>
+                  <dd>{getStrengthAbilityScore(data)}</dd>
+                  <dt>Dexterity</dt>
+                  <dd>{getDexterityAbilityScore(data)}</dd>
+                  <dt>Constitution</dt>
+                  <dd>{getConstitutionAbilityScore(data)}</dd>
+                  <dt>Intelligence</dt>
+                  <dd>{getIntelligenceAbilityScore(data)}</dd>
+                  <dt>Wisdom</dt>
+                  <dd>{getWisdomAbilityScore(data)}</dd>
+                  <dt>Charisma</dt>
+                  <dd>{getCharismaAbilityScore(data)}</dd>
                 </dl>
               </li>
             ))}
