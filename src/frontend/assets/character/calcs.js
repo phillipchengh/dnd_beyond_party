@@ -12,6 +12,13 @@ export function getName({ name }) {
   return name;
 }
 
+// for convenient debugging these calcs
+// eslint-disable-next-line no-unused-vars
+function debug(character, key, value) {
+  // eslint-disable-next-line no-console
+  console.log(`${getName(character)} | ${key} | ${JSON.stringify(value)}`);
+}
+
 export function getClassDisplay({ classes }) {
   // check if at least 1 class
   // could be newbie character for example
