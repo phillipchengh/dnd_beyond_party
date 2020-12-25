@@ -66,7 +66,7 @@ Testing my character calcs against D&D Beyond archived pages\n\
 `;
 
 describe(DESCRIBE_TEST, () => {
-  test.concurrent.each(mhtFiles)('%#) Processing %s', async (mhtFile) => {
+  test.each(mhtFiles)('%#) Processing %s', async (mhtFile) => {
     // document object used for scraping the html inside it
     const document = loadDdbDocument(mhtFile);
     // get the character id scraped from the .mht file
