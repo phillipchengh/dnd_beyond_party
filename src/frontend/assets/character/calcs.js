@@ -236,6 +236,7 @@ function getAbilityScore(character, abilityId) {
   abilitySets.forEach((abilitySet) => {
     abilityScore = Math.max(abilityScore, abilitySet);
   });
+  // don't go below 0 for ability scores
   abilityScore = Math.max(abilityScore, ABILITY_SCORE_DEFAULT_MIN);
   return abilityScore;
 }
