@@ -36,13 +36,17 @@ export function getClassDisplay({ classes }) {
   return [startingClassDisplay, ...multiClassDisplays].join(' / ');
 }
 
+function getTotalLevel({ classes }) {
+  return classes.reduce((totalLevel, { level }) => (
+    totalLevel + level
+  ), 0);
+}
+
 export function getLevelDisplay({ classes }) {
   if (!classes.length) {
     return 'Level 0';
   }
-  return `Level ${classes.reduce((totalLevel, { level }) => (
-    totalLevel + level
-  ), 0)}`;
+  return `Level ${getTotalLevel({ classes })}`;
 }
 
 export function getRace({ race }) {
@@ -50,6 +54,14 @@ export function getRace({ race }) {
     return '';
   }
   return race.fullName || race.baseName;
+}
+
+function getProficiencyBonus(character) {
+  return Math.floor((getTotalLevel(character) - 1) / 4) + 2;
+}
+
+export function getProficiencyBonusDisplay(character) {
+  return `+${getProficiencyBonus(character)}`;
 }
 
 const STRENGTH_ID = 1;
