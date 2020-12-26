@@ -59,6 +59,7 @@ const INTELLIGENCE_ID = 4;
 const WISDOM_ID = 5;
 const CHARISMA_ID = 6;
 const ABILITY_SCORE_DEFAULT_MAX = 20;
+const ABILITY_SCORE_DEFAULT_MIN = 0;
 
 // applies modifier in the second argument into current modifiers matching the ability id
 // returns null if no modifiers applied, this signals if the modifier actually was applied or not
@@ -235,6 +236,7 @@ function getAbilityScore(character, abilityId) {
   abilitySets.forEach((abilitySet) => {
     abilityScore = Math.max(abilityScore, abilitySet);
   });
+  abilityScore = Math.max(abilityScore, ABILITY_SCORE_DEFAULT_MIN);
   return abilityScore;
 }
 
