@@ -60,7 +60,8 @@ const WISDOM_ID = 5;
 const CHARISMA_ID = 6;
 const ABILITY_SCORE_DEFAULT_MAX = 20;
 
-// applies modifier in the second modifier into current set modifiers matching the ability id
+// applies modifier in the second argument into current modifiers matching the ability id
+// returns null if no modifiers applied, this signals if the modifier actually was applied or not
 function applyAbilityModifiers(modifiers, {
   entityId, statId, type, value,
 }, abilityId) {
@@ -68,12 +69,57 @@ function applyAbilityModifiers(modifiers, {
   // ??? handle restricted bonuses
   if (entityId === abilityId && type === 'bonus') {
     appliedAbilityModifiers.abilityBonus += value;
-  } else if (entityId === abilityId && type === 'set') {
-    appliedAbilityModifiers.abilitySets.push(value);
-  } else if (statId === abilityId && type === 'bonus') {
-    appliedAbilityModifiers.maxBonuses.push(value);
+    return appliedAbilityModifiers;
   }
-  return appliedAbilityModifiers;
+  if (entityId === abilityId && type === 'set') {
+    appliedAbilityModifiers.abilitySets.push(value);
+    return appliedAbilityModifiers;
+  }
+  if (statId === abilityId && type === 'bonus') {
+    appliedAbilityModifiers.maxBonuses.push(value);
+    return appliedAbilityModifiers;
+  }
+  return null;
+}
+
+// matching examples
+// modifiers.background[].componentId === background.definition.id
+// modifiers.background[].componentId === customBackground.id
+function componentIdInBackground(character, componentId) {
+  return (
+    character.background.definition.id === componentId
+    || character.background.customBackground.id === componentId
+  );
+}
+
+// matching examples
+// modifiers.class[].componentId === classes[].classFeatures[].definition.id
+// modifiers.class[].componentId === classes[].subclassDefinition.classFeatures[].definition.id
+function componentIdInClasses(character, componentId) {
+  return (
+    character.classes.find(
+      ({ classFeatures, subclassDefinition }) => (
+        classFeatures.find(
+          ({ definition: { id } }) => (id === componentId),
+        )
+        || !!subclassDefinition?.classFeatures.find(
+          ({ definition: { id } }) => (id === componentId),
+        )
+      ),
+    )
+  );
+}
+
+// matching example
+// modifiers.feat[].componentId === feats[].definition.id
+function componentIdInFeats(character, componentId) {
+  return character.feats.find(({ definition: { id } }) => (id === componentId));
+}
+
+// matching example
+// modifiers.race[].componentId === race.racialTraits[].definition.id
+function componentIdInRace(character, componentId) {
+  return !!character.race.racialTraits?.find(({ definition: { id } }) => (id === componentId));
 }
 
 function getAbilityScore(character, abilityId) {
@@ -94,25 +140,64 @@ function getAbilityScore(character, abilityId) {
   const bonusValue = character.bonusStats.find(({ id }) => (id === abilityId))?.value ?? 0;
   abilityScore = statValue + bonusValue;
 
-  // gather all modifiers under character.modifiers except for items
-  // these include background, class, condition, feat, race
-  // they are statically set unlike items, so i believe i can assume they are applied
-  const staticModifiers = Object.entries(
-    character.modifiers,
-  ).reduce(
-    (allModifiers, [modifierType, typeModifiers]) => (
-      modifierType !== 'item' ? allModifiers.concat(typeModifiers) : allModifiers
-    ), [],
-  ).reduce((currentModifiers, modifier) => (
-    applyAbilityModifiers(currentModifiers, modifier, abilityId)
-  ), {
+  // iterate over all modifiers under character.modifiers
+  // calculations that use modifiers can be reduced down to these properties
+  let activeModifiers = {
     abilityBonus: 0,
     abilitySets: [],
     maxBonuses: [],
-  });
+  };
+
+  // i assume background, class, feat, race are applied if their componentId is found
+  // componentId seems to source the feature/component granting the modifier
+  // ??? checking the component tells us to apply the modifier or not
+  // i.e. sometimes the component is just a character option, not a modifier in effect
+  // https://dndbeyond.com/characters/3 is an example
+  // that guy has wisdom-score as an optional modifier, but isn't actually in effect
+  // check for componentId last, because they could be an expensive operation
+
+  // componentId matchers
+  // modifiers.race[].componentId === race.racialTraits[].definition.id
+  // modifiers.class[].componentId === classes[].classFeatures[].definition.id
+  // modifiers.class[].componentId === classes[].subclassDefinition.classFeatures[].definition.id
+  // modifiers.feat[].componentId === feats[].definition.id
+
+  // ??? do conditions matter for ability score?
+
+  activeModifiers = character.modifiers.background.reduce((currentModifiers, modifier) => {
+    const newModifiers = applyAbilityModifiers(currentModifiers, modifier, abilityId);
+    if (newModifiers && componentIdInBackground(character, modifier.componentId)) {
+      return newModifiers;
+    }
+    return currentModifiers;
+  }, activeModifiers);
+
+  activeModifiers = character.modifiers.class.reduce((currentModifiers, modifier) => {
+    const newModifiers = applyAbilityModifiers(currentModifiers, modifier, abilityId);
+    if (newModifiers && componentIdInClasses(character, modifier.componentId)) {
+      return newModifiers;
+    }
+    return currentModifiers;
+  }, activeModifiers);
+
+  activeModifiers = character.modifiers.feat.reduce((currentModifiers, modifier) => {
+    const newModifiers = applyAbilityModifiers(currentModifiers, modifier, abilityId);
+    if (newModifiers && componentIdInFeats(character, modifier.componentId)) {
+      return newModifiers;
+    }
+    return currentModifiers;
+  }, activeModifiers);
+
+  activeModifiers = character.modifiers.race.reduce((currentModifiers, modifier) => {
+    const newModifiers = applyAbilityModifiers(currentModifiers, modifier, abilityId);
+    if (newModifiers && componentIdInRace(character, modifier.componentId)) {
+      return newModifiers;
+    }
+    return currentModifiers;
+  }, activeModifiers);
 
   // items have grantedModifiers, but we need to check if they're equipped and attunement rules
-  const activeModifiers = character.inventory.reduce((currentModifiers, {
+  activeModifiers = character.inventory.reduce((currentModifiers, {
     equipped, isAttuned, definition: {
       grantedModifiers,
     },
@@ -126,9 +211,10 @@ function getAbilityScore(character, abilityId) {
       if (requiresAttunement && !isAttuned) {
         return currentModifiersInner;
       }
-      return applyAbilityModifiers(currentModifiersInner, modifier, abilityId);
+      const newModifier = applyAbilityModifiers(currentModifiersInner, modifier, abilityId);
+      return newModifier ?? currentModifiersInner;
     }, currentModifiers);
-  }, staticModifiers);
+  }, activeModifiers);
 
   const {
     abilityBonus,
