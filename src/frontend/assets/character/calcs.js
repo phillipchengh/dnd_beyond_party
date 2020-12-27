@@ -129,6 +129,11 @@ function componentIdInFeats(character, componentId) {
   return character.feats.find(({ definition: { id } }) => (id === componentId));
 }
 
+// unsure if we need this
+// function componentIdInConditions(character, componentId) {
+//   return character.conditions.find({ id } => (id === componentId));
+// }
+
 // matching example
 // modifiers.race[].componentId === race.racialTraits[].definition.id
 function componentIdInRace(character, componentId) {
