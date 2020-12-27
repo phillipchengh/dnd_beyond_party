@@ -46,3 +46,27 @@ export function getWisdomAbilityScore(document) {
 export function getCharismaAbilityScore(document) {
   return parseInt(document.querySelectorAll('.ddbc-ability-summary__secondary')[5].textContent, 10);
 }
+
+export function getStrengthModifierDisplay(document) {
+  return document.querySelectorAll('.ddbc-ability-summary__primary')[0].textContent;
+}
+
+export function getDexterityModifierDisplay(document) {
+  return document.querySelectorAll('.ddbc-ability-summary__primary')[1].textContent;
+}
+
+export function getConstitutionModifierDisplay(document) {
+  return document.querySelectorAll('.ddbc-ability-summary__primary')[2].textContent;
+}
+
+export function getIntelligenceModifierDisplay(document) {
+  return document.querySelectorAll('.ddbc-ability-summary__primary')[3].textContent;
+}
+
+export function getWisdomModifierDisplay(document) {
+  return document.querySelectorAll('.ddbc-ability-summary__primary')[4].textContent;
+}
+
+export function getCharismaModifierDisplay(document) {
+  return document.querySelectorAll('.ddbc-ability-summary__primary')[5].textContent;
+}

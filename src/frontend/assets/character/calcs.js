@@ -281,3 +281,63 @@ export function getWisdomAbilityScore(character) {
 export function getCharismaAbilityScore(character) {
   return getAbilityScore(character, CHARISMA_ID);
 }
+
+function calculateModifier(abilityScore) {
+  return Math.floor(abilityScore / 2) - 5;
+}
+
+function addSignDisplay(modifier) {
+  if (modifier < 0) {
+    // a negative number already has a -
+    return `${modifier}`;
+  }
+  return `+${modifier}`;
+}
+
+function getStrengthModifier(character) {
+  return calculateModifier(getStrengthAbilityScore(character));
+}
+
+function getDexterityModifier(character) {
+  return calculateModifier(getDexterityAbilityScore(character));
+}
+
+function getConstitutionModifier(character) {
+  return calculateModifier(getConstitutionAbilityScore(character));
+}
+
+function getIntelligenceModifier(character) {
+  return calculateModifier(getIntelligenceAbilityScore(character));
+}
+
+function getWisdomModifier(character) {
+  return calculateModifier(getWisdomAbilityScore(character));
+}
+
+function getCharismaModifier(character) {
+  return calculateModifier(getCharismaAbilityScore(character));
+}
+
+export function getStrengthModifierDisplay(character) {
+  return addSignDisplay(getStrengthModifier(character));
+}
+
+export function getDexterityModifierDisplay(character) {
+  return addSignDisplay(getDexterityModifier(character));
+}
+
+export function getConstitutionModifierDisplay(character) {
+  return addSignDisplay(getConstitutionModifier(character));
+}
+
+export function getIntelligenceModifierDisplay(character) {
+  return addSignDisplay(getIntelligenceModifier(character));
+}
+
+export function getWisdomModifierDisplay(character) {
+  return addSignDisplay(getWisdomModifier(character));
+}
+
+export function getCharismaModifierDisplay(character) {
+  return addSignDisplay(getCharismaModifier(character));
+}
