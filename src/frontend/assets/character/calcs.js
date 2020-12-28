@@ -366,36 +366,36 @@ function applyProficiencies(modifiers, { subType, type }, skill) {
 }
 
 function getSkillProficiencyModifier(character, skill) {
-  let proficiencies = character.modifiers.background.reduce((currentModifiers, modifier) => {
-    const newModifiers = applyProficiencies(currentModifiers, modifier, skill);
-    if (newModifiers && componentIdInBackground(character, modifier.componentId)) {
-      return newModifiers;
+  let proficiencies = character.modifiers.background.reduce((currentProficiencies, modifier) => {
+    const newProficiencies = applyProficiencies(currentProficiencies, modifier, skill);
+    if (newProficiencies && componentIdInBackground(character, modifier.componentId)) {
+      return newProficiencies;
     }
-    return currentModifiers;
+    return currentProficiencies;
   }, new Set());
 
-  proficiencies = character.modifiers.class.reduce((currentModifiers, modifier) => {
-    const newModifiers = applyProficiencies(currentModifiers, modifier, skill);
-    if (newModifiers && componentIdInClasses(character, modifier.componentId)) {
-      return newModifiers;
+  proficiencies = character.modifiers.class.reduce((currentProficiencies, modifier) => {
+    const newProficiencies = applyProficiencies(currentProficiencies, modifier, skill);
+    if (newProficiencies && componentIdInClasses(character, modifier.componentId)) {
+      return newProficiencies;
     }
-    return currentModifiers;
+    return currentProficiencies;
   }, proficiencies);
 
-  proficiencies = character.modifiers.feat.reduce((currentModifiers, modifier) => {
-    const newModifiers = applyProficiencies(currentModifiers, modifier, skill);
-    if (newModifiers && componentIdInFeats(character, modifier.componentId)) {
-      return newModifiers;
+  proficiencies = character.modifiers.feat.reduce((currentProficiencies, modifier) => {
+    const newProficiencies = applyProficiencies(currentProficiencies, modifier, skill);
+    if (newProficiencies && componentIdInFeats(character, modifier.componentId)) {
+      return newProficiencies;
     }
-    return currentModifiers;
+    return currentProficiencies;
   }, proficiencies);
 
-  proficiencies = character.modifiers.race.reduce((currentModifiers, modifier) => {
-    const newModifiers = applyProficiencies(currentModifiers, modifier, skill);
-    if (newModifiers && componentIdInRace(character, modifier.componentId)) {
-      return newModifiers;
+  proficiencies = character.modifiers.race.reduce((currentProficiencies, modifier) => {
+    const newProficiencies = applyProficiencies(currentProficiencies, modifier, skill);
+    if (newProficiencies && componentIdInRace(character, modifier.componentId)) {
+      return newProficiencies;
     }
-    return currentModifiers;
+    return currentProficiencies;
   }, proficiencies);
 
   const proficiencyBonus = getProficiencyBonus(character);
