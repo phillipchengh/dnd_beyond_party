@@ -24,6 +24,9 @@ import {
   getIntelligenceAbilityScore,
   getWisdomAbilityScore,
   getCharismaAbilityScore,
+  getPassivePerception,
+  getPassiveInvestigation,
+  getPassiveInsight,
 } from '@assets/character/calcs';
 import {
   getAvatarUrl,
@@ -113,6 +116,12 @@ export function Campaigns() {
                   <dd>{getWisdomAbilityScore(data)}</dd>
                   <dt>Charisma</dt>
                   <dd>{getCharismaAbilityScore(data)}</dd>
+                  <dt>Passive Perception</dt>
+                  <dd>{getPassivePerception(data)}</dd>
+                  <dt>Passive Investigation</dt>
+                  <dd>{getPassiveInvestigation(data)}</dd>
+                  <dt>Passive Insight</dt>
+                  <dd>{getPassiveInsight(data)}</dd>
                 </dl>
               </li>
             ))}

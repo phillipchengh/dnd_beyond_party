@@ -584,3 +584,108 @@ function getSurvivalModifier(character) {
 export function getSurvivalModifierDisplay(character) {
   return addSignDisplay(getSurvivalModifier(character));
 }
+
+// functions very similarly to applyAbilityModifiers, but without maxes
+function applyPassiveModifiers(modifiers, { subType, type, value }, skill) {
+  const appliedAbilityModifiers = { ...modifiers };
+  // ??? handle restricted bonuses
+  if (subType === skill && type === 'bonus') {
+    appliedAbilityModifiers.passiveBonus += value;
+    return appliedAbilityModifiers;
+  }
+  if (subType === skill && type === 'set') {
+    appliedAbilityModifiers.passiveSets.push(value);
+    return appliedAbilityModifiers;
+  }
+  return null;
+}
+
+// functions very similarly to ability score, but applies modifiers to the baseScore number
+function applyPassiveBonus(character, baseScore, skill) {
+  let passiveScore = baseScore;
+
+  let activeModifiers = {
+    passiveBonus: 0,
+    passiveSets: [],
+  };
+
+  activeModifiers = character.modifiers.background.reduce((currentModifiers, modifier) => {
+    const newModifiers = applyPassiveModifiers(currentModifiers, modifier, skill);
+    if (newModifiers && componentIdInBackground(character, modifier.componentId)) {
+      return newModifiers;
+    }
+    return currentModifiers;
+  }, activeModifiers);
+
+  activeModifiers = character.modifiers.class.reduce((currentModifiers, modifier) => {
+    const newModifiers = applyPassiveModifiers(currentModifiers, modifier, skill);
+    if (newModifiers && componentIdInClasses(character, modifier.componentId)) {
+      return newModifiers;
+    }
+    return currentModifiers;
+  }, activeModifiers);
+
+  activeModifiers = character.modifiers.feat.reduce((currentModifiers, modifier) => {
+    const newModifiers = applyPassiveModifiers(currentModifiers, modifier, skill);
+    if (newModifiers && componentIdInFeats(character, modifier.componentId)) {
+      return newModifiers;
+    }
+    return currentModifiers;
+  }, activeModifiers);
+
+  activeModifiers = character.modifiers.race.reduce((currentModifiers, modifier) => {
+    const newModifiers = applyPassiveModifiers(currentModifiers, modifier, skill);
+    if (newModifiers && componentIdInRace(character, modifier.componentId)) {
+      return newModifiers;
+    }
+    return currentModifiers;
+  }, activeModifiers);
+
+  // items have grantedModifiers, but we need to check if they're equipped and attunement rules
+  activeModifiers = character.inventory.reduce((currentModifiers, {
+    equipped, isAttuned, definition: {
+      grantedModifiers,
+    },
+  }) => {
+    // ??? an item can only apply modifiers if they're equipped
+    if (!equipped) {
+      return currentModifiers;
+    }
+    return grantedModifiers.reduce((currentModifiersInner, modifier) => {
+      const { requiresAttunement } = modifier;
+      if (requiresAttunement && !isAttuned) {
+        return currentModifiersInner;
+      }
+      const newModifier = applyPassiveModifiers(currentModifiersInner, modifier, skill);
+      return newModifier ?? currentModifiersInner;
+    }, currentModifiers);
+  }, activeModifiers);
+
+  const {
+    passiveBonus,
+    passiveSets,
+  } = activeModifiers;
+
+  // add all the bonuses we've found
+  passiveScore += passiveBonus;
+  // there can be modifiers that directly set the passive score
+  // check if any output a better stat than the calculated score
+  passiveSets.forEach((passiveSet) => {
+    passiveScore = Math.max(passiveScore, passiveSet);
+  });
+
+  return passiveScore;
+}
+
+// passive scores are 10 + skill modifier + any bonuses
+export function getPassivePerception(character) {
+  return applyPassiveBonus(character, 10 + getPerceptionModifier(character), 'passive-perception');
+}
+
+export function getPassiveInvestigation(character) {
+  return applyPassiveBonus(character, 10 + getInvestigationModifier(character), 'passive-investigation');
+}
+
+export function getPassiveInsight(character) {
+  return applyPassiveBonus(character, 10 + getInsightModifier(character), 'passive-insight');
+}

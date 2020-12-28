@@ -146,3 +146,15 @@ export function getStealthModifierDisplay(document) {
 export function getSurvivalModifierDisplay(document) {
   return document.querySelectorAll('.ct-skills__col--modifier')[18].textContent;
 }
+
+export function getPassivePerception(document) {
+  return parseInt(document.querySelectorAll('.ct-senses__callout-value')[0].textContent, 10);
+}
+
+export function getPassiveInvestigation(document) {
+  return parseInt(document.querySelectorAll('.ct-senses__callout-value')[1].textContent, 10);
+}
+
+export function getPassiveInsight(document) {
+  return parseInt(document.querySelectorAll('.ct-senses__callout-value')[2].textContent, 10);
+}
