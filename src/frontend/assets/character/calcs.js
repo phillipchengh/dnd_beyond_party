@@ -116,7 +116,7 @@ function componentIdInClasses(character, componentId) {
           ({ definition: { id } }) => (id === componentId),
         )
         || !!subclassDefinition?.classFeatures.find(
-          ({ definition: { id } }) => (id === componentId),
+          ({ id }) => (id === componentId),
         )
       ),
     )
