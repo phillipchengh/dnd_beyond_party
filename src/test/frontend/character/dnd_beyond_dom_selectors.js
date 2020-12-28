@@ -70,3 +70,79 @@ export function getWisdomModifierDisplay(document) {
 export function getCharismaModifierDisplay(document) {
   return document.querySelectorAll('.ddbc-ability-summary__primary')[5].textContent;
 }
+
+export function getInitiativeModifierDisplay(document) {
+  return document.querySelector('.ct-initiative-box__value').textContent;
+}
+
+export function getAcrobaticsModifierDisplay(document) {
+  return document.querySelectorAll('.ct-skills__col--modifier')[1].textContent;
+}
+
+export function getAnimalHandlingModifierDisplay(document) {
+  return document.querySelectorAll('.ct-skills__col--modifier')[2].textContent;
+}
+
+export function getArcanaModifierDisplay(document) {
+  return document.querySelectorAll('.ct-skills__col--modifier')[3].textContent;
+}
+
+export function getAthleticsModifierDisplay(document) {
+  return document.querySelectorAll('.ct-skills__col--modifier')[4].textContent;
+}
+
+export function getDeceptionModifierDisplay(document) {
+  return document.querySelectorAll('.ct-skills__col--modifier')[5].textContent;
+}
+
+export function getHistoryModifierDisplay(document) {
+  return document.querySelectorAll('.ct-skills__col--modifier')[6].textContent;
+}
+
+export function getInsightModifierDisplay(document) {
+  return document.querySelectorAll('.ct-skills__col--modifier')[7].textContent;
+}
+
+export function getIntimidationModifierDisplay(document) {
+  return document.querySelectorAll('.ct-skills__col--modifier')[8].textContent;
+}
+
+export function getInvestigationModifierDisplay(document) {
+  return document.querySelectorAll('.ct-skills__col--modifier')[9].textContent;
+}
+
+export function getMedicineModifierDisplay(document) {
+  return document.querySelectorAll('.ct-skills__col--modifier')[10].textContent;
+}
+
+export function getNatureModifierDisplay(document) {
+  return document.querySelectorAll('.ct-skills__col--modifier')[11].textContent;
+}
+
+export function getPerceptionModifierDisplay(document) {
+  return document.querySelectorAll('.ct-skills__col--modifier')[12].textContent;
+}
+
+export function getPerformanceModifierDisplay(document) {
+  return document.querySelectorAll('.ct-skills__col--modifier')[13].textContent;
+}
+
+export function getPersuasionModifierDisplay(document) {
+  return document.querySelectorAll('.ct-skills__col--modifier')[14].textContent;
+}
+
+export function getReligionModifierDisplay(document) {
+  return document.querySelectorAll('.ct-skills__col--modifier')[15].textContent;
+}
+
+export function getSleightOfHandModifierDisplay(document) {
+  return document.querySelectorAll('.ct-skills__col--modifier')[16].textContent;
+}
+
+export function getStealthModifierDisplay(document) {
+  return document.querySelectorAll('.ct-skills__col--modifier')[17].textContent;
+}
+
+export function getSurvivalModifierDisplay(document) {
+  return document.querySelectorAll('.ct-skills__col--modifier')[18].textContent;
+}

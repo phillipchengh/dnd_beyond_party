@@ -341,3 +341,249 @@ export function getWisdomModifierDisplay(character) {
 export function getCharismaModifierDisplay(character) {
   return addSignDisplay(getCharismaModifier(character));
 }
+
+const PROFICIENCY = 'proficiency';
+const HALF_PROFICIENCY = 'half-proficiency';
+const HALF_PROFICIENCY_ROUND_UP = 'half-proficiency-round-up';
+const EXPERTISE = 'expertise';
+
+const PROFICIENCIES = [
+  HALF_PROFICIENCY,
+  HALF_PROFICIENCY_ROUND_UP,
+  PROFICIENCY,
+  EXPERTISE,
+];
+
+function applyProficiencies(modifiers, { subType, type }, skill) {
+  if (
+    PROFICIENCIES.includes(type) && (subType === skill || subType === 'ability-checks')
+  ) {
+    const newProficiencies = new Set(modifiers);
+    newProficiencies.add(type);
+    return newProficiencies;
+  }
+  return null;
+}
+
+function getSkillProficiencyModifier(character, skill) {
+  let proficiencies = character.modifiers.background.reduce((currentModifiers, modifier) => {
+    const newModifiers = applyProficiencies(currentModifiers, modifier, skill);
+    if (newModifiers && componentIdInBackground(character, modifier.componentId)) {
+      return newModifiers;
+    }
+    return currentModifiers;
+  }, new Set());
+
+  proficiencies = character.modifiers.class.reduce((currentModifiers, modifier) => {
+    const newModifiers = applyProficiencies(currentModifiers, modifier, skill);
+    if (newModifiers && componentIdInClasses(character, modifier.componentId)) {
+      return newModifiers;
+    }
+    return currentModifiers;
+  }, proficiencies);
+
+  proficiencies = character.modifiers.feat.reduce((currentModifiers, modifier) => {
+    const newModifiers = applyProficiencies(currentModifiers, modifier, skill);
+    if (newModifiers && componentIdInFeats(character, modifier.componentId)) {
+      return newModifiers;
+    }
+    return currentModifiers;
+  }, proficiencies);
+
+  proficiencies = character.modifiers.race.reduce((currentModifiers, modifier) => {
+    const newModifiers = applyProficiencies(currentModifiers, modifier, skill);
+    if (newModifiers && componentIdInRace(character, modifier.componentId)) {
+      if (getId(character) === 3 && skill === 'insight') {
+        debug(character, 'race modifier inside', modifier);
+      }
+      return newModifiers;
+    }
+    return currentModifiers;
+  }, proficiencies);
+
+  const proficiencyBonus = getProficiencyBonus(character);
+  let proficiencyModifier = 0;
+
+  proficiencies.forEach((proficiency) => {
+    switch (proficiency) {
+      case HALF_PROFICIENCY:
+        proficiencyModifier = Math.max(
+          proficiencyModifier, Math.floor(proficiencyBonus / 2),
+        );
+        break;
+      case HALF_PROFICIENCY_ROUND_UP:
+        proficiencyModifier = Math.max(
+          proficiencyModifier, Math.ceil(proficiencyBonus / 2),
+        );
+        break;
+      case PROFICIENCY:
+        proficiencyModifier = Math.max(proficiencyModifier, proficiencyBonus);
+        break;
+      case EXPERTISE: {
+        const expertiseBonus = proficiencies.has(
+          PROFICIENCY,
+        ) ? proficiencyBonus * 2 : proficiencyBonus;
+        proficiencyModifier = Math.max(
+          proficiencyModifier, expertiseBonus,
+        );
+        break;
+      }
+      default:
+        throw new Error('Found unknown proficiency!');
+    }
+  });
+
+  return proficiencyModifier;
+}
+
+function getInitiativeModifier(character) {
+  return getSkillProficiencyModifier(character, 'initiative') + getDexterityModifier(character);
+}
+
+export function getInitiativeModifierDisplay(character) {
+  return addSignDisplay(getInitiativeModifier(character));
+}
+
+function getAcrobaticsModifier(character) {
+  return getSkillProficiencyModifier(character, 'acrobatics') + getDexterityModifier(character);
+}
+
+export function getAcrobaticsModifierDisplay(character) {
+  return addSignDisplay(getAcrobaticsModifier(character));
+}
+
+function getAnimalHandlingModifier(character) {
+  return getSkillProficiencyModifier(character, 'animal-handling') + getWisdomModifier(character);
+}
+
+export function getAnimalHandlingModifierDisplay(character) {
+  return addSignDisplay(getAnimalHandlingModifier(character));
+}
+
+function getArcanaModifier(character) {
+  return getSkillProficiencyModifier(character, 'arcana') + getIntelligenceModifier(character);
+}
+
+export function getArcanaModifierDisplay(character) {
+  return addSignDisplay(getArcanaModifier(character));
+}
+
+function getAthleticsModifier(character) {
+  return getSkillProficiencyModifier(character, 'athletics') + getStrengthModifier(character);
+}
+
+export function getAthleticsModifierDisplay(character) {
+  return addSignDisplay(getAthleticsModifier(character));
+}
+
+function getDeceptionModifier(character) {
+  return getSkillProficiencyModifier(character, 'deception') + getCharismaModifier(character);
+}
+
+export function getDeceptionModifierDisplay(character) {
+  return addSignDisplay(getDeceptionModifier(character));
+}
+
+function getHistoryModifier(character) {
+  return getSkillProficiencyModifier(character, 'history') + getIntelligenceModifier(character);
+}
+
+export function getHistoryModifierDisplay(character) {
+  return addSignDisplay(getHistoryModifier(character));
+}
+
+function getInsightModifier(character) {
+  return getSkillProficiencyModifier(character, 'insight') + getWisdomModifier(character);
+}
+
+export function getInsightModifierDisplay(character) {
+  return addSignDisplay(getInsightModifier(character));
+}
+
+function getIntimidationModifier(character) {
+  return getSkillProficiencyModifier(character, 'intimidation') + getCharismaModifier(character);
+}
+
+export function getIntimidationModifierDisplay(character) {
+  return addSignDisplay(getIntimidationModifier(character));
+}
+
+function getInvestigationModifier(character) {
+  return getSkillProficiencyModifier(character, 'investigation') + getIntelligenceModifier(character);
+}
+
+export function getInvestigationModifierDisplay(character) {
+  return addSignDisplay(getInvestigationModifier(character));
+}
+
+function getMedicineModifier(character) {
+  return getSkillProficiencyModifier(character, 'medicine') + getWisdomModifier(character);
+}
+
+export function getMedicineModifierDisplay(character) {
+  return addSignDisplay(getMedicineModifier(character));
+}
+
+function getNatureModifier(character) {
+  return getSkillProficiencyModifier(character, 'nature') + getIntelligenceModifier(character);
+}
+
+export function getNatureModifierDisplay(character) {
+  return addSignDisplay(getNatureModifier(character));
+}
+
+function getPerceptionModifier(character) {
+  return getSkillProficiencyModifier(character, 'perception') + getWisdomModifier(character);
+}
+
+export function getPerceptionModifierDisplay(character) {
+  return addSignDisplay(getPerceptionModifier(character));
+}
+
+function getPerformanceModifier(character) {
+  return getSkillProficiencyModifier(character, 'performance') + getCharismaModifier(character);
+}
+
+export function getPerformanceModifierDisplay(character) {
+  return addSignDisplay(getPerformanceModifier(character));
+}
+
+function getPersuasionModifier(character) {
+  return getSkillProficiencyModifier(character, 'persuasion') + getCharismaModifier(character);
+}
+
+export function getPersuasionModifierDisplay(character) {
+  return addSignDisplay(getPersuasionModifier(character));
+}
+
+function getReligionModifier(character) {
+  return getSkillProficiencyModifier(character, 'religion') + getIntelligenceModifier(character);
+}
+
+export function getReligionModifierDisplay(character) {
+  return addSignDisplay(getReligionModifier(character));
+}
+
+function getSleightOfHandModifier(character) {
+  return getSkillProficiencyModifier(character, 'sleight-of-hand') + getDexterityModifier(character);
+}
+
+export function getSleightOfHandModifierDisplay(character) {
+  return addSignDisplay(getSleightOfHandModifier(character));
+}
+
+function getStealthModifier(character) {
+  return getSkillProficiencyModifier(character, 'stealth') + getDexterityModifier(character);
+}
+
+export function getStealthModifierDisplay(character) {
+  return addSignDisplay(getStealthModifier(character));
+}
+
+function getSurvivalModifier(character) {
+  return getSkillProficiencyModifier(character, 'survival') + getWisdomModifier(character);
+}
+
+export function getSurvivalModifierDisplay(character) {
+  return addSignDisplay(getSurvivalModifier(character));
+}
