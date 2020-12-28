@@ -393,9 +393,6 @@ function getSkillProficiencyModifier(character, skill) {
   proficiencies = character.modifiers.race.reduce((currentModifiers, modifier) => {
     const newModifiers = applyProficiencies(currentModifiers, modifier, skill);
     if (newModifiers && componentIdInRace(character, modifier.componentId)) {
-      if (getId(character) === 3 && skill === 'insight') {
-        debug(character, 'race modifier inside', modifier);
-      }
       return newModifiers;
     }
     return currentModifiers;
