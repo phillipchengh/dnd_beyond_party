@@ -77,3 +77,11 @@ export function getUnimportedCampaignCharacters(state, character) {
 export function getError(state) {
   return state.error;
 }
+
+export function getCharacter(state, characterId) {
+  return Object.values(getCampaigns(state)).reduce((
+    allCharacters, { characters },
+  ) => (
+    allCharacters.concat(Object.values(characters))
+  ), []).find(({ data: { id } }) => (id === characterId))?.data ?? null;
+}
