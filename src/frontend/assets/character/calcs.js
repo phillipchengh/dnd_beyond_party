@@ -362,9 +362,38 @@ const PROFICIENCIES = [
   EXPERTISE,
 ];
 
-function applyProficiencies(modifiers, { subType, type }, skill) {
+const SKILL_TYPE_ID = 1958004211;
+const ACROBATICS_ID = 3;
+const ANIMAL_HANDLING_ID = 11;
+const ARCANA_ID = 6;
+const ATHLETICS_ID = 2;
+const DECEPTION_ID = 16;
+const HISTORY_ID = 7;
+const INSIGHT_ID = 12;
+const INVESTIGATION_ID = 8;
+const INTIMIDATION_ID = 17;
+const MEDICINE_ID = 13;
+const NATURE_ID = 9;
+const PERCEPTION_ID = 14;
+const PERFORMANCE_ID = 18;
+const PERSUASION_ID = 19;
+const RELIGION_ID = 10;
+const SLEIGHT_OF_HAND_ID = 4;
+const STEALTH_ID = 5;
+const SURVIVAL_ID = 15;
+
+// TODO ??? check stuff like 'charisma-ability-checks' bonus
+function applyProficiencies(
+  modifiers, {
+    entityId, entityTypeId, subType, type,
+  }, skillId,
+) {
   if (
-    PROFICIENCIES.includes(type) && (subType === skill || subType === 'ability-checks')
+    PROFICIENCIES.includes(type)
+    && (
+      (entityId === skillId && entityTypeId === SKILL_TYPE_ID)
+      || subType === 'ability-checks'
+    )
   ) {
     const newProficiencies = new Set(modifiers);
     newProficiencies.add(type);
@@ -373,9 +402,9 @@ function applyProficiencies(modifiers, { subType, type }, skill) {
   return null;
 }
 
-function getSkillProficiencyModifier(character, skill) {
+function getSkillProficiencyModifier(character, skillId) {
   let proficiencies = character.modifiers.background.reduce((currentProficiencies, modifier) => {
-    const newProficiencies = applyProficiencies(currentProficiencies, modifier, skill);
+    const newProficiencies = applyProficiencies(currentProficiencies, modifier, skillId);
     if (newProficiencies && componentIdInBackground(character, modifier.componentId)) {
       return newProficiencies;
     }
@@ -383,7 +412,7 @@ function getSkillProficiencyModifier(character, skill) {
   }, new Set());
 
   proficiencies = character.modifiers.class.reduce((currentProficiencies, modifier) => {
-    const newProficiencies = applyProficiencies(currentProficiencies, modifier, skill);
+    const newProficiencies = applyProficiencies(currentProficiencies, modifier, skillId);
     if (newProficiencies && componentIdInClasses(character, modifier.componentId)) {
       return newProficiencies;
     }
@@ -391,7 +420,7 @@ function getSkillProficiencyModifier(character, skill) {
   }, proficiencies);
 
   proficiencies = character.modifiers.feat.reduce((currentProficiencies, modifier) => {
-    const newProficiencies = applyProficiencies(currentProficiencies, modifier, skill);
+    const newProficiencies = applyProficiencies(currentProficiencies, modifier, skillId);
     if (newProficiencies && componentIdInFeats(character, modifier.componentId)) {
       return newProficiencies;
     }
@@ -399,7 +428,7 @@ function getSkillProficiencyModifier(character, skill) {
   }, proficiencies);
 
   proficiencies = character.modifiers.race.reduce((currentProficiencies, modifier) => {
-    const newProficiencies = applyProficiencies(currentProficiencies, modifier, skill);
+    const newProficiencies = applyProficiencies(currentProficiencies, modifier, skillId);
     if (newProficiencies && componentIdInRace(character, modifier.componentId)) {
       return newProficiencies;
     }
@@ -441,16 +470,8 @@ function getSkillProficiencyModifier(character, skill) {
   return proficiencyModifier;
 }
 
-function getInitiativeModifier(character) {
-  return getSkillProficiencyModifier(character, 'initiative') + getDexterityModifier(character);
-}
-
-export function getInitiativeModifierDisplay(character) {
-  return addSignDisplay(getInitiativeModifier(character));
-}
-
 function getAcrobaticsModifier(character) {
-  return getSkillProficiencyModifier(character, 'acrobatics') + getDexterityModifier(character);
+  return getSkillProficiencyModifier(character, ACROBATICS_ID) + getDexterityModifier(character);
 }
 
 export function getAcrobaticsModifierDisplay(character) {
@@ -458,7 +479,7 @@ export function getAcrobaticsModifierDisplay(character) {
 }
 
 function getAnimalHandlingModifier(character) {
-  return getSkillProficiencyModifier(character, 'animal-handling') + getWisdomModifier(character);
+  return getSkillProficiencyModifier(character, ANIMAL_HANDLING_ID) + getWisdomModifier(character);
 }
 
 export function getAnimalHandlingModifierDisplay(character) {
@@ -466,7 +487,7 @@ export function getAnimalHandlingModifierDisplay(character) {
 }
 
 function getArcanaModifier(character) {
-  return getSkillProficiencyModifier(character, 'arcana') + getIntelligenceModifier(character);
+  return getSkillProficiencyModifier(character, ARCANA_ID) + getIntelligenceModifier(character);
 }
 
 export function getArcanaModifierDisplay(character) {
@@ -474,7 +495,7 @@ export function getArcanaModifierDisplay(character) {
 }
 
 function getAthleticsModifier(character) {
-  return getSkillProficiencyModifier(character, 'athletics') + getStrengthModifier(character);
+  return getSkillProficiencyModifier(character, ATHLETICS_ID) + getStrengthModifier(character);
 }
 
 export function getAthleticsModifierDisplay(character) {
@@ -482,7 +503,7 @@ export function getAthleticsModifierDisplay(character) {
 }
 
 function getDeceptionModifier(character) {
-  return getSkillProficiencyModifier(character, 'deception') + getCharismaModifier(character);
+  return getSkillProficiencyModifier(character, DECEPTION_ID) + getCharismaModifier(character);
 }
 
 export function getDeceptionModifierDisplay(character) {
@@ -490,7 +511,7 @@ export function getDeceptionModifierDisplay(character) {
 }
 
 function getHistoryModifier(character) {
-  return getSkillProficiencyModifier(character, 'history') + getIntelligenceModifier(character);
+  return getSkillProficiencyModifier(character, HISTORY_ID) + getIntelligenceModifier(character);
 }
 
 export function getHistoryModifierDisplay(character) {
@@ -498,7 +519,7 @@ export function getHistoryModifierDisplay(character) {
 }
 
 function getInsightModifier(character) {
-  return getSkillProficiencyModifier(character, 'insight') + getWisdomModifier(character);
+  return getSkillProficiencyModifier(character, INSIGHT_ID) + getWisdomModifier(character);
 }
 
 export function getInsightModifierDisplay(character) {
@@ -506,7 +527,7 @@ export function getInsightModifierDisplay(character) {
 }
 
 function getIntimidationModifier(character) {
-  return getSkillProficiencyModifier(character, 'intimidation') + getCharismaModifier(character);
+  return getSkillProficiencyModifier(character, INTIMIDATION_ID) + getCharismaModifier(character);
 }
 
 export function getIntimidationModifierDisplay(character) {
@@ -514,7 +535,8 @@ export function getIntimidationModifierDisplay(character) {
 }
 
 function getInvestigationModifier(character) {
-  return getSkillProficiencyModifier(character, 'investigation') + getIntelligenceModifier(character);
+  // eslint-disable-next-line max-len
+  return getSkillProficiencyModifier(character, INVESTIGATION_ID) + getIntelligenceModifier(character);
 }
 
 export function getInvestigationModifierDisplay(character) {
@@ -522,7 +544,7 @@ export function getInvestigationModifierDisplay(character) {
 }
 
 function getMedicineModifier(character) {
-  return getSkillProficiencyModifier(character, 'medicine') + getWisdomModifier(character);
+  return getSkillProficiencyModifier(character, MEDICINE_ID) + getWisdomModifier(character);
 }
 
 export function getMedicineModifierDisplay(character) {
@@ -530,7 +552,7 @@ export function getMedicineModifierDisplay(character) {
 }
 
 function getNatureModifier(character) {
-  return getSkillProficiencyModifier(character, 'nature') + getIntelligenceModifier(character);
+  return getSkillProficiencyModifier(character, NATURE_ID) + getIntelligenceModifier(character);
 }
 
 export function getNatureModifierDisplay(character) {
@@ -538,7 +560,7 @@ export function getNatureModifierDisplay(character) {
 }
 
 function getPerceptionModifier(character) {
-  return getSkillProficiencyModifier(character, 'perception') + getWisdomModifier(character);
+  return getSkillProficiencyModifier(character, PERCEPTION_ID) + getWisdomModifier(character);
 }
 
 export function getPerceptionModifierDisplay(character) {
@@ -546,7 +568,7 @@ export function getPerceptionModifierDisplay(character) {
 }
 
 function getPerformanceModifier(character) {
-  return getSkillProficiencyModifier(character, 'performance') + getCharismaModifier(character);
+  return getSkillProficiencyModifier(character, PERFORMANCE_ID) + getCharismaModifier(character);
 }
 
 export function getPerformanceModifierDisplay(character) {
@@ -554,7 +576,7 @@ export function getPerformanceModifierDisplay(character) {
 }
 
 function getPersuasionModifier(character) {
-  return getSkillProficiencyModifier(character, 'persuasion') + getCharismaModifier(character);
+  return getSkillProficiencyModifier(character, PERSUASION_ID) + getCharismaModifier(character);
 }
 
 export function getPersuasionModifierDisplay(character) {
@@ -562,7 +584,7 @@ export function getPersuasionModifierDisplay(character) {
 }
 
 function getReligionModifier(character) {
-  return getSkillProficiencyModifier(character, 'religion') + getIntelligenceModifier(character);
+  return getSkillProficiencyModifier(character, RELIGION_ID) + getIntelligenceModifier(character);
 }
 
 export function getReligionModifierDisplay(character) {
@@ -570,7 +592,8 @@ export function getReligionModifierDisplay(character) {
 }
 
 function getSleightOfHandModifier(character) {
-  return getSkillProficiencyModifier(character, 'sleight-of-hand') + getDexterityModifier(character);
+  // eslint-disable-next-line max-len
+  return getSkillProficiencyModifier(character, SLEIGHT_OF_HAND_ID) + getDexterityModifier(character);
 }
 
 export function getSleightOfHandModifierDisplay(character) {
@@ -578,7 +601,7 @@ export function getSleightOfHandModifierDisplay(character) {
 }
 
 function getStealthModifier(character) {
-  return getSkillProficiencyModifier(character, 'stealth') + getDexterityModifier(character);
+  return getSkillProficiencyModifier(character, STEALTH_ID) + getDexterityModifier(character);
 }
 
 export function getStealthModifierDisplay(character) {
@@ -586,11 +609,19 @@ export function getStealthModifierDisplay(character) {
 }
 
 function getSurvivalModifier(character) {
-  return getSkillProficiencyModifier(character, 'survival') + getWisdomModifier(character);
+  return getSkillProficiencyModifier(character, SURVIVAL_ID) + getWisdomModifier(character);
 }
 
 export function getSurvivalModifierDisplay(character) {
   return addSignDisplay(getSurvivalModifier(character));
+}
+
+function getInitiativeModifier(character) {
+  return getDexterityModifier(character);
+}
+
+export function getInitiativeModifierDisplay(character) {
+  return addSignDisplay(getInitiativeModifier(character));
 }
 
 // functions very similarly to applyAbilityModifiers, but without maxes
