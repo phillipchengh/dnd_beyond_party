@@ -108,6 +108,7 @@ function componentIdInBackground(character, componentId) {
 // matching examples
 // modifiers.class[].componentId === classes[].classFeatures[].definition.id
 // modifiers.class[].componentId === classes[].subclassDefinition.classFeatures[].definition.id
+// modifiers.class[].componentId === optionalClassFeatures[].classFeatureId
 function componentIdInClasses(character, componentId) {
   return (
     character.classes.find(
@@ -119,6 +120,9 @@ function componentIdInClasses(character, componentId) {
           ({ id }) => (id === componentId),
         )
       ),
+    )
+    || character.optionalClassFeatures.find(
+      ({ classFeatureId }) => (classFeatureId === componentId),
     )
   );
 }
@@ -136,8 +140,12 @@ function componentIdInFeats(character, componentId) {
 
 // matching example
 // modifiers.race[].componentId === race.racialTraits[].definition.id
+// modifiers.race[].componentId === optionalOrigins[].racialTraitId
 function componentIdInRace(character, componentId) {
-  return !!character.race.racialTraits?.find(({ definition: { id } }) => (id === componentId));
+  return (
+    !!character.race.racialTraits?.find(({ definition: { id } }) => (id === componentId))
+    || character.optionalOrigins.find(({ racialTraitId }) => (racialTraitId === componentId))
+  );
 }
 
 function getAbilityScore(character, abilityId) {
