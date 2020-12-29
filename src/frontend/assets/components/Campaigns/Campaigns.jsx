@@ -27,6 +27,7 @@ import {
   getPassivePerception,
   getPassiveInvestigation,
   getPassiveInsight,
+  getArmorClass,
 } from '@assets/character/calcs';
 import {
   getAvatarUrl,
@@ -122,6 +123,8 @@ export function Campaigns() {
                   <dd>{getPassiveInvestigation(data)}</dd>
                   <dt>Passive Insight</dt>
                   <dd>{getPassiveInsight(data)}</dd>
+                  <dt>Armor Class</dt>
+                  <dd>{getArmorClass(data)}</dd>
                 </dl>
               </li>
             ))}

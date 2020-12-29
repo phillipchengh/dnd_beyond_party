@@ -158,3 +158,7 @@ export function getPassiveInvestigation(document) {
 export function getPassiveInsight(document) {
   return parseInt(document.querySelectorAll('.ct-senses__callout-value')[2].textContent, 10);
 }
+
+export function getArmorClass(document) {
+  return parseInt(document.querySelector('.ddbc-armor-class-box__value').textContent, 10);
+}

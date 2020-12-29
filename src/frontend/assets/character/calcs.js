@@ -697,3 +697,296 @@ export function getPassiveInvestigation(character) {
 export function getPassiveInsight(character) {
   return applyPassiveBonus(character, 10 + getInsightModifier(character), 'passive-insight');
 }
+
+function getAbilityScoreModifierById(character, abilityId) {
+  return calculateModifier(getAbilityScore(character, abilityId));
+}
+
+const CHARACTER_VALUE_OVERRIDE_AC_ID = 1;
+const CHARACTER_VALUE_OVERRIDE_BASE_ARMOR_DEX_ID = 4;
+const CHARACTER_VALUE_ADDITIONAL_MAGIC_BONUS_ID = 2;
+const CHARACTER_VALUE_ADDITIONAL_MISC_BONUS_ID = 3;
+const CHARACTER_VALUE_DUAL_WIELD_ID = 18;
+
+// gets manually set values under characterValues
+function getCharacterValueByTypeId(character, matchId) {
+  return character.characterValues.find(({ typeId }) => (
+    typeId === matchId
+  ))?.value ?? null;
+}
+
+// need these ids, since the friendly type string may not appear for custom items
+const LIGHT_ARMOR_ID = 1;
+const MEDIUM_ARMOR_ID = 2;
+const HEAVY_ARMOR_ID = 3;
+const SHIELD_ID = 4;
+
+function applyArmorClassModifiers(character, modifiers, {
+  subType, statId, type, value,
+}) {
+  const appliedArmorClassModifiers = { ...modifiers };
+  // barbarian/monk adds dexterity + another set modifier
+  // note barbarian's ability adds any shield bonuses, but monks do not
+  // however, dndbeyond adds monk shield bonuses anyways, so we'll just roll with that
+  if (subType === 'unarmored-armor-class' && type === 'set') {
+    appliedArmorClassModifiers.unarmoredBonusSets.push(
+      getAbilityScoreModifierById(character, statId) + getDexterityModifier(character),
+    );
+    return appliedArmorClassModifiers;
+  }
+  // unsure if this situation happens, but mirror armored-armor-class bonus
+  if (subType === 'unarmored-armor-class' && type === 'bonus') {
+    appliedArmorClassModifiers.unarmoredBonus += value;
+    return appliedArmorClassModifiers;
+  }
+  // ??? i don't think armored-armor-class sets exist, if it does, integrate it
+  // if (subType === 'armored-armor-class' && type === 'set') {
+  // this can happen with defense fighting style
+  if (subType === 'armored-armor-class' && type === 'bonus') {
+    appliedArmorClassModifiers.armoredBonus += value;
+    return appliedArmorClassModifiers;
+  }
+  // the dual wield feat looks like this
+  if (subType === 'dual-wield-armor-class' && type === 'bonus') {
+    appliedArmorClassModifiers.dualWieldBonus += value;
+    return appliedArmorClassModifiers;
+  }
+  // any catch all, like magic items
+  if (subType === 'armor-class' && type === 'bonus') {
+    appliedArmorClassModifiers.bonus += value;
+    return appliedArmorClassModifiers;
+  }
+  return null;
+}
+
+function getArmorClassGrantedModifiersBonus({
+  // logic checks that we are already equipped here
+  isAttuned,
+  definition: {
+    requiresAttunement, grantedModifiers,
+  },
+}) {
+  return grantedModifiers.reduce((bonus, {
+    subType, type, value,
+  }) => {
+    if (requiresAttunement && !isAttuned) {
+      return bonus;
+    }
+    // hard check 'armor-class' instead of includes like the above
+    // ??? i think just reduce 'armor-class' to check how much innate AC the armor provides
+    // we want to tie +1's, etc. to this particular armor's armor class
+    // +1's don't all sum up if you wear many +1 of the same armor
+    // but you can wear many cold/acid/etc. resistances of armor and they all appear on dndbeyond
+    if (subType === 'armor-class' && type === 'bonus') {
+      return bonus + value;
+    }
+    return bonus;
+  }, 0);
+}
+
+function applyArmorClassItem(character, modifiers, item) {
+  const { equipped } = item;
+  // ??? an item only matters if they're equipped
+  if (!equipped) {
+    return modifiers;
+  }
+  const {
+    isAttuned,
+    definition: {
+      armorClass, armorTypeId, grantedModifiers,
+    },
+  } = item;
+
+  const newModifiers = { ...modifiers };
+  const {
+    bestLightArmorAC,
+    bestMediumArmorAC,
+    bestHeavyArmorAC,
+    bestShieldAC,
+  } = newModifiers;
+  // armor and shields have special rules
+  // dndbeyond seems to use the best ac calculated from whatever armor combo equipped
+  // so, find the selected armor with the best calculated AC by category for calculations later
+  // armors could have bonuses (+1s, +2s, etc.) that only contribute if it's the 'selected' armor
+  // associate those bonuses with the armor AC itself, not as a global bonus/effect
+  switch (armorTypeId) {
+    case LIGHT_ARMOR_ID:
+      newModifiers.bestLightArmorAC = Math.max(
+        bestLightArmorAC, armorClass + getArmorClassGrantedModifiersBonus(item),
+      );
+      newModifiers.armorEquipped = true;
+      return newModifiers;
+    case MEDIUM_ARMOR_ID:
+      newModifiers.bestMediumArmorAC = Math.max(
+        bestMediumArmorAC, armorClass + getArmorClassGrantedModifiersBonus(item),
+      );
+      newModifiers.armorEquipped = true;
+      return newModifiers;
+    case HEAVY_ARMOR_ID:
+      newModifiers.bestHeavyArmorAC = Math.max(
+        bestHeavyArmorAC, armorClass + getArmorClassGrantedModifiersBonus(item),
+      );
+      newModifiers.armorEquipped = true;
+      return newModifiers;
+    case SHIELD_ID:
+      newModifiers.bestShieldAC = Math.max(
+        bestShieldAC, armorClass + getArmorClassGrantedModifiersBonus(item),
+      );
+      return newModifiers;
+    default:
+  }
+  // not an armor, this could be a magic item, etc. that modify armor class
+  return grantedModifiers.reduce((modifiersInner, modifier) => {
+    const { requiresAttunement } = modifier;
+    if (requiresAttunement && !isAttuned) {
+      return modifiersInner;
+    }
+    const newModifier = applyArmorClassModifiers(character, modifiersInner, modifier);
+    return newModifier ?? modifiersInner;
+  }, newModifiers);
+}
+
+function isDualWielding(character) {
+  const hasDualWieldItem = character.characterValues.find(({
+    typeId, value, valueId,
+  }) => (
+    typeId === CHARACTER_VALUE_DUAL_WIELD_ID
+    && value === true
+    && character.inventory.find(({ equipped, id }) => (equipped && id === parseInt(valueId, 10)))
+  ));
+  // if equipped with a dual wield item, need to find another equipped item that's not dual wield
+  return hasDualWieldItem && character.inventory.find(({
+    equipped, id,
+  }) => (
+    equipped
+    && !character.characterValues.find(({
+      typeId, value, valueId,
+    }) => (
+      typeId === CHARACTER_VALUE_DUAL_WIELD_ID
+      && value === true
+      && id === parseInt(valueId, 10)
+    ))
+  ));
+}
+
+export function getArmorClass(character) {
+  const overrideArmorClass = getCharacterValueByTypeId(character, CHARACTER_VALUE_OVERRIDE_AC_ID);
+  // if there's an override that the player has manually set, then just return that
+  if (overrideArmorClass) {
+    return overrideArmorClass;
+  }
+  // these bonuses are added everywhere except for master override above
+  const additionalMagicBonus = getCharacterValueByTypeId(
+    character, CHARACTER_VALUE_ADDITIONAL_MAGIC_BONUS_ID,
+  ) ?? 0;
+  const additionalMiscBonus = getCharacterValueByTypeId(
+    character, CHARACTER_VALUE_ADDITIONAL_MISC_BONUS_ID,
+  ) ?? 0;
+  // if they've set the base armor, we'll exclude any special base armor rules below
+  const overrideBaseArmorClass = getCharacterValueByTypeId(
+    character, CHARACTER_VALUE_OVERRIDE_BASE_ARMOR_DEX_ID,
+  );
+
+  let activeModifiers = {
+    armorEquipped: false,
+    bestLightArmorAC: 0,
+    bestMediumArmorAC: 0,
+    bestHeavyArmorAC: 0,
+    bestShieldAC: 0,
+    unarmoredBonusSets: [],
+    unarmoredBonus: 0,
+    armoredBonus: 0,
+    dualWieldBonus: 0,
+    bonus: 0,
+  };
+
+  activeModifiers = character.modifiers.background.reduce((currentModifiers, modifier) => {
+    const newModifiers = applyArmorClassModifiers(character, currentModifiers, modifier);
+    if (newModifiers && componentIdInBackground(character, modifier.componentId)) {
+      return newModifiers;
+    }
+    return currentModifiers;
+  }, activeModifiers);
+
+  activeModifiers = character.modifiers.class.reduce((currentModifiers, modifier) => {
+    const newModifiers = applyArmorClassModifiers(character, currentModifiers, modifier);
+    if (newModifiers && componentIdInClasses(character, modifier.componentId)) {
+      return newModifiers;
+    }
+    return currentModifiers;
+  }, activeModifiers);
+
+  activeModifiers = character.modifiers.feat.reduce((currentModifiers, modifier) => {
+    const newModifiers = applyArmorClassModifiers(character, currentModifiers, modifier);
+    if (newModifiers && componentIdInFeats(character, modifier.componentId)) {
+      return newModifiers;
+    }
+    return currentModifiers;
+  }, activeModifiers);
+
+  activeModifiers = character.modifiers.race.reduce((currentModifiers, modifier) => {
+    const newModifiers = applyArmorClassModifiers(character, currentModifiers, modifier);
+    if (newModifiers && componentIdInRace(character, modifier.componentId)) {
+      return newModifiers;
+    }
+    return currentModifiers;
+  }, activeModifiers);
+
+  activeModifiers = character.inventory.reduce((currentModifiers, item) => (
+    applyArmorClassItem(character, currentModifiers, item)
+  ), activeModifiers);
+
+  const {
+    armorEquipped,
+    bestLightArmorAC,
+    bestMediumArmorAC,
+    bestHeavyArmorAC,
+    bestShieldAC,
+    unarmoredBonusSets,
+    unarmoredBonus,
+    armoredBonus,
+    dualWieldBonus,
+    bonus,
+  } = activeModifiers;
+  let armorClass = 0;
+
+  if (overrideBaseArmorClass) {
+    // manually set base armor, skip any special armor calcs
+    armorClass = overrideBaseArmorClass;
+  } else if (!armorEquipped) {
+    // unarmored base AC with no armor or shield
+    armorClass = 10 + getDexterityModifier(character);
+    // get the best AC calculation if there's unarmored defense
+    unarmoredBonusSets.forEach((unarmoredBonusSet) => {
+      armorClass = Math.max(armorClass, 10 + unarmoredBonusSet);
+    });
+    // any unarmored bonuses, unsure if there are any
+    armorClass += unarmoredBonus;
+  } else {
+    // light armor includes dexterity modifier
+    armorClass = Math.max(
+      armorClass, bestLightArmorAC + getDexterityModifier(character),
+    );
+    // medium armor includes dexterity modifier, but max 2
+    armorClass = Math.max(
+      armorClass, bestMediumArmorAC + Math.min(getDexterityModifier(character), 2),
+    );
+    // heavy armor is just the set value
+    armorClass = Math.max(armorClass, bestHeavyArmorAC);
+    // stuff like defense fighting style
+    armorClass += armoredBonus;
+  }
+  // dual wield feat
+  if (dualWieldBonus && isDualWielding(character)) {
+    armorClass += dualWieldBonus;
+  }
+
+  // we can add shield armor class to any base armor formula
+  // this should not work with monk's unarmored defense, but dndbeyond adds it anyways
+  armorClass += bestShieldAC;
+  // any global bonuses
+  armorClass += bonus;
+  armorClass += additionalMagicBonus;
+  armorClass += additionalMiscBonus;
+  return armorClass;
+}
