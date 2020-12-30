@@ -835,6 +835,23 @@ export function getInitiativeModifierDisplay(character) {
   return addSignDisplay(getInitiativeModifier(character));
 }
 
+const CHARACTER_VALUE_OVERRIDE_PASSIVE_PERCEPTION = 5;
+const CHARACTER_VALUE_OVERRIDE_PASSIVE_INVESTIGATION = 6;
+const CHARACTER_VALUE_OVERRIDE_PASSIVE_INSIGHT = 7;
+
+const CHARACTER_VALUE_OVERRIDE_AC_ID = 1;
+const CHARACTER_VALUE_OVERRIDE_BASE_ARMOR_DEX_ID = 4;
+const CHARACTER_VALUE_ADDITIONAL_MAGIC_BONUS_ID = 2;
+const CHARACTER_VALUE_ADDITIONAL_MISC_BONUS_ID = 3;
+const CHARACTER_VALUE_DUAL_WIELD_ID = 18;
+
+// gets manually set values under characterValues
+function getCharacterValueByTypeId(character, matchId) {
+  return character.characterValues.find(({ typeId }) => (
+    typeId === matchId
+  ))?.value ?? null;
+}
+
 // functions very similarly to applyAbilityModifiers, but without maxes
 function applyPassiveModifiers({
   match,
@@ -883,28 +900,33 @@ function applyPassiveBonus(character, baseScore, skill) {
 
 // passive scores are 10 + skill modifier + any bonuses
 export function getPassivePerception(character) {
+  const overrideValue = getCharacterValueByTypeId(
+    character, CHARACTER_VALUE_OVERRIDE_PASSIVE_PERCEPTION,
+  );
+  if (overrideValue !== null) {
+    return overrideValue;
+  }
   return applyPassiveBonus(character, 10 + getPerceptionModifier(character), 'passive-perception');
 }
 
 export function getPassiveInvestigation(character) {
+  const overrideValue = getCharacterValueByTypeId(
+    character, CHARACTER_VALUE_OVERRIDE_PASSIVE_INVESTIGATION,
+  );
+  if (overrideValue !== null) {
+    return overrideValue;
+  }
   return applyPassiveBonus(character, 10 + getInvestigationModifier(character), 'passive-investigation');
 }
 
 export function getPassiveInsight(character) {
+  const overrideValue = getCharacterValueByTypeId(
+    character, CHARACTER_VALUE_OVERRIDE_PASSIVE_INSIGHT,
+  );
+  if (overrideValue !== null) {
+    return overrideValue;
+  }
   return applyPassiveBonus(character, 10 + getInsightModifier(character), 'passive-insight');
-}
-
-const CHARACTER_VALUE_OVERRIDE_AC_ID = 1;
-const CHARACTER_VALUE_OVERRIDE_BASE_ARMOR_DEX_ID = 4;
-const CHARACTER_VALUE_ADDITIONAL_MAGIC_BONUS_ID = 2;
-const CHARACTER_VALUE_ADDITIONAL_MISC_BONUS_ID = 3;
-const CHARACTER_VALUE_DUAL_WIELD_ID = 18;
-
-// gets manually set values under characterValues
-function getCharacterValueByTypeId(character, matchId) {
-  return character.characterValues.find(({ typeId }) => (
-    typeId === matchId
-  ))?.value ?? null;
 }
 
 // need these ids, since the friendly type string may not appear for custom items
