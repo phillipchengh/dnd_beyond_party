@@ -212,8 +212,37 @@ function applyModifiers(character, modifiers, applyModifier, match) {
   return activeModifiers;
 }
 
+// stuff like ioun stone of mastery increases proficiency bonus
+function applyProficiencyBonusModifier({
+  match,
+  modifiers,
+  modifier: {
+    subType, type, value,
+  },
+}) {
+  const appliedAbilityModifiers = { ...modifiers };
+  if (subType === match && type === 'bonus') {
+    appliedAbilityModifiers.bonus += value;
+    return appliedAbilityModifiers;
+  }
+  return null;
+}
+
 function getProficiencyBonus(character) {
-  return Math.floor((getTotalLevel(character) - 1) / 4) + 2;
+  let proficiencyBonus = Math.floor((getTotalLevel(character) - 1) / 4) + 2;
+
+  let activeModifiers = {
+    bonus: 0,
+  };
+
+  activeModifiers = applyModifiers(character, activeModifiers, applyProficiencyBonusModifier, 'proficiency-bonus');
+
+  const {
+    bonus,
+  } = activeModifiers;
+
+  proficiencyBonus += bonus;
+  return proficiencyBonus;
 }
 
 export function getProficiencyBonusDisplay(character) {
