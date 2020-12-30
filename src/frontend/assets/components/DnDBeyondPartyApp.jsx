@@ -6,6 +6,7 @@ import * as calcs from '@assets/character/calcs';
 import * as selectors from '@assets/party/selectors';
 
 import Main from './Main';
+import './styles.less';
 
 export function DndBeyondPartyApp() {
   const [state, dispatch] = useReducer(partyReducer, initialState);

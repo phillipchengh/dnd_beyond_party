@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import ReactModal from 'react-modal';
+import './modal.less';
 
 export function Modal(props) {
   // this should be set outside the function, but react-modal complains inside a test

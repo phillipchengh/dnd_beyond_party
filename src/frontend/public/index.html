@@ -8,6 +8,8 @@
     {{ range $css := $entrypoint.css }}
       <link rel="stylesheet" href="/asset/{{ $css }}" type="text/css" media="all">
     {{ end }}
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap" rel="stylesheet">
   </head>
   <body>
     <div id="dnd_beyond_party_app"></div>
