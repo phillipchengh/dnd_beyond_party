@@ -110,7 +110,9 @@ function componentIdInRace(character, componentId) {
 }
 
 // background, class, feat, race (basically not items)
-// separated out cause some calcs might want to calculate items specifically
+// separated out items cause some calcs might want to calculate them specifically
+// applyModifier must accept the object shape used below
+// applyModifiers must return a new copy of modifiers or null if it was not actually applied
 function applyStaticModifiers(character, modifiers, applyModifier, match) {
   let activeModifiers = { ...modifiers };
 
@@ -121,12 +123,6 @@ function applyStaticModifiers(character, modifiers, applyModifier, match) {
   // https://dndbeyond.com/characters/3 is an example
   // that guy has wisdom-score as an optional modifier, but isn't actually in effect
   // check for componentId last, because they could be an expensive operation
-
-  // componentId matchers
-  // modifiers.race[].componentId === race.racialTraits[].definition.id
-  // modifiers.class[].componentId === classes[].classFeatures[].definition.id
-  // modifiers.class[].componentId === classes[].subclassDefinition.classFeatures[].definition.id
-  // modifiers.feat[].componentId === feats[].definition.id
 
   // ??? do conditions matter for ability score?
   activeModifiers = character.modifiers.background.reduce((currentModifiers, modifier) => {
@@ -233,8 +229,6 @@ const CHARISMA_ID = 6;
 const ABILITY_SCORE_DEFAULT_MAX = 20;
 const ABILITY_SCORE_DEFAULT_MIN = 0;
 
-// applies modifier in the second argument into current modifiers matching the ability id
-// returns null if no modifiers applied, this signals if the modifier actually was applied or not
 function applyAbilityModifiers({
   match,
   modifiers,
