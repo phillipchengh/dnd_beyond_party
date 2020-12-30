@@ -16,6 +16,16 @@ import {
   getId,
   getName,
   getRace,
+  getStrengthAbilityScore,
+  getDexterityAbilityScore,
+  getConstitutionAbilityScore,
+  getIntelligenceAbilityScore,
+  getWisdomAbilityScore,
+  getCharismaAbilityScore,
+  getPassivePerception,
+  getPassiveInvestigation,
+  getPassiveInsight,
+  getArmorClass,
 } from '@assets/character/calcs';
 import {
   getAvatarUrl,
@@ -53,7 +63,7 @@ export function CurrentCampaign() {
       <div className="characters">
         {currentCampaignCharacters.map(({ lastUpdate, data }) => (
           <div className="character" key={getId(data)}>
-            <div class="card-header">
+            <div className="card-header">
               <img height="60" width="60" src={getAvatarUrl(data)} alt="Avatar" />
               <a href={getLink(data)}><strong>{getName(data)}</strong></a>
             </div>
@@ -69,10 +79,31 @@ export function CurrentCampaign() {
               <dt>Race</dt>
               <dd>{getRace(data)}</dd>
               <dt>Avatar</dt>
-              <dd></dd>
+              <dd><img height="60" width="60" src={getAvatarUrl(data)} alt="Avatar" /></dd>
               <dt>Link</dt>
+              <dd><a href={getLink(data)}>Here</a></dd>
               <dt>Raw</dt>
               <dd><a href={getRaw(data)}>Here</a></dd>
+              <dt>Strength</dt>
+              <dd>{getStrengthAbilityScore(data)}</dd>
+              <dt>Dexterity</dt>
+              <dd>{getDexterityAbilityScore(data)}</dd>
+              <dt>Constitution</dt>
+              <dd>{getConstitutionAbilityScore(data)}</dd>
+              <dt>Intelligence</dt>
+              <dd>{getIntelligenceAbilityScore(data)}</dd>
+              <dt>Wisdom</dt>
+              <dd>{getWisdomAbilityScore(data)}</dd>
+              <dt>Charisma</dt>
+              <dd>{getCharismaAbilityScore(data)}</dd>
+              <dt>Passive Perception</dt>
+              <dd>{getPassivePerception(data)}</dd>
+              <dt>Passive Investigation</dt>
+              <dd>{getPassiveInvestigation(data)}</dd>
+              <dt>Passive Insight</dt>
+              <dd>{getPassiveInsight(data)}</dd>
+              <dt>Armor Class</dt>
+              <dd>{getArmorClass(data)}</dd>
             </dl>
           </div>
         ))}
