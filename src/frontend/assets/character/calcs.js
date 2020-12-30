@@ -339,6 +339,10 @@ function calculateModifier(abilityScore) {
   return Math.floor(abilityScore / 2) - 5;
 }
 
+function getAbilityScoreModifierById(character, abilityId) {
+  return calculateModifier(getAbilityScore(character, abilityId));
+}
+
 function addSignDisplay(modifier) {
   if (modifier < 0) {
     // a negative number already has a -
@@ -427,20 +431,123 @@ const SLEIGHT_OF_HAND_ID = 4;
 const STEALTH_ID = 5;
 const SURVIVAL_ID = 15;
 
-// TODO ??? check stuff like 'charisma-ability-checks' bonus
-function applyProficiencies({
+const DEFAULT_SKILL_STAT_ID = {
+  [ACROBATICS_ID]: DEXTERITY_ID,
+  [ANIMAL_HANDLING_ID]: WISDOM_ID,
+  [ARCANA_ID]: INTELLIGENCE_ID,
+  [ATHLETICS_ID]: STRENGTH_ID,
+  [DECEPTION_ID]: CHARISMA_ID,
+  [HISTORY_ID]: INTELLIGENCE_ID,
+  [INSIGHT_ID]: WISDOM_ID,
+  [INVESTIGATION_ID]: INTELLIGENCE_ID,
+  [INTIMIDATION_ID]: CHARISMA_ID,
+  [MEDICINE_ID]: WISDOM_ID,
+  [NATURE_ID]: INTELLIGENCE_ID,
+  [PERCEPTION_ID]: WISDOM_ID,
+  [PERFORMANCE_ID]: CHARISMA_ID,
+  [PERSUASION_ID]: CHARISMA_ID,
+  [RELIGION_ID]: INTELLIGENCE_ID,
+  [SLEIGHT_OF_HAND_ID]: DEXTERITY_ID,
+  [STEALTH_ID]: DEXTERITY_ID,
+  [SURVIVAL_ID]: WISDOM_ID,
+};
+
+const CHARACTER_VALUE_SKILL_OVERRIDE = 23;
+const CHARACTER_VALUE_SKILL_STAT_OVERRIDE = 27;
+const CHARACTER_VALUE_SKILL_MAGIC_BONUS = 25;
+const CHARACTER_VALUE_SKILL_MISC_BONUS = 24;
+const CHARACTER_VALUE_SKILL_PROFICIENCY_LEVEL = 26;
+
+function getCharacterValueSkillValue(character, matchId, skillId) {
+  return character.characterValues.find(({ valueId, typeId }) => (
+    matchId === typeId
+    && skillId === parseInt(valueId, 10)
+  ))?.value ?? null;
+}
+
+function getCharacterValueSkillOverride(character, skillId) {
+  return getCharacterValueSkillValue(character, CHARACTER_VALUE_SKILL_OVERRIDE, skillId);
+}
+
+function getCharacterValueSkillStatOverride(character, skillId) {
+  return getCharacterValueSkillValue(character, CHARACTER_VALUE_SKILL_STAT_OVERRIDE, skillId);
+}
+
+function getCharacterValueSkillMagicBonus(character, skillId) {
+  return getCharacterValueSkillValue(character, CHARACTER_VALUE_SKILL_MAGIC_BONUS, skillId);
+}
+
+function getCharacterValueSkillMiscBonus(character, skillId) {
+  return getCharacterValueSkillValue(character, CHARACTER_VALUE_SKILL_MISC_BONUS, skillId);
+}
+
+// unused
+// const NO_PROFICIENCY_ID = 1;
+const HALF_PROFICIENCY_ID = 2;
+const PROFICIENCY_ID = 3;
+const EXPERTISE_ID = 4;
+
+function getCharacterValueSkillProficiencyLevel(character, skillId) {
+  return getCharacterValueSkillValue(character, CHARACTER_VALUE_SKILL_PROFICIENCY_LEVEL, skillId);
+}
+
+function getSkillAbilityId(character, skillId) {
+  let skillAbilityId = getCharacterValueSkillStatOverride(character, skillId);
+  if (!skillAbilityId) {
+    skillAbilityId = DEFAULT_SKILL_STAT_ID[skillId];
+  }
+  return skillAbilityId;
+}
+
+const ABILITY_NAME = {
+  [STRENGTH_ID]: 'strength',
+  [DEXTERITY_ID]: 'dexterity',
+  [CONSTITUTION_ID]: 'constitution',
+  [INTELLIGENCE_ID]: 'intelligence',
+  [WISDOM_ID]: 'wisdom',
+  [CHARISMA_ID]: 'charisma',
+};
+
+function getSkillAbilityName(character, skillId) {
+  const abilityId = getSkillAbilityId(character, skillId);
+  return ABILITY_NAME[abilityId];
+}
+
+function getProficienciesFromId(proficiencyId) {
+  const proficiencies = new Set();
+  switch (proficiencyId) {
+    case HALF_PROFICIENCY_ID:
+      proficiencies.add(HALF_PROFICIENCY);
+      break;
+    case PROFICIENCY_ID:
+      proficiencies.add(PROFICIENCY);
+      break;
+    case EXPERTISE_ID:
+      proficiencies.add(PROFICIENCY);
+      proficiencies.add(EXPERTISE);
+      break;
+    default:
+  }
+  return proficiencies;
+}
+
+function applySkillModifier({
+  character,
   match,
   modifiers,
   modifier: {
-    entityId, entityTypeId, subType, type,
+    entityId, entityTypeId, statId, subType, type,
   },
 }) {
   const appliedModifiers = { ...modifiers };
+  // stuff like charisma-ability-checks
+  const skillAbilityChecks = `${getSkillAbilityName(character, match)}-ability-checks`;
   if (
     PROFICIENCIES.includes(type)
     && (
       (entityId === match && entityTypeId === SKILL_TYPE_ID)
       || subType === 'ability-checks'
+      || subType === skillAbilityChecks
     )
   ) {
     const newProficiencies = new Set(modifiers.proficiencies);
@@ -448,10 +555,18 @@ function applyProficiencies({
     appliedModifiers.proficiencies = newProficiencies;
     return appliedModifiers;
   }
+  if (
+    (subType === 'ability-checks' || subType === skillAbilityChecks)
+    && type === 'bonus'
+    && statId
+  ) {
+    appliedModifiers.bonus += getAbilityScoreModifierById(character, statId);
+    return appliedModifiers;
+  }
   return null;
 }
 
-function getBestProfiencyModifier(character, proficiencies) {
+function getBestProficiencyModifier(character, proficiencies) {
   const proficiencyBonus = getProficiencyBonus(character);
   let proficiencyModifier = 0;
   proficiencies.forEach((proficiency) => {
@@ -485,20 +600,43 @@ function getBestProfiencyModifier(character, proficiencies) {
   return proficiencyModifier;
 }
 
-function getSkillProficiencyModifier(character, skillId) {
+function getSkillModifier(character, skillId) {
+  const overrideValue = getCharacterValueSkillOverride(character, skillId);
+  if (overrideValue !== null) {
+    return overrideValue;
+  }
+  const abilityId = getSkillAbilityId(character, skillId);
+
   let activeModifiers = {
+    bonus: 0,
     proficiencies: new Set(),
   };
 
-  activeModifiers = applyModifiers(character, activeModifiers, applyProficiencies, skillId);
+  activeModifiers = applyModifiers(character, activeModifiers, applySkillModifier, skillId);
 
-  const { proficiencies } = activeModifiers;
+  const { bonus, proficiencies } = activeModifiers;
 
-  return getBestProfiencyModifier(character, proficiencies);
+  let skillModifier = 0;
+  const manualProficiencyId = getCharacterValueSkillProficiencyLevel(character, skillId);
+  if (manualProficiencyId) {
+    skillModifier += getBestProficiencyModifier(
+      character, getProficienciesFromId(manualProficiencyId),
+    );
+  } else {
+    skillModifier += getBestProficiencyModifier(
+      character, proficiencies,
+    );
+  }
+
+  skillModifier += bonus;
+  skillModifier += getAbilityScoreModifierById(character, abilityId);
+  skillModifier += getCharacterValueSkillMagicBonus(character, skillId) ?? 0;
+  skillModifier += getCharacterValueSkillMiscBonus(character, skillId) ?? 0;
+  return skillModifier;
 }
 
 function getAcrobaticsModifier(character) {
-  return getSkillProficiencyModifier(character, ACROBATICS_ID) + getDexterityModifier(character);
+  return getSkillModifier(character, ACROBATICS_ID);
 }
 
 export function getAcrobaticsModifierDisplay(character) {
@@ -506,7 +644,7 @@ export function getAcrobaticsModifierDisplay(character) {
 }
 
 function getAnimalHandlingModifier(character) {
-  return getSkillProficiencyModifier(character, ANIMAL_HANDLING_ID) + getWisdomModifier(character);
+  return getSkillModifier(character, ANIMAL_HANDLING_ID);
 }
 
 export function getAnimalHandlingModifierDisplay(character) {
@@ -514,7 +652,7 @@ export function getAnimalHandlingModifierDisplay(character) {
 }
 
 function getArcanaModifier(character) {
-  return getSkillProficiencyModifier(character, ARCANA_ID) + getIntelligenceModifier(character);
+  return getSkillModifier(character, ARCANA_ID);
 }
 
 export function getArcanaModifierDisplay(character) {
@@ -522,7 +660,7 @@ export function getArcanaModifierDisplay(character) {
 }
 
 function getAthleticsModifier(character) {
-  return getSkillProficiencyModifier(character, ATHLETICS_ID) + getStrengthModifier(character);
+  return getSkillModifier(character, ATHLETICS_ID);
 }
 
 export function getAthleticsModifierDisplay(character) {
@@ -530,7 +668,7 @@ export function getAthleticsModifierDisplay(character) {
 }
 
 function getDeceptionModifier(character) {
-  return getSkillProficiencyModifier(character, DECEPTION_ID) + getCharismaModifier(character);
+  return getSkillModifier(character, DECEPTION_ID);
 }
 
 export function getDeceptionModifierDisplay(character) {
@@ -538,7 +676,7 @@ export function getDeceptionModifierDisplay(character) {
 }
 
 function getHistoryModifier(character) {
-  return getSkillProficiencyModifier(character, HISTORY_ID) + getIntelligenceModifier(character);
+  return getSkillModifier(character, HISTORY_ID);
 }
 
 export function getHistoryModifierDisplay(character) {
@@ -546,7 +684,7 @@ export function getHistoryModifierDisplay(character) {
 }
 
 function getInsightModifier(character) {
-  return getSkillProficiencyModifier(character, INSIGHT_ID) + getWisdomModifier(character);
+  return getSkillModifier(character, INSIGHT_ID);
 }
 
 export function getInsightModifierDisplay(character) {
@@ -554,7 +692,7 @@ export function getInsightModifierDisplay(character) {
 }
 
 function getIntimidationModifier(character) {
-  return getSkillProficiencyModifier(character, INTIMIDATION_ID) + getCharismaModifier(character);
+  return getSkillModifier(character, INTIMIDATION_ID);
 }
 
 export function getIntimidationModifierDisplay(character) {
@@ -562,8 +700,7 @@ export function getIntimidationModifierDisplay(character) {
 }
 
 function getInvestigationModifier(character) {
-  // eslint-disable-next-line max-len
-  return getSkillProficiencyModifier(character, INVESTIGATION_ID) + getIntelligenceModifier(character);
+  return getSkillModifier(character, INVESTIGATION_ID);
 }
 
 export function getInvestigationModifierDisplay(character) {
@@ -571,7 +708,7 @@ export function getInvestigationModifierDisplay(character) {
 }
 
 function getMedicineModifier(character) {
-  return getSkillProficiencyModifier(character, MEDICINE_ID) + getWisdomModifier(character);
+  return getSkillModifier(character, MEDICINE_ID);
 }
 
 export function getMedicineModifierDisplay(character) {
@@ -579,7 +716,7 @@ export function getMedicineModifierDisplay(character) {
 }
 
 function getNatureModifier(character) {
-  return getSkillProficiencyModifier(character, NATURE_ID) + getIntelligenceModifier(character);
+  return getSkillModifier(character, NATURE_ID);
 }
 
 export function getNatureModifierDisplay(character) {
@@ -587,7 +724,7 @@ export function getNatureModifierDisplay(character) {
 }
 
 function getPerceptionModifier(character) {
-  return getSkillProficiencyModifier(character, PERCEPTION_ID) + getWisdomModifier(character);
+  return getSkillModifier(character, PERCEPTION_ID);
 }
 
 export function getPerceptionModifierDisplay(character) {
@@ -595,7 +732,7 @@ export function getPerceptionModifierDisplay(character) {
 }
 
 function getPerformanceModifier(character) {
-  return getSkillProficiencyModifier(character, PERFORMANCE_ID) + getCharismaModifier(character);
+  return getSkillModifier(character, PERFORMANCE_ID);
 }
 
 export function getPerformanceModifierDisplay(character) {
@@ -603,7 +740,7 @@ export function getPerformanceModifierDisplay(character) {
 }
 
 function getPersuasionModifier(character) {
-  return getSkillProficiencyModifier(character, PERSUASION_ID) + getCharismaModifier(character);
+  return getSkillModifier(character, PERSUASION_ID);
 }
 
 export function getPersuasionModifierDisplay(character) {
@@ -611,7 +748,7 @@ export function getPersuasionModifierDisplay(character) {
 }
 
 function getReligionModifier(character) {
-  return getSkillProficiencyModifier(character, RELIGION_ID) + getIntelligenceModifier(character);
+  return getSkillModifier(character, RELIGION_ID);
 }
 
 export function getReligionModifierDisplay(character) {
@@ -619,8 +756,7 @@ export function getReligionModifierDisplay(character) {
 }
 
 function getSleightOfHandModifier(character) {
-  // eslint-disable-next-line max-len
-  return getSkillProficiencyModifier(character, SLEIGHT_OF_HAND_ID) + getDexterityModifier(character);
+  return getSkillModifier(character, SLEIGHT_OF_HAND_ID);
 }
 
 export function getSleightOfHandModifierDisplay(character) {
@@ -628,7 +764,7 @@ export function getSleightOfHandModifierDisplay(character) {
 }
 
 function getStealthModifier(character) {
-  return getSkillProficiencyModifier(character, STEALTH_ID) + getDexterityModifier(character);
+  return getSkillModifier(character, STEALTH_ID);
 }
 
 export function getStealthModifierDisplay(character) {
@@ -636,7 +772,7 @@ export function getStealthModifierDisplay(character) {
 }
 
 function getSurvivalModifier(character) {
-  return getSkillProficiencyModifier(character, SURVIVAL_ID) + getWisdomModifier(character);
+  return getSkillModifier(character, SURVIVAL_ID);
 }
 
 export function getSurvivalModifierDisplay(character) {
@@ -687,7 +823,7 @@ function getInitiativeModifier(character) {
 
   let initiative = getDexterityModifier(character);
   initiative += bonus;
-  initiative += getBestProfiencyModifier(character, proficiencies);
+  initiative += getBestProficiencyModifier(character, proficiencies);
   sets.forEach((set) => (
     Math.max(initiative, set)
   ));
@@ -756,10 +892,6 @@ export function getPassiveInvestigation(character) {
 
 export function getPassiveInsight(character) {
   return applyPassiveBonus(character, 10 + getInsightModifier(character), 'passive-insight');
-}
-
-function getAbilityScoreModifierById(character, abilityId) {
-  return calculateModifier(getAbilityScore(character, abilityId));
 }
 
 const CHARACTER_VALUE_OVERRIDE_AC_ID = 1;
