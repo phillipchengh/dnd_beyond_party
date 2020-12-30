@@ -958,11 +958,50 @@ const MEDIUM_ARMOR_ID = 2;
 const HEAVY_ARMOR_ID = 3;
 const SHIELD_ID = 4;
 
+// for stuff like tortle natural armor
+function applyArmorClassMaxDexModifier({
+  match,
+  modifiers,
+  modifier: {
+    componentId, subType, type, value,
+  },
+}) {
+  const appliedModifiers = { ...modifiers };
+  if (componentId === match && subType === 'ac-max-dex-modifier' && type === 'set') {
+    appliedModifiers.maxDexModifier = value;
+    return appliedModifiers;
+  }
+  return null;
+}
+
+function getArmorClassMaxDexModifier(character, componentId) {
+  let activeModifiers = {
+    maxDexModifier: null,
+  };
+
+  activeModifiers = applyModifiers(
+    character, activeModifiers, applyArmorClassMaxDexModifier, componentId,
+  );
+
+  const { maxDexModifier } = activeModifiers;
+
+  return maxDexModifier;
+}
+
+// accounts for dex modifier max, which is a thing apparently
+function getArmorClassDexModifier(character, componentId) {
+  const maxDexModifier = getArmorClassMaxDexModifier(character, componentId);
+  if (maxDexModifier !== null) {
+    return Math.min(getDexterityModifier(character), maxDexModifier);
+  }
+  return getDexterityModifier(character);
+}
+
 function applyArmorClassModifiers({
   character,
   modifiers,
   modifier: {
-    subType, statId, type, value,
+    componentId, subType, statId, type, value,
   },
 }) {
   const appliedArmorClassModifiers = { ...modifiers };
@@ -971,7 +1010,8 @@ function applyArmorClassModifiers({
   // however, dndbeyond adds monk shield bonuses anyways, so we'll just roll with that
   if (subType === 'unarmored-armor-class' && type === 'set' && statId) {
     appliedArmorClassModifiers.unarmoredBonusSets.push(
-      getDexterityModifier(character) + getAbilityScoreModifierById(character, statId),
+      getArmorClassDexModifier(character, componentId)
+      + getAbilityScoreModifierById(character, statId),
     );
     return appliedArmorClassModifiers;
   }
@@ -979,7 +1019,7 @@ function applyArmorClassModifiers({
   // draconic sorcerer won't have a statId, it will just have some value
   if (subType === 'unarmored-armor-class' && type === 'set' && value) {
     appliedArmorClassModifiers.unarmoredBonusSets.push(
-      getDexterityModifier(character) + value,
+      getArmorClassDexModifier(character, componentId) + value,
     );
     return appliedArmorClassModifiers;
   }
