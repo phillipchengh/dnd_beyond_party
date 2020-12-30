@@ -759,9 +759,17 @@ function applyArmorClassModifiers(character, modifiers, {
   // barbarian/monk adds dexterity + another set modifier
   // note barbarian's ability adds any shield bonuses, but monks do not
   // however, dndbeyond adds monk shield bonuses anyways, so we'll just roll with that
-  if (subType === 'unarmored-armor-class' && type === 'set') {
+  if (subType === 'unarmored-armor-class' && type === 'set' && statId) {
     appliedArmorClassModifiers.unarmoredBonusSets.push(
-      getAbilityScoreModifierById(character, statId) + getDexterityModifier(character),
+      getDexterityModifier(character) + getAbilityScoreModifierById(character, statId),
+    );
+    return appliedArmorClassModifiers;
+  }
+  // draconic sorcerer adds dexterity + some bonus
+  // draconic sorcerer won't have a statId, it will just have some value
+  if (subType === 'unarmored-armor-class' && type === 'set' && value) {
+    appliedArmorClassModifiers.unarmoredBonusSets.push(
+      getDexterityModifier(character) + value,
     );
     return appliedArmorClassModifiers;
   }
