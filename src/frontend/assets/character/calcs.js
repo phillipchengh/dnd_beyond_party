@@ -1064,9 +1064,12 @@ function isDualWielding(character) {
   ));
   // if equipped with a dual wield item, need to find another equipped item that's not dual wield
   return hasDualWieldItem && character.inventory.find(({
-    equipped, id,
+    definition: { damage }, equipped, id,
   }) => (
     equipped
+    // ??? choose any item that does damage, does that mean it's a weapon?
+    // and dndbeyond doesn't seem to account for dual wield weapon restrictions
+    && !!damage
     && !character.characterValues.find(({
       typeId, value, valueId,
     }) => (
