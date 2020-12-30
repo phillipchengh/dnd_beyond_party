@@ -402,6 +402,40 @@ function applyProficiencies(
   return null;
 }
 
+function getBestProfiencyModifier(character, proficiencies) {
+  const proficiencyBonus = getProficiencyBonus(character);
+  let proficiencyModifier = 0;
+  proficiencies.forEach((proficiency) => {
+    switch (proficiency) {
+      case HALF_PROFICIENCY:
+        proficiencyModifier = Math.max(
+          proficiencyModifier, Math.floor(proficiencyBonus / 2),
+        );
+        break;
+      case HALF_PROFICIENCY_ROUND_UP:
+        proficiencyModifier = Math.max(
+          proficiencyModifier, Math.ceil(proficiencyBonus / 2),
+        );
+        break;
+      case PROFICIENCY:
+        proficiencyModifier = Math.max(proficiencyModifier, proficiencyBonus);
+        break;
+      case EXPERTISE: {
+        const expertiseBonus = proficiencies.has(
+          PROFICIENCY,
+        ) ? proficiencyBonus * 2 : proficiencyBonus;
+        proficiencyModifier = Math.max(
+          proficiencyModifier, expertiseBonus,
+        );
+        break;
+      }
+      default:
+        throw new Error('Found unknown proficiency!');
+    }
+  });
+  return proficiencyModifier;
+}
+
 function getSkillProficiencyModifier(character, skillId) {
   let proficiencies = character.modifiers.background.reduce((currentProficiencies, modifier) => {
     const newProficiencies = applyProficiencies(currentProficiencies, modifier, skillId);
@@ -435,39 +469,7 @@ function getSkillProficiencyModifier(character, skillId) {
     return currentProficiencies;
   }, proficiencies);
 
-  const proficiencyBonus = getProficiencyBonus(character);
-  let proficiencyModifier = 0;
-
-  proficiencies.forEach((proficiency) => {
-    switch (proficiency) {
-      case HALF_PROFICIENCY:
-        proficiencyModifier = Math.max(
-          proficiencyModifier, Math.floor(proficiencyBonus / 2),
-        );
-        break;
-      case HALF_PROFICIENCY_ROUND_UP:
-        proficiencyModifier = Math.max(
-          proficiencyModifier, Math.ceil(proficiencyBonus / 2),
-        );
-        break;
-      case PROFICIENCY:
-        proficiencyModifier = Math.max(proficiencyModifier, proficiencyBonus);
-        break;
-      case EXPERTISE: {
-        const expertiseBonus = proficiencies.has(
-          PROFICIENCY,
-        ) ? proficiencyBonus * 2 : proficiencyBonus;
-        proficiencyModifier = Math.max(
-          proficiencyModifier, expertiseBonus,
-        );
-        break;
-      }
-      default:
-        throw new Error('Found unknown proficiency!');
-    }
-  });
-
-  return proficiencyModifier;
+  return getBestProfiencyModifier(character, proficiencies);
 }
 
 function getAcrobaticsModifier(character) {
