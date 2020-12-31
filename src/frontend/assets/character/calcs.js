@@ -959,7 +959,7 @@ const HEAVY_ARMOR_ID = 3;
 const SHIELD_ID = 4;
 
 // for stuff like tortle natural armor
-function applyArmorClassMaxDexModifier({
+function applyMaxDexterityModifierByComponent({
   match,
   modifiers,
   modifier: {
@@ -974,13 +974,13 @@ function applyArmorClassMaxDexModifier({
   return null;
 }
 
-function getArmorClassMaxDexModifier(character, componentId) {
+function getMaxDexterityModifierByComponent(character, componentId) {
   let activeModifiers = {
     maxDexModifier: null,
   };
 
   activeModifiers = applyModifiers(
-    character, activeModifiers, applyArmorClassMaxDexModifier, componentId,
+    character, activeModifiers, applyMaxDexterityModifierByComponent, componentId,
   );
 
   const { maxDexModifier } = activeModifiers;
@@ -989,8 +989,8 @@ function getArmorClassMaxDexModifier(character, componentId) {
 }
 
 // accounts for dex modifier max, which is a thing apparently
-function getArmorClassDexModifier(character, componentId) {
-  const maxDexModifier = getArmorClassMaxDexModifier(character, componentId);
+function getDexterityModifierByComponent(character, componentId) {
+  const maxDexModifier = getMaxDexterityModifierByComponent(character, componentId);
   if (maxDexModifier !== null) {
     return Math.min(getDexterityModifier(character), maxDexModifier);
   }
@@ -1010,7 +1010,7 @@ function applyArmorClassModifiers({
   // however, dndbeyond adds monk shield bonuses anyways, so we'll just roll with that
   if (subType === 'unarmored-armor-class' && type === 'set' && statId) {
     appliedArmorClassModifiers.unarmoredBonusSets.push(
-      getArmorClassDexModifier(character, componentId)
+      getDexterityModifierByComponent(character, componentId)
       + getAbilityScoreModifierById(character, statId),
     );
     return appliedArmorClassModifiers;
@@ -1019,7 +1019,7 @@ function applyArmorClassModifiers({
   // draconic sorcerer won't have a statId, it will just have some value
   if (subType === 'unarmored-armor-class' && type === 'set' && value) {
     appliedArmorClassModifiers.unarmoredBonusSets.push(
-      getArmorClassDexModifier(character, componentId) + value,
+      getDexterityModifierByComponent(character, componentId) + value,
     );
     return appliedArmorClassModifiers;
   }
