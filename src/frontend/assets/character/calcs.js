@@ -1045,6 +1045,13 @@ function applyArmorClassModifiers({
     appliedArmorClassModifiers.armoredBonus += value;
     return appliedArmorClassModifiers;
   }
+  // for medium armor master feat
+  if (subType === 'ac-max-dex-armored-modifier' && type === 'set') {
+    appliedArmorClassModifiers.mediumArmorMaxDexterityBonus = Math.max(
+      value, appliedArmorClassModifiers.mediumArmorMaxDexterityBonus,
+    );
+    return appliedArmorClassModifiers;
+  }
   // the dual wield feat looks like this
   if (subType === 'dual-wield-armor-class' && type === 'bonus') {
     appliedArmorClassModifiers.dualWieldBonus += value;
@@ -1202,6 +1209,7 @@ export function getArmorClass(character) {
     unarmoredBonusSets: [],
     unarmoredBonus: 0,
     armoredBonus: 0,
+    mediumArmorMaxDexterityBonus: 2,
     dualWieldBonus: 0,
     bonus: 0,
   };
@@ -1222,6 +1230,7 @@ export function getArmorClass(character) {
     unarmoredBonusSets,
     unarmoredBonus,
     armoredBonus,
+    mediumArmorMaxDexterityBonus,
     dualWieldBonus,
     bonus,
   } = activeModifiers;
@@ -1244,9 +1253,12 @@ export function getArmorClass(character) {
     armorClass = Math.max(
       armorClass, bestLightArmorAC + getDexterityModifier(character),
     );
-    // medium armor includes dexterity modifier, but max 2
+    // medium armor includes dexterity modifier, but has a cap
+    // the cap is usually 2, but medium armor master modifies it
     armorClass = Math.max(
-      armorClass, bestMediumArmorAC + Math.min(getDexterityModifier(character), 2),
+      armorClass, bestMediumArmorAC + Math.min(
+        getDexterityModifier(character), mediumArmorMaxDexterityBonus,
+      ),
     );
     // heavy armor is just the set value
     armorClass = Math.max(armorClass, bestHeavyArmorAC);
