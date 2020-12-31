@@ -162,3 +162,8 @@ export function getPassiveInsight(document) {
 export function getArmorClass(document) {
   return parseInt(document.querySelector('.ddbc-armor-class-box__value').textContent, 10);
 }
+
+export function getSensesDisplay(document) {
+  const senses = document.querySelector('.ct-senses__summary').textContent;
+  return senses === 'Additional Sense Types' ? '' : senses;
+}

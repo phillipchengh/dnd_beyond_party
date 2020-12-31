@@ -1279,3 +1279,85 @@ export function getArmorClass(character) {
   armorClass += additionalMiscBonus;
   return armorClass;
 }
+
+const SENSE_TYPE_ID = 668550506;
+const BLINDSIGHT_ID = 1;
+const DARKVISION_ID = 2;
+const TREMORSENSE_ID = 3;
+const TRUESIGHT_ID = 4;
+const SENSE_IDS = [BLINDSIGHT_ID, DARKVISION_ID, TREMORSENSE_ID, TRUESIGHT_ID];
+const SENSE_NAME = {
+  [BLINDSIGHT_ID]: 'Blindsight',
+  [DARKVISION_ID]: 'Darkvision',
+  [TREMORSENSE_ID]: 'Tremorsense',
+  [TRUESIGHT_ID]: 'Truesight',
+};
+
+function applySensesModifiers({
+  modifiers,
+  modifier: {
+    entityId, entityTypeId, type, value,
+  },
+}) {
+  const activeModifiers = { ...modifiers };
+
+  // value is the sense in distance
+  // goggles of night etc. that grants or adds to vision
+  if (SENSE_TYPE_ID === entityTypeId && SENSE_IDS.includes(entityId) && type === 'sense') {
+    activeModifiers.senseBonus[entityId] += value;
+    return activeModifiers;
+  }
+  // robe of eyes etc. that only grants vision
+  if (SENSE_TYPE_ID === entityTypeId && SENSE_IDS.includes(entityId) && type === 'set-base') {
+    const setSense = activeModifiers.senseSets[entityId];
+    activeModifiers.senseSets[entityId] = Math.max(setSense, value);
+    return activeModifiers;
+  }
+  return null;
+}
+
+function initializeSenses(value) {
+  return SENSE_IDS.reduce((senses, senseId) => ({ ...senses, [senseId]: value }), {});
+}
+
+function getSenses(character) {
+  const senses = initializeSenses(null);
+  // a sense with a real value means it was overridden
+  character.customSenses.forEach(({ distance, senseId }) => {
+    senses[senseId] = distance;
+  });
+
+  let activeModifiers = {
+    senseBonus: initializeSenses(0),
+    senseSets: initializeSenses(0),
+  };
+
+  activeModifiers = applyModifiers(character, activeModifiers, applySensesModifiers);
+
+  const {
+    senseBonus,
+    senseSets,
+  } = activeModifiers;
+
+  Object.entries(senses).forEach(([senseId, distance]) => {
+    // prefer overridden value
+    if (distance === null) {
+      senses[senseId] = senseSets[senseId] + senseBonus[senseId];
+    }
+  });
+  return senses;
+}
+
+export function getSensesDisplay(character) {
+  return Object.entries(getSenses(character)).map(([senseId, distance]) => (
+    // distance could be null or 0, both mean no sense should be shown
+    // display on dndbeyond looks like
+    // Blindsight 11 ft., Darkvision 22 ft., Tremorsense 33 ft., Truesight 44 ft.
+    distance ? `${SENSE_NAME[senseId]} ${distance} ft.` : null
+  )).filter((senseString) => (
+    // get rid of senses with no value
+    senseString !== null
+  ))
+    .sort()
+    .join(', '); // also sort senses
+}
