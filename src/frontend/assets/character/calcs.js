@@ -59,10 +59,12 @@ export function getRace({ race }) {
 // matching examples
 // modifiers.background[].componentId === background.definition.id
 // modifiers.background[].componentId === customBackground.id
+// modifiers.background[].componentId === choices.background[].optionValue
 function componentIdInBackground(character, componentId) {
   return (
     character.background.definition.id === componentId
     || character.background.customBackground.id === componentId
+    || character.choices.background.find(({ optionValue }) => (optionValue === componentId))
   );
 }
 
@@ -70,6 +72,7 @@ function componentIdInBackground(character, componentId) {
 // modifiers.class[].componentId === classes[].classFeatures[].definition.id
 // modifiers.class[].componentId === classes[].subclassDefinition.classFeatures[].definition.id
 // modifiers.class[].componentId === optionalClassFeatures[].classFeatureId
+// modifiers.class[].componentId === choices.class[].optionValue
 function componentIdInClasses(character, componentId) {
   return (
     character.classes.find(
@@ -85,13 +88,18 @@ function componentIdInClasses(character, componentId) {
     || character.optionalClassFeatures.find(
       ({ classFeatureId }) => (classFeatureId === componentId),
     )
+    || character.choices.class.find(({ optionValue }) => (optionValue === componentId))
   );
 }
 
 // matching example
 // modifiers.feat[].componentId === feats[].definition.id
+// modifiers.feat[].componentId === choices.feat[].optionValue
 function componentIdInFeats(character, componentId) {
-  return character.feats.find(({ definition: { id } }) => (id === componentId));
+  return (
+    character.feats.find(({ definition: { id } }) => (id === componentId))
+    || character.choices.feat.find(({ optionValue }) => (optionValue === componentId))
+  );
 }
 
 // unsure if we need this
@@ -102,10 +110,12 @@ function componentIdInFeats(character, componentId) {
 // matching example
 // modifiers.race[].componentId === race.racialTraits[].definition.id
 // modifiers.race[].componentId === optionalOrigins[].racialTraitId
+// modifiers.feat[].componentId === choices.race[].optionValue
 function componentIdInRace(character, componentId) {
   return (
     !!character.race.racialTraits?.find(({ definition: { id } }) => (id === componentId))
     || character.optionalOrigins.find(({ racialTraitId }) => (racialTraitId === componentId))
+    || character.choices.race.find(({ optionValue }) => (optionValue === componentId))
   );
 }
 
