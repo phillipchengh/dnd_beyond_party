@@ -1634,3 +1634,13 @@ export function getMaxHitPoints(character) {
   maxHitPoints += bonusHitPoints;
   return maxHitPoints;
 }
+
+export function getCurrentHitPoints(character) {
+  const { removedHitPoints } = character;
+  return getMaxHitPoints(character) - removedHitPoints;
+}
+
+export function getTemporaryHitPoints(character) {
+  const { temporaryHitPoints } = character;
+  return temporaryHitPoints;
+}

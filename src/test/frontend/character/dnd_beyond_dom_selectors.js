@@ -186,3 +186,12 @@ export function getLanguages(document) {
 export function getMaxHitPoints(document) {
   return parseInt(document.querySelectorAll('.ct-health-summary__hp-number')[1].textContent, 10);
 }
+
+export function getCurrentHitPoints(document) {
+  return parseInt(document.querySelectorAll('.ct-health-summary__hp-number')[0].textContent, 10);
+}
+
+export function getTemporaryHitPoints(document) {
+  // might not be there
+  return parseInt(document.querySelectorAll('.ct-health-summary__hp-number')[2]?.textContent ?? 0, 10);
+}
