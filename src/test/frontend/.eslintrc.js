@@ -3,4 +3,5 @@ module.exports = {
     browser: true,
     jest: true,
   },
+  parser: '@babel/eslint-parser',
 };
