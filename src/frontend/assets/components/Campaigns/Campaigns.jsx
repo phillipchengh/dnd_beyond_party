@@ -29,6 +29,7 @@ import {
   getPassiveInsight,
   getArmorClass,
   getSpellSaveDCs,
+  getLanguages,
 } from '@assets/character/calcs';
 import {
   getAvatarUrl,
@@ -128,6 +129,8 @@ export function Campaigns() {
                   <dd>{getArmorClass(data)}</dd>
                   <dt>Spell Save DC</dt>
                   <dd>{getSpellSaveDCs(data)}</dd>
+                  <dt>Languages</dt>
+                  <dd>{getLanguages(data)}</dd>
                 </dl>
               </li>
             ))}

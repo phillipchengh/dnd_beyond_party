@@ -1471,3 +1471,119 @@ export function getSpellSaveDCs(character) {
     [classSaveDC, classNames.join(', ')]
   ));
 }
+
+const LANGUAGE_ID = 906033267;
+const CUSTOM_PROFICIENCY_LANGUAGE_ID = 3;
+// parsed from select option under custom language proficiencies
+const LANGUAGE = {
+  1: 'Common',
+  2: 'Dwarvish',
+  3: 'Elvish',
+  4: 'Giant',
+  5: 'Gnomish',
+  6: 'Goblin',
+  7: 'Halfling',
+  8: 'Orc',
+  9: 'Abyssal',
+  10: 'Celestial',
+  11: 'Draconic',
+  12: 'Deep Speech',
+  13: 'Infernal',
+  14: 'Primordial',
+  15: 'Sylvan',
+  16: 'Undercommon',
+  18: 'Telepathy',
+  19: 'Aquan',
+  20: 'Auran',
+  21: 'Ignan',
+  22: 'Terran',
+  23: 'Druidic',
+  24: 'Giant Eagle',
+  25: 'Giant Elk',
+  26: 'Giant Owl',
+  27: 'Gnoll',
+  28: 'Otyugh',
+  29: 'Sahuagin',
+  30: 'Sphinx',
+  31: 'Winter Wolf',
+  32: 'Worg',
+  33: 'Blink Dog',
+  34: 'Yeti',
+  35: 'All',
+  36: 'Aarakocra',
+  37: 'Slaad',
+  38: 'Bullywug',
+  39: 'Gith',
+  40: 'Grell',
+  41: 'Hook Horror',
+  42: 'Modron',
+  43: 'Thri-kreen',
+  44: 'Troglodyte',
+  45: 'Umber Hulk',
+  46: 'Thieves’ Cant',
+  47: 'Grung',
+  48: 'Tlincalli',
+  49: 'Vegepygmy',
+  50: 'Yikaria',
+  51: 'Bothii',
+  52: 'Ixitxachitl',
+  53: 'Thayan',
+  54: 'Netherese',
+  55: 'Ice Toad',
+  56: 'Olman',
+  57: 'Quori',
+  58: 'Minotaur',
+  59: 'Loxodon',
+  60: 'Kraul',
+  61: 'Vedalken',
+  62: 'Daelkyr',
+  64: 'Riedran',
+  66: 'Zemnian',
+  67: 'Marquesian',
+  68: 'Naush',
+  69: 'Leonin',
+};
+
+function applyLanguageModifiers({
+  modifiers,
+  modifier: {
+    entityId, entityTypeId,
+  },
+}) {
+  const activeModifiers = { ...modifiers };
+  if (entityTypeId === LANGUAGE_ID && LANGUAGE[entityId]) {
+    activeModifiers.languages.add(LANGUAGE[entityId]);
+    return activeModifiers;
+  }
+  return null;
+}
+
+export function getLanguages(character) {
+  let activeModifiers = {
+    languages: new Set(),
+  };
+
+  activeModifiers = applyModifiers(character, activeModifiers, applyLanguageModifiers);
+
+  const { languages } = activeModifiers;
+
+  const { characterValues, customProficiencies } = character;
+  // characterValues, custom added dnd languages
+  characterValues.forEach(({ valueId, valueTypeId }) => {
+    if (
+      parseInt(valueTypeId, 10) === LANGUAGE_ID
+      && LANGUAGE[parseInt(valueId, 10)]
+    ) {
+      languages.add(LANGUAGE[parseInt(valueId, 10)]);
+    }
+  });
+
+  // customProficiencies, user made their own language
+  customProficiencies.forEach(({ name, type }) => {
+    if (type === CUSTOM_PROFICIENCY_LANGUAGE_ID) {
+      languages.add(name);
+    }
+  });
+
+  return Array.from(languages).sort().join(', ');
+}

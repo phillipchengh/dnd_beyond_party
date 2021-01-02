@@ -178,3 +178,7 @@ export function getSpellSaveDCs(document) {
     [...saveDCs, [parseInt(child.textContent, 10), child.getAttribute('data-original-title')]]
   ), []) : null;
 }
+
+export function getLanguages(document) {
+  return document.querySelectorAll('.ct-proficiency-groups__group-items')[3].textContent;
+}
