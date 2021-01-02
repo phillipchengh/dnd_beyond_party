@@ -1364,3 +1364,110 @@ export function getSensesDisplay(character) {
     .sort()
     .join(', '); // also sort senses
 }
+
+// gets sorted spellcasting class definitions
+function getSpellCastingClasses({ classes }) {
+  return [...classes].filter(({
+    level,
+    definition: {
+      canCastSpells,
+      classFeatures,
+      spellCastingAbilityId,
+    },
+  }) => (
+    // get all classes with spellcasting
+    canCastSpells && spellCastingAbilityId && classFeatures.find(({
+      name,
+      requiredLevel,
+    }) => (
+      // dndbeyond seems to care about their class achieving Spellcasting feature as well
+      (name === 'Spellcasting' || name === 'Pact Magic') && level >= requiredLevel
+    ))
+  )).sort((a, b) => {
+    // starting class takes precedence, otherwise sort alphabetically
+    if (a.isStartingClass) {
+      return -1;
+    }
+    if (b.isStartingClass) {
+      return 1;
+    }
+    return a.definition.name.localeCompare(b.definition.name);
+    // just return the class definition, we only need the name and spellCastingAbilityId
+  }).map(({ definition }) => (definition));
+}
+
+function applySaveDCModifiers({
+  modifiers,
+  modifier: {
+    subType, type, value,
+  },
+}) {
+  const activeModifiers = { ...modifiers };
+  // classes the character has
+  const classes = Object.keys(activeModifiers.classBonus);
+
+  // global save dc like robe of the magic
+  if (subType === 'spell-save-dc' && type === 'bonus') {
+    activeModifiers.bonus += value;
+    return activeModifiers;
+  }
+
+  // class save dc like rod of the pact keeper (warlock)
+  classes.forEach((className) => {
+    // don't use class as a variable name jesus
+    if (subType === `${className.toLowerCase()}-spell-save-dc` && type === 'bonus') {
+      activeModifiers.classBonus[className] += value;
+    }
+  });
+
+  return null;
+}
+
+// returns spell save DCs in this form:
+// [[SAVE_DC_NUMBER, CLASSES], [SAVE_DC_NUMBER2, CLASSES]]
+// classes with same save dc are lumped in the same string, like how dndbeyond does it
+// they are sorted based on starting class name followed by alphabetical class name
+export function getSpellSaveDCs(character) {
+  const classes = getSpellCastingClasses(character);
+  // if no spellcasting classes, return null
+  if (!classes.length) {
+    return null;
+  }
+
+  let activeModifiers = classes.reduce((modifiers, { name }) => ({
+    ...modifiers,
+    classBonus: {
+      ...modifiers.classBonus,
+      [name]: 0,
+    },
+  }), {
+    bonus: 0,
+    classBonus: {},
+  });
+
+  activeModifiers = applyModifiers(character, activeModifiers, applySaveDCModifiers);
+
+  const { bonus, classBonus } = activeModifiers;
+
+  const saveDCBase = 8 + getProficiencyBonus(character) + bonus;
+
+  return classes.map(({ name, spellCastingAbilityId }) => ([
+    saveDCBase
+    + getAbilityScoreModifierById(character, spellCastingAbilityId)
+    + classBonus[name],
+    name,
+  // dndbeyond combines same saveDCs, but still with starting class up front
+  ])).reduce((classSaveDCs, [classSaveDC, className]) => {
+    const nextClassSaveDCs = [...classSaveDCs];
+    // lump classes with same value saveDCs together, but preserve the order
+    const matchIndex = nextClassSaveDCs.findIndex(([saveDC]) => (classSaveDC === saveDC));
+    if (matchIndex !== -1) {
+      nextClassSaveDCs[matchIndex][1].push(className);
+    } else {
+      nextClassSaveDCs.push([classSaveDC, [className]]);
+    }
+    return nextClassSaveDCs;
+  }, []).map(([classSaveDC, classNames]) => (
+    [classSaveDC, classNames.join(', ')]
+  ));
+}

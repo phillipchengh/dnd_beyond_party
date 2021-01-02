@@ -167,3 +167,14 @@ export function getSensesDisplay(document) {
   const senses = document.querySelector('.ct-senses__summary').textContent;
   return senses === 'Additional Sense Types' ? '' : senses;
 }
+
+export function getSpellSaveDCs(document) {
+  // return null if there's no expected spell save dc element
+  // it's not there if the character is on the wrong tab or not a spellcaster
+  const spellSaveDCElements = document.querySelectorAll(
+    '.ct-spells-level-casting__info-group',
+  )[2]?.children[0].children;
+  return spellSaveDCElements ? Array.from(spellSaveDCElements).reduce((saveDCs, child) => (
+    [...saveDCs, [parseInt(child.textContent, 10), child.getAttribute('data-original-title')]]
+  ), []) : null;
+}
