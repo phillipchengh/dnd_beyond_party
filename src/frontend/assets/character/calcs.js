@@ -1587,3 +1587,50 @@ export function getLanguages(character) {
 
   return Array.from(languages).sort().join(', ');
 }
+
+function applyMaxHitPoints({
+  modifiers,
+  modifier: {
+    subType, type, value,
+  },
+}) {
+  const appliedModifiers = { ...modifiers };
+
+  // stuff like tough feat and hill dwarf
+  if (subType === 'hit-points-per-level' && type === 'bonus') {
+    appliedModifiers.hitPointsPerLevel += value;
+    return appliedModifiers;
+  }
+
+  return null;
+}
+
+export function getMaxHitPoints(character) {
+  const {
+    baseHitPoints,
+    bonusHitPoints,
+    overrideHitPoints,
+  } = character;
+
+  if (overrideHitPoints !== null) {
+    return overrideHitPoints;
+  }
+
+  let activeModifiers = {
+    hitPointsPerLevel: 0,
+  };
+
+  activeModifiers = applyModifiers(character, activeModifiers, applyMaxHitPoints);
+
+  const { hitPointsPerLevel } = activeModifiers;
+  // base includes how they got hp: rolled/average/etc.
+  let maxHitPoints = baseHitPoints;
+  // constitution bonus
+  const level = getTotalLevel(character);
+  maxHitPoints += getConstitutionModifier(character) * level;
+  // modifier bonus
+  maxHitPoints += hitPointsPerLevel * level;
+  // custom input bonus
+  maxHitPoints += bonusHitPoints;
+  return maxHitPoints;
+}

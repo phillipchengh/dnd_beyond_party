@@ -182,3 +182,7 @@ export function getSpellSaveDCs(document) {
 export function getLanguages(document) {
   return document.querySelectorAll('.ct-proficiency-groups__group-items')[3].textContent;
 }
+
+export function getMaxHitPoints(document) {
+  return parseInt(document.querySelectorAll('.ct-health-summary__hp-number')[1].textContent, 10);
+}
