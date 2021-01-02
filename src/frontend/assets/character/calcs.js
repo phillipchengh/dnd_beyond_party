@@ -1243,6 +1243,9 @@ export function getArmorClass(character) {
     // unarmored base AC with no armor or shield
     armorClass = 10 + getDexterityModifier(character);
     // get the best AC calculation if there's unarmored defense
+    // note dndbeyond doesn't necessarily use the best defense
+    // i.e. it still display tortle natural armor over robe of the archmagi
+    // even if robe of the archmagi results in a better AC
     unarmoredBonusSets.forEach((unarmoredBonusSet) => {
       armorClass = Math.max(armorClass, 10 + unarmoredBonusSet);
     });
