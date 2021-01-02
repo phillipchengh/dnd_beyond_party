@@ -82,14 +82,19 @@ describe(DESCRIBE_TEST, () => {
     // compare each calc output using character-service data with the expected value in the .mht
     myCalcsKeys.forEach((calc) => {
       expect(ddbDomSelectors[calc]).toBeInstanceOf(Function);
-      // using an object with calc and value outputs which calc failed if it does fail
-      expect({
-        calc,
-        value: calcs[calc](data),
-      }).toEqual({
-        calc,
-        value: ddbDomSelectors[calc](document),
-      });
+      const expectedValue = ddbDomSelectors[calc](document);
+      // null is an option to skip the test or the mht didn't have the value
+      // i.e. spell save dc might not be there if the mht is on the wrong tab
+      if (expectedValue !== null) {
+        // using an object with calc and value outputs which calc failed if it does fail
+        expect({
+          calc,
+          value: calcs[calc](data),
+        }).toEqual({
+          calc,
+          value: expectedValue,
+        });
+      }
     });
   });
 });
