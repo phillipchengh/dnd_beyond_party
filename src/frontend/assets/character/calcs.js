@@ -1644,3 +1644,184 @@ export function getTemporaryHitPoints(character) {
   const { temporaryHitPoints } = character;
   return temporaryHitPoints;
 }
+
+const CONDITION_ADJUSTMENT_ID = 1;
+const DAMAGE_ADJUSTMENT_ID = 2;
+
+const CUSTOM_RESISTANCE = {
+  1: 'Bludgeoning',
+  2: 'Piercing',
+  3: 'Slashing',
+  4: 'Lightning',
+  5: 'Thunder',
+  6: 'Poison',
+  7: 'Cold',
+  8: 'Radiant',
+  9: 'Fire',
+  10: 'Necrotic',
+  11: 'Acid',
+  12: 'Psychic',
+  47: 'Force',
+  51: 'Ranged Attacks',
+  52: 'Damage Dealt By Traps',
+  54: 'Bludgeoning from non magical attacks',
+  57: 'Damage from Spells',
+};
+
+const CUSTOM_VULNERABILITY = {
+  33: 'Bludgeoning',
+  34: 'Piercing',
+  35: 'Slashing',
+  36: 'Lightning',
+  37: 'Thunder',
+  38: 'Poison',
+  39: 'Cold',
+  40: 'Radiant',
+  41: 'Fire',
+  42: 'Necrotic',
+  43: 'Acid',
+  44: 'Psychic',
+  49: 'Force',
+};
+
+const CUSTOM_DAMAGE_IMMUNITY = {
+  17: 'Bludgeoning',
+  18: 'Piercing',
+  19: 'Slashing',
+  20: 'Lightning',
+  21: 'Thunder',
+  22: 'Poison',
+  23: 'Cold',
+  24: 'Radiant',
+  25: 'Fire',
+  26: 'Necrotic',
+  27: 'Acid',
+  28: 'Psychic',
+  48: 'Force',
+};
+
+const CUSTOM_CONDITION_IMMUNITY = {
+  1: 'Blinded',
+  2: 'Charmed',
+  3: 'Deafened',
+  4: 'Exhaustion',
+  5: 'Frightened',
+  6: 'Grappled',
+  7: 'Incapacitated',
+  8: 'Invisible',
+  9: 'Paralyzed',
+  10: 'Petrified',
+  11: 'Poisoned',
+  12: 'Prone',
+  13: 'Restrained',
+  14: 'Stunned',
+  15: 'Unconscious',
+};
+
+function applyResistanceModifiers({
+  modifiers,
+  modifier: {
+    type, friendlySubtypeName,
+  },
+}) {
+  const appliedModifiers = { ...modifiers };
+
+  if (type === 'resistance') {
+    appliedModifiers.resistances.add(friendlySubtypeName);
+    return appliedModifiers;
+  }
+
+  return null;
+}
+
+export function getResistances(character) {
+  let activeModifiers = {
+    resistances: new Set(),
+  };
+
+  activeModifiers = applyModifiers(character, activeModifiers, applyResistanceModifiers);
+
+  const { resistances } = activeModifiers;
+
+  const { customDefenseAdjustments } = character;
+  customDefenseAdjustments.forEach(({ adjustmentId, type }) => {
+    if (type === DAMAGE_ADJUSTMENT_ID && CUSTOM_RESISTANCE[adjustmentId]) {
+      resistances.add(CUSTOM_RESISTANCE[adjustmentId]);
+    }
+  });
+
+  return Array.from(resistances).sort().join(', ');
+}
+
+function applyImmunityModifiers({
+  modifiers,
+  modifier: {
+    type, friendlySubtypeName,
+  },
+}) {
+  const appliedModifiers = { ...modifiers };
+
+  if (type === 'immunity') {
+    appliedModifiers.immunities.add(friendlySubtypeName);
+    return appliedModifiers;
+  }
+
+  return null;
+}
+
+function applyVulnerabilityModifiers({
+  modifiers,
+  modifier: {
+    type, friendlySubtypeName,
+  },
+}) {
+  const appliedModifiers = { ...modifiers };
+
+  if (type === 'vulnerability') {
+    appliedModifiers.vulnerabilities.add(friendlySubtypeName);
+    return appliedModifiers;
+  }
+
+  return null;
+}
+
+export function getVulnerabilities(character) {
+  let activeModifiers = {
+    vulnerabilities: new Set(),
+  };
+
+  activeModifiers = applyModifiers(character, activeModifiers, applyVulnerabilityModifiers);
+
+  const { vulnerabilities } = activeModifiers;
+
+  const { customDefenseAdjustments } = character;
+  customDefenseAdjustments.forEach(({ adjustmentId, type }) => {
+    if (type === DAMAGE_ADJUSTMENT_ID && CUSTOM_VULNERABILITY[adjustmentId]) {
+      vulnerabilities.add(CUSTOM_VULNERABILITY[adjustmentId]);
+    }
+  });
+
+  return Array.from(vulnerabilities).sort().join(', ');
+}
+
+export function getImmunities(character) {
+  let activeModifiers = {
+    immunities: new Set(),
+  };
+
+  activeModifiers = applyModifiers(character, activeModifiers, applyImmunityModifiers);
+
+  const { immunities } = activeModifiers;
+
+  const { customDefenseAdjustments } = character;
+  customDefenseAdjustments.forEach(({ adjustmentId, type }) => {
+    if (type === DAMAGE_ADJUSTMENT_ID && CUSTOM_DAMAGE_IMMUNITY[adjustmentId]) {
+      immunities.add(CUSTOM_DAMAGE_IMMUNITY[adjustmentId]);
+    }
+    if (type === CONDITION_ADJUSTMENT_ID && CUSTOM_CONDITION_IMMUNITY[adjustmentId]) {
+      immunities.add(CUSTOM_CONDITION_IMMUNITY[adjustmentId]);
+    }
+  });
+
+  return Array.from(immunities).sort().join(', ');
+}

@@ -195,3 +195,36 @@ export function getTemporaryHitPoints(document) {
   // might not be there
   return parseInt(document.querySelectorAll('.ct-health-summary__hp-number')[2]?.textContent ?? 0, 10);
 }
+
+export function getResistances(document) {
+  const resistancesElement = document.querySelector(
+    '[data-original-title="Resistance"]',
+  )?.parentElement.parentElement.children[1].children;
+  return resistancesElement ? Array.from(
+    resistancesElement,
+  ).map(
+    ({ textContent }) => (textContent.replace('*', '')),
+  ).join(', ') : null;
+}
+
+export function getVulnerabilities(document) {
+  const resistancesElement = document.querySelector(
+    '[data-original-title="Vulnerability"]',
+  )?.parentElement.parentElement.children[1].children;
+  return resistancesElement ? Array.from(
+    resistancesElement,
+  ).map(
+    ({ textContent }) => (textContent.replace('*', '')),
+  ).join(', ') : null;
+}
+
+export function getImmunities(document) {
+  const resistancesElement = document.querySelector(
+    '[data-original-title="Immunity"]',
+  )?.parentElement.parentElement.children[1].children;
+  return resistancesElement ? Array.from(
+    resistancesElement,
+  ).map(
+    ({ textContent }) => (textContent.replace('*', '')),
+  ).join(', ') : null;
+}

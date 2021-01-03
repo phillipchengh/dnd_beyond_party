@@ -30,6 +30,12 @@ import {
   getArmorClass,
   getSpellSaveDCs,
   getLanguages,
+  getCurrentHitPoints,
+  getMaxHitPoints,
+  getTemporaryHitPoints,
+  getResistances,
+  getImmunities,
+  getVulnerabilities,
 } from '@assets/character/calcs';
 import {
   getAvatarUrl,
@@ -131,6 +137,18 @@ export function Campaigns() {
                   <dd>{getSpellSaveDCs(data)}</dd>
                   <dt>Languages</dt>
                   <dd>{getLanguages(data)}</dd>
+                  <dt>Current Hit Points</dt>
+                  <dd>{getCurrentHitPoints(data)}</dd>
+                  <dt>Max Hit Points</dt>
+                  <dd>{getMaxHitPoints(data)}</dd>
+                  <dt>Temporary Hit Points</dt>
+                  <dd>{getTemporaryHitPoints(data)}</dd>
+                  <dt>Resistances</dt>
+                  <dd>{getResistances(data)}</dd>
+                  <dt>Immunities</dt>
+                  <dd>{getImmunities(data)}</dd>
+                  <dt>Vulnerabilities</dt>
+                  <dd>{getVulnerabilities(data)}</dd>
                 </dl>
               </li>
             ))}
