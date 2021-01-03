@@ -22,15 +22,29 @@
     color: #eee;
     font-size: 1rem;
     padding: 1.5rem;
+    transition: 0.1s ease-in;
     width: 100%;
 
+    &::after {
+        content: "→";
+        display: none;
+        margin-left: 1rem;
+    }
+
     &:hover {
-        background: black;
-        color: #eee;
+        background: #444;
+    
+        &::after {
+            display: inline-block;
+        }
     }
 }
 
 .current {
     background-color: #ccc;
     color: #26282a;
+
+    &:hover {
+        background: #999;
+    }
 }

@@ -1,0 +1,55 @@
+.characters {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.character {
+    border: 1px solid black;
+    margin-bottom: 1rem;
+}
+
+.character-header {
+    background: #26282a;
+    color: #eee;
+    padding: 1rem;
+    min-height: 6rem;
+
+    a {
+        color: #eee;
+        font-size: 1.5rem;
+    }
+    
+    div {
+        padding-left: 1rem;
+    }
+
+    strong {
+        display: inline-block;
+    }
+
+    img {
+        float: left;
+        max-width: 60px;
+        margin-right: 1rem;
+    }
+}
+
+dl {
+	display: grid;
+    grid-template: auto / 10em 1fr;
+    margin: 0;
+}
+
+dt {
+	background: #fee;
+}
+
+dd {
+	background: #f1f2f4;
+}
+
+dt, dd {
+	margin: 0;
+	padding: .3em .5em;
+	border-top: 1px solid #0000001a;
+}

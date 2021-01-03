@@ -59,29 +59,16 @@ export function CurrentCampaign() {
   return (
     <div className="current-campaign">
       <a href={getCampaignLink(state, currentCampaignId)}><h2>{currentCampaignName}</h2></a>
-      <button onClick={handleDelete(currentCampaignId)} type="button">Delete</button>
+      <button onClick={handleDelete(currentCampaignId)} type="button">Delete {currentCampaignName}</button>
       <div className="characters">
         {currentCampaignCharacters.map(({ lastUpdate, data }) => (
           <div className="character" key={getId(data)}>
-            <div className="card-header">
-              <img height="60" width="60" src={getAvatarUrl(data)} alt="Avatar" />
+            <div className="character-header">
+              <img src={getAvatarUrl(data)} alt="Avatar" />
               <a href={getLink(data)}><strong>{getName(data)}</strong></a>
+              <div>{getClassDisplay(data)} {getLevelDisplay(data)} | {getRace(data)}</div>
             </div>
             <dl>
-              <dt>Character ID</dt>
-              <dd>{getId(data)}</dd>
-              <dt>Last Update</dt>
-              <dd>{formatDistanceToNow(lastUpdate)}</dd>
-              <dt>Class</dt>
-              <dd>{getClassDisplay(data)}</dd>
-              <dt>Level</dt>
-              <dd>{getLevelDisplay(data)}</dd>
-              <dt>Race</dt>
-              <dd>{getRace(data)}</dd>
-              <dt>Avatar</dt>
-              <dd><img height="60" width="60" src={getAvatarUrl(data)} alt="Avatar" /></dd>
-              <dt>Link</dt>
-              <dd><a href={getLink(data)}>Here</a></dd>
               <dt>Raw</dt>
               <dd><a href={getRaw(data)}>Here</a></dd>
               <dt>Strength</dt>
@@ -104,6 +91,10 @@ export function CurrentCampaign() {
               <dd>{getPassiveInsight(data)}</dd>
               <dt>Armor Class</dt>
               <dd>{getArmorClass(data)}</dd>
+              <dt>Character ID</dt>
+              <dd>{getId(data)}</dd>
+              <dt>Last Update</dt>
+              <dd>{formatDistanceToNow(lastUpdate)}</dd>
             </dl>
           </div>
         ))}
