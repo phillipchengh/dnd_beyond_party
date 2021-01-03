@@ -1825,3 +1825,37 @@ export function getImmunities(character) {
 
   return Array.from(immunities).sort().join(', ');
 }
+
+const CONDITION = {
+  1: 'Blinded',
+  2: 'Charmed',
+  3: 'Deafened',
+  4: 'Exhaustion',
+  5: 'Frightened',
+  6: 'Grappled',
+  7: 'Incapacitated',
+  8: 'Invisible',
+  9: 'Paralyzed',
+  10: 'Petrified',
+  11: 'Poisoned',
+  12: 'Prone',
+  13: 'Restrained',
+  14: 'Stunned',
+  15: 'Unconscious',
+};
+
+export function getConditions(character) {
+  const { conditions } = character;
+
+  return conditions.reduce((currentConditions, { id, level }) => {
+    const condition = CONDITION[id];
+    // exhaustion also has a level
+    if (condition === 'Exhaustion' && level) {
+      return [...currentConditions, `Exhaustion (Level ${level})`];
+    }
+    if (condition) {
+      return [...currentConditions, condition];
+    }
+    return currentConditions;
+  }, []).sort().join(', ') ?? null;
+}

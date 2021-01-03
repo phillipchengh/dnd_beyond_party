@@ -36,6 +36,7 @@ import {
   getResistances,
   getImmunities,
   getVulnerabilities,
+  getConditions,
 } from '@assets/character/calcs';
 import {
   getAvatarUrl,
@@ -149,6 +150,8 @@ export function Campaigns() {
                   <dd>{getImmunities(data)}</dd>
                   <dt>Vulnerabilities</dt>
                   <dd>{getVulnerabilities(data)}</dd>
+                  <dt>Conditions</dt>
+                  <dd>{getConditions(data)}</dd>
                 </dl>
               </li>
             ))}

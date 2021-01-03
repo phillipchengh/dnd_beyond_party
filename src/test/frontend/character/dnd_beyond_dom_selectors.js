@@ -184,11 +184,12 @@ export function getLanguages(document) {
 }
 
 export function getMaxHitPoints(document) {
-  return parseInt(document.querySelectorAll('.ct-health-summary__hp-number')[1].textContent, 10);
+  const maxHitPoints = document.querySelectorAll('.ct-health-summary__hp-number')[1]?.textContent;
+  return maxHitPoints ? parseInt(maxHitPoints, 10) : null;
 }
 
 export function getCurrentHitPoints(document) {
-  return parseInt(document.querySelectorAll('.ct-health-summary__hp-number')[0].textContent, 10);
+  return parseInt(document.querySelectorAll('.ct-health-summary__hp-number')[0]?.textContent ?? 0, 10);
 }
 
 export function getTemporaryHitPoints(document) {
@@ -227,4 +228,15 @@ export function getImmunities(document) {
   ).map(
     ({ textContent }) => (textContent.replace('*', '')),
   ).join(', ') : null;
+}
+
+export function getConditions(document) {
+  return Array.from(
+    document.querySelectorAll('.ct-conditions-summary')[0].children,
+  ).map(
+    ({ textContent }) => (textContent),
+  ).filter(
+    // filter out no condition text
+    (condition) => (condition !== 'Add Active Conditions'),
+  ).join(', ') ?? null;
 }
