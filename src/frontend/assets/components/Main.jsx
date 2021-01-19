@@ -6,6 +6,7 @@ import { hasCampaigns } from '@assets/party/selectors';
 import ImportWizardModal from './ImportWizard/ImportWizardModal';
 import Updater from './Updater/Updater';
 import Campaigns from './Campaigns/Campaigns';
+import CurrentCampaign from './CurrentCampaign/CurrentCampaign';
 
 export function Main() {
   const { state } = useContext(PartyContext);
@@ -31,6 +32,7 @@ export function Main() {
       />
       <Updater />
       <Campaigns campaigns={state.campaigns} />
+      <CurrentCampaign />
     </main>
   );
 }
