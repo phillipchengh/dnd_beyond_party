@@ -5,6 +5,8 @@ import PartyContext from '@assets/party/Context';
 import * as calcs from '@assets/character/calcs';
 import * as selectors from '@assets/party/selectors';
 
+import '@assets/reset.less';
+
 import Main from './Main';
 
 export function DndBeyondPartyApp() {
