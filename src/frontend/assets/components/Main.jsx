@@ -1,37 +1,13 @@
-import React, { useContext, useState } from 'react';
+import React from 'react';
 
-import PartyContext from '@assets/party/Context';
-import { hasCampaigns } from '@assets/party/selectors';
-
-import ImportWizardModal from './ImportWizard/ImportWizardModal';
-import Updater from './Updater/Updater';
-import Campaigns from './Campaigns/Campaigns';
+import Nav from './Nav/Nav';
 import CurrentCampaign from './CurrentCampaign/CurrentCampaign';
 
+
 export function Main() {
-  const { state } = useContext(PartyContext);
-  const hasNoCampaigns = !hasCampaigns(state);
-  // if they have no campaigns, force show them the modal
-  const [showImportWizard, setShowImportWizard] = useState(hasNoCampaigns);
-
-  const handleOpenImportWizard = () => {
-    setShowImportWizard(true);
-  };
-
-  const handleCloseImportWizard = !hasNoCampaigns ? () => {
-    setShowImportWizard(false);
-  } : null;
-
   return (
-    <main>
-      <h1>D&D Beyond Party</h1>
-      <button onClick={handleOpenImportWizard} type="button">Import Character</button>
-      <ImportWizardModal
-        isOpen={showImportWizard}
-        onRequestClose={handleCloseImportWizard}
-      />
-      <Updater />
-      <Campaigns campaigns={state.campaigns} />
+    <main className="main">
+      <Nav />
       <CurrentCampaign />
     </main>
   );

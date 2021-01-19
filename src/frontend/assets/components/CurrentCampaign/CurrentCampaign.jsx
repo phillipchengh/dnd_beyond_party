@@ -12,6 +12,7 @@ import {
   getId,
 } from '@assets/character/calcs';
 
+import Updater from '@assets/components/Updater/Updater';
 import Character from './Character';
 
 export function CurrentCampaign() {
@@ -29,6 +30,7 @@ export function CurrentCampaign() {
     <>
       {showCurrentCampaign && (
         <>
+          <Updater />
           <h2>{`Current Campaign: ${currentCampaignName}`}</h2>
           <ol>
             {currentCampaignCharacters.map(({ lastUpdate, data }) => (
