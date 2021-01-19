@@ -15,9 +15,9 @@ export function Campaigns() {
   return (
     <>
       <h2>Campaigns</h2>
-      <ol>
+      <ol role="menu">
         {Object.keys(campaigns).map((campaignId) => (
-          <li key={campaignId}>
+          <li role="menuitem" key={campaignId}>
             <Campaign campaignId={campaignId} />
           </li>
         ))}
