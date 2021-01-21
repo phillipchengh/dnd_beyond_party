@@ -56,6 +56,10 @@ export function getCurrentCampaignId(state) {
   return state.currentCampaignId;
 }
 
+export function getCurrentCampaignLink(state) {
+  return getCampaignLink(state, state.currentCampaignId);
+}
+
 export function getSortedCurrentCampaignCharacters(state) {
   return getSortedCampaignCharacters(state, state.currentCampaignId);
 }

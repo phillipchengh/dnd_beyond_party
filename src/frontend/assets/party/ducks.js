@@ -43,6 +43,7 @@ export const ActionTypes = {
   DELETE_CAMPAIGN: 'delete_campaign',
   UPDATE_CAMPAIGN: 'update_campaign',
   SET_CURRENT_CAMPAIGN_ID: 'set_current_campaign_id',
+  DELETE_CURRENT_CAMPAIGN: 'delete_current_campaign',
   SET_ERROR: 'set_error',
   CLEAR_ERROR: 'clear_error',
 };
@@ -71,6 +72,9 @@ export const actions = {
     type: ActionTypes.SET_CURRENT_CAMPAIGN_ID,
     campaignId,
   }),
+  deleteCurrentCampaign: () => (storeCampaigns({
+    type: ActionTypes.DELETE_CURRENT_CAMPAIGN,
+  })),
   setError: (error) => ({
     type: ActionTypes.SET_ERROR,
     error,
@@ -158,6 +162,15 @@ export function reducer(state = initialState, action) {
         // i.e. when we compare campaign ids, we should compare them as numbers
         currentCampaignId: parseInt(campaignId, 10),
       };
+    }
+    case ActionTypes.DELETE_CURRENT_CAMPAIGN: {
+      const { currentCampaignId } = state;
+      const nextState = {
+        error: null,
+        ...state,
+      };
+      delete nextState.campaigns[currentCampaignId];
+      return nextState;
     }
     case ActionTypes.SET_ERROR: {
       const { error } = action;
