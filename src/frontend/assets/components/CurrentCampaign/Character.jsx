@@ -1,19 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 
 import {
   getClassDisplay,
   getLevelDisplay,
-  getId,
   getName,
   getRace,
-  getStrengthAbilityScore,
-  getDexterityAbilityScore,
-  getConstitutionAbilityScore,
-  getIntelligenceAbilityScore,
-  getWisdomAbilityScore,
-  getCharismaAbilityScore,
   getPassivePerception,
   getPassiveInvestigation,
   getPassiveInsight,
@@ -36,16 +28,12 @@ import {
 } from '@assets/character/selectors';
 
 export function Character({
-  lastUpdate, data,
+  data,
 }) {
   return (
     <>
       <div><strong>{getName(data)}</strong></div>
       <dl>
-        <dt>Character ID</dt>
-        <dd>{getId(data)}</dd>
-        <dt>Last Update</dt>
-        <dd>{formatDistanceToNow(lastUpdate)}</dd>
         <dt>Class</dt>
         <dd>{getClassDisplay(data)}</dd>
         <dt>Level</dt>
@@ -58,18 +46,6 @@ export function Character({
         <dd><a href={getLink(data)}>Here</a></dd>
         <dt>Raw</dt>
         <dd><a href={getRaw(data)}>Here</a></dd>
-        <dt>Strength</dt>
-        <dd>{getStrengthAbilityScore(data)}</dd>
-        <dt>Dexterity</dt>
-        <dd>{getDexterityAbilityScore(data)}</dd>
-        <dt>Constitution</dt>
-        <dd>{getConstitutionAbilityScore(data)}</dd>
-        <dt>Intelligence</dt>
-        <dd>{getIntelligenceAbilityScore(data)}</dd>
-        <dt>Wisdom</dt>
-        <dd>{getWisdomAbilityScore(data)}</dd>
-        <dt>Charisma</dt>
-        <dd>{getCharismaAbilityScore(data)}</dd>
         <dt>Passive Perception</dt>
         <dd>{getPassivePerception(data)}</dd>
         <dt>Passive Investigation</dt>
@@ -102,7 +78,6 @@ export function Character({
 }
 
 Character.propTypes = {
-  lastUpdate: PropTypes.number.isRequired,
   data: PropTypes.shape({}).isRequired,
 };
 
