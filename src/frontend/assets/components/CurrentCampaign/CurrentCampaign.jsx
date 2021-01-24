@@ -18,6 +18,8 @@ import {
 import Updater from '@assets/components/Updater/Updater';
 import Character from './Character';
 
+import './CurrentCampaign.less';
+
 export function CurrentCampaign() {
   const { dispatch, state } = useContext(PartyContext);
 
@@ -51,9 +53,9 @@ export function CurrentCampaign() {
           <h2>{`Current Campaign: ${currentCampaignName}`}</h2>
           <button onClick={handleDelete} type="button">Delete</button>
           <a href={getCurrentCampaignLink(state)}>DnD Beyond Link</a>
-          <ol>
+          <ol className="character_list">
             {currentCampaignCharacters.map(({ lastUpdate, data }) => (
-              <li key={getId(data)}>
+              <li className="character_item" key={getId(data)}>
                 <Character
                   data={data}
                   lastUpdate={lastUpdate}
