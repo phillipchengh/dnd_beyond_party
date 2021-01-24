@@ -14,6 +14,13 @@ export function getCampaigns(state) {
   return state.campaigns;
 }
 
+export function getSortedCampaignIds(state) {
+  // eslint-disable-next-line no-unused-vars
+  return Object.entries(getCampaigns(state)).sort(([idA, campaignA], [idB, campaignB]) => (
+    campaignA.name.localeCompare(campaignB.name)
+  )).map(([campaignId]) => (parseInt(campaignId, 10)));
+}
+
 export function getCampaign(state, campaignId) {
   // either retrieve the existing campaign, or return a new campaign object
   return state.campaigns[campaignId] ?? getEmptyCampaign();
