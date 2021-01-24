@@ -1,0 +1,43 @@
+@import "@assets/imports";
+
+.nav {
+  height: 100vh;
+  padding: 1rem;
+  width: 20rem;
+  position: fixed;
+
+  .import_button {
+    .primary_button();
+
+    &:after {
+      background-color: @pink;
+      border-radius: 10rem;
+      bottom: 0;
+      content: '';
+      height: 100%;
+      left: 0;
+      position: absolute;
+      width: 100%;
+      z-index: -2;
+    }
+
+    &:before {
+      background-color: darken(@pink, 15%);
+      bottom: 0;
+      content: '';
+      height: 100%;
+      left: 0;
+      position: absolute;
+      transition: all .3s;
+      border-radius: 10rem;
+      width: 0%;
+      z-index: -1;
+    }
+
+    &:hover {
+      &:before {
+        width: 100%;
+      }
+    }
+  }
+}

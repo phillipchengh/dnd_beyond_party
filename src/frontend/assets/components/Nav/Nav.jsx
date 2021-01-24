@@ -6,6 +6,8 @@ import { hasCampaigns } from '@assets/party/selectors';
 import ImportWizardModal from '@assets/components/ImportWizard/ImportWizardModal';
 import Campaigns from '@assets/components/Campaigns/Campaigns';
 
+import './Nav.less';
+
 export function Nav() {
   const { state } = useContext(PartyContext);
   const hasNoCampaigns = !hasCampaigns(state);
@@ -21,15 +23,21 @@ export function Nav() {
   } : null;
 
   return (
-    <>
+    <div className="nav">
       <h1 className="header">D&D Beyond Party</h1>
-      <button onClick={handleOpenImportWizard} type="button">Import Character</button>
+      <Campaigns campaigns={state.campaigns} />
+      <button
+        className="import_button"
+        onClick={handleOpenImportWizard}
+        type="button"
+      >
+        Import Campaign
+      </button>
       <ImportWizardModal
         isOpen={showImportWizard}
         onRequestClose={handleCloseImportWizard}
       />
-      <Campaigns campaigns={state.campaigns} />
-    </>
+    </div>
   );
 }
 
