@@ -8,6 +8,8 @@ import {
   getCurrentCampaignId,
 } from '@assets/party/selectors';
 
+import './Campaign.less';
+
 export function Campaign({ campaignId }) {
   const { dispatch, state } = useContext(PartyContext);
 
