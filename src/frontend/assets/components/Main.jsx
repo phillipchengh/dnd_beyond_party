@@ -3,6 +3,7 @@ import React from 'react';
 import Nav from './Nav/Nav';
 import CurrentCampaign from './CurrentCampaign/CurrentCampaign';
 
+import './Main.less';
 
 export function Main() {
   return (
