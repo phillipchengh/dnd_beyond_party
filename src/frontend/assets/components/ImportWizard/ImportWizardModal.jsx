@@ -19,6 +19,8 @@ import ImportCharacter from './ImportCharacter';
 import FoundCharacterInfo from './FoundCharacterInfo';
 import ImportedCampaignInfo from './ImportedCampaignInfo';
 
+import './ImportWizardModal.less';
+
 export function ImportWizardModal({ isOpen, onRequestClose }) {
   const { dispatch, state } = useContext(PartyContext);
   const [characterToImport, setCharacterToImport] = useState(null);
@@ -71,8 +73,10 @@ export function ImportWizardModal({ isOpen, onRequestClose }) {
 
   return (
     <Modal
+      className="import_wizard_modal"
       isOpen={isOpen}
       onRequestClose={onRequestClose}
+      overlayClassName="import_wizard_overlay"
     >
       {!characterToImport && (
         <ImportCharacter
