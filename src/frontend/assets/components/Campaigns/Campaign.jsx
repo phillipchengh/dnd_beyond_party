@@ -5,6 +5,7 @@ import { actions } from '@assets/party/ducks';
 import PartyContext from '@assets/party/Context';
 import {
   getCampaignName,
+  getCurrentCampaignId,
 } from '@assets/party/selectors';
 
 export function Campaign({ campaignId }) {
@@ -14,8 +15,14 @@ export function Campaign({ campaignId }) {
     dispatch(actions.setCurrentCampaign(campaignId));
   };
 
+  const currentCampaignId = getCurrentCampaignId(state);
+
   return (
-    <button onClick={handleSetCurrentCampaign} type="button">
+    <button
+      className={`campaign ${currentCampaignId === campaignId ? 'active' : ''}`}
+      onClick={handleSetCurrentCampaign}
+      type="button"
+    >
       {getCampaignName(state, campaignId)}
     </button>
   );
