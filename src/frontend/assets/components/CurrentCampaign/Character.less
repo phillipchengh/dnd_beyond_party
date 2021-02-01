@@ -1,0 +1,219 @@
+@import "@assets/imports";
+
+.character {
+  border: 1px solid @white;
+  height: 100%;
+
+  .header {
+    display: flex;
+    padding: 1rem;
+    position: relative;
+
+    .avatar {
+      height: 4.5rem;
+      width: 4.5rem;
+    }
+
+    .info {
+      margin-left: 1rem;
+      overflow: hidden;
+      width: 100%;
+
+      .dndbeyond_link {
+        .link();
+
+        display: inline-block;
+        max-width: 100%;
+        position: relative;
+        font-weight: 700;
+
+        .name {
+          font-size: 1.5rem;
+          padding-right: 2rem;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .externallink_svg {
+          height: 1rem;
+          position: absolute;
+          right: 0.5rem;
+          top: 0.25rem;
+          width: 1rem;
+        }
+      }
+
+      .class {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .race_json_row {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+
+        .json {
+          .link();
+
+          &::before {
+            content: '{';
+          }
+
+          &::after {
+            content: '}';
+          }
+        }
+      }
+    }
+  }
+
+  .grid_info {
+    align-items: center;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    justify-items: center;
+  }
+
+  .senses {
+    .passive_score {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  .armor_class {
+    align-items: center;
+    display: flex;
+    height: 6rem;
+    justify-content: center;
+    position: relative;
+    text-align: center;
+    width: 6rem;
+
+    .shield_svg {
+      height: 6rem;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 6rem;
+    }
+
+    .armor_class_info {
+      display: flex;
+      flex-direction: column-reverse;
+    }
+  }
+
+  .hit_points {
+    align-items: center;
+    display: flex;
+    height: 6rem;
+    justify-content: center;
+    // size of temp hit points area
+    margin-right: 3rem;
+    position: relative;
+    text-align: center;
+    width: 6rem;
+
+    .heart_svg {
+      height: 6rem;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 6rem;
+    }
+
+    .hit_points_info {
+      display: flex;
+      flex-direction: column-reverse;
+    }
+
+    .temp_hit_points {
+      align-items: center;
+      display: flex;
+      flex-direction: column-reverse;
+      height: 6rem;
+      justify-content: center;
+      top: 0;
+      position: absolute;
+      right: -3rem;
+    }
+  }
+
+  .defenses {
+    .defense_icon {
+      align-items: center;
+      color: @green;
+      display: inline-flex;
+      height: 1rem;
+      justify-content: center;
+      position: relative;
+      // odd number seems to center the letter better
+      width: 1.1rem;
+
+      .shield_svg {
+        height: 100%;
+        width: 100%;
+      }
+
+      &:before {
+        // had trouble figuring out properly centering, this seems to do best
+        font-size: 0.5rem;
+        font-weight: 700;
+        height: 100%;
+        position: absolute;
+        text-align: center;
+        top: 0.25rem;
+        width: 100%;
+      }
+    }
+
+    .resistance_icon:before {
+      content: 'R';
+    }
+
+    .immunity_icon:before {
+      content: 'I';
+    }
+
+    .vulnerability_icon {
+      color: @red;
+    }
+
+    .vulnerability_icon:before {
+      content: 'V';
+    }
+
+    .defense_value {
+      display: inline;
+      vertical-align: text-top;
+    }
+  }
+
+  .primary_save_dc {
+    text-align: center;
+  }
+
+  .other_save_dcs {
+    .other_save_dc_info {
+      display: flex;
+
+      .other_save_dc_classes {
+        margin-left: 0.5rem;
+      }
+    }
+  }
+
+  .languages {
+    .languages_list {
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+  }
+}
