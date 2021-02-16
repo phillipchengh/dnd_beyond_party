@@ -24,21 +24,22 @@ export function Nav() {
 
   return (
     <>
-      <div className="nav_overlay" />
-      <div className="nav">
-        <h1 className="header">D&D Beyond Party</h1>
-        <Campaigns campaigns={state.campaigns} />
-        <button
-          className="import_button"
-          onClick={handleOpenImportWizard}
-          type="button"
-        >
-          Import Campaign
-        </button>
-        <ImportWizardModal
-          isOpen={showImportWizard}
-          onRequestClose={handleCloseImportWizard}
-        />
+      <div className="nav_overlay">
+        <div className="nav">
+          <h1 className="header">D&D Beyond Party</h1>
+          <Campaigns campaigns={state.campaigns} />
+          <button
+            className="import_button"
+            onClick={handleOpenImportWizard}
+            type="button"
+          >
+            Import Campaign
+          </button>
+          <ImportWizardModal
+            isOpen={showImportWizard}
+            onRequestClose={handleCloseImportWizard}
+          />
+        </div>
       </div>
     </>
   );
