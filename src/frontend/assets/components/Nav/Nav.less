@@ -1,10 +1,25 @@
 @import "@assets/imports";
 
+.nav_overlay {
+  height: 100vh;
+  margin-right: 22rem;
+
+  @media @phonesAndTablet {
+    // margin-right: 3rem;
+    margin-right: 0;
+  }
+}
+
 .nav {
   height: 100vh;
   padding: 1rem;
   width: 20rem;
   position: fixed;
+
+  @media @phonesAndTablet {
+    display: none;
+    max-width: 1rem;
+  }
 
   .header {
     color: @red;
