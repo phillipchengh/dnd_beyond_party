@@ -62,7 +62,7 @@ export function getRace({ race }) {
 // modifiers.background[].componentId === choices.background[].optionValue
 function componentIdInBackground(character, componentId) {
   return (
-    character.background.definition.id === componentId
+    character.background.definition?.id === componentId
     || character.background.customBackground.id === componentId
     || character.choices.background.find(({ optionValue }) => (optionValue === componentId))
   );
