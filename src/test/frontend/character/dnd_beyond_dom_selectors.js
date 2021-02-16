@@ -163,9 +163,9 @@ export function getArmorClass(document) {
   return parseInt(document.querySelector('.ddbc-armor-class-box__value').textContent, 10);
 }
 
-export function getSensesDisplay(document) {
+export function getExtraSenses(document) {
   const senses = document.querySelector('.ct-senses__summary').textContent;
-  return senses === 'Additional Sense Types' ? '' : senses;
+  return senses === 'Additional Sense Types' ? [] : senses.split(', ');
 }
 
 export function getSpellSaveDCs(document) {
@@ -180,7 +180,7 @@ export function getSpellSaveDCs(document) {
 }
 
 export function getLanguages(document) {
-  return document.querySelectorAll('.ct-proficiency-groups__group-items')[3].textContent;
+  return document.querySelectorAll('.ct-proficiency-groups__group-items')[3].textContent?.split(', ') ?? [];
 }
 
 export function getMaxHitPoints(document) {
@@ -205,7 +205,7 @@ export function getResistances(document) {
     resistancesElement,
   ).map(
     ({ textContent }) => (textContent.replace('*', '')),
-  ).join(', ') : null;
+  ) : null;
 }
 
 export function getVulnerabilities(document) {
@@ -216,7 +216,7 @@ export function getVulnerabilities(document) {
     resistancesElement,
   ).map(
     ({ textContent }) => (textContent.replace('*', '')),
-  ).join(', ') : null;
+  ) : null;
 }
 
 export function getImmunities(document) {
@@ -227,7 +227,7 @@ export function getImmunities(document) {
     resistancesElement,
   ).map(
     ({ textContent }) => (textContent.replace('*', '')),
-  ).join(', ') : null;
+  ) : null;
 }
 
 export function getConditions(document) {
@@ -238,5 +238,5 @@ export function getConditions(document) {
   ).filter(
     // filter out no condition text
     (condition) => (condition !== 'Add Active Conditions'),
-  ).join(', ') ?? null;
+  ) ?? null;
 }

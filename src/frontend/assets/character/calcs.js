@@ -1351,7 +1351,7 @@ function getSenses(character) {
   return senses;
 }
 
-export function getSensesDisplay(character) {
+export function getExtraSenses(character) {
   return Object.entries(getSenses(character)).map(([senseId, distance]) => (
     // distance could be null or 0, both mean no sense should be shown
     // display on dndbeyond looks like
@@ -1361,8 +1361,7 @@ export function getSensesDisplay(character) {
     // get rid of senses with no value
     senseString !== null
   ))
-    .sort()
-    .join(', '); // also sort senses
+    .sort(); // also sort senses
 }
 
 // gets sorted spellcasting class definitions
@@ -1585,7 +1584,7 @@ export function getLanguages(character) {
     }
   });
 
-  return Array.from(languages).sort().join(', ');
+  return Array.from(languages).sort();
 }
 
 function applyMaxHitPoints({
@@ -1750,7 +1749,7 @@ export function getResistances(character) {
     }
   });
 
-  return Array.from(resistances).sort().join(', ');
+  return Array.from(resistances).sort();
 }
 
 function applyImmunityModifiers({
@@ -1801,7 +1800,7 @@ export function getVulnerabilities(character) {
     }
   });
 
-  return Array.from(vulnerabilities).sort().join(', ');
+  return Array.from(vulnerabilities).sort();
 }
 
 export function getImmunities(character) {
@@ -1823,7 +1822,7 @@ export function getImmunities(character) {
     }
   });
 
-  return Array.from(immunities).sort().join(', ');
+  return Array.from(immunities).sort();
 }
 
 const CONDITION = {
@@ -1857,5 +1856,5 @@ export function getConditions(character) {
       return [...currentConditions, condition];
     }
     return currentConditions;
-  }, []).sort().join(', ') ?? null;
+  }, []).sort() ?? null;
 }

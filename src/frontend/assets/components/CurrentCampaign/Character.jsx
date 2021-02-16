@@ -9,7 +9,7 @@ import {
   getPassivePerception,
   getPassiveInvestigation,
   getPassiveInsight,
-  getSensesDisplay,
+  getExtraSenses,
   getArmorClass,
   getSpellSaveDCs,
   getLanguages,
@@ -29,8 +29,11 @@ import {
 } from '@assets/character/selectors';
 
 import ExternalLink from '../Graphics/ExternalLink';
+import Eye from '../Graphics/Eye';
 import Heart from '../Graphics/Heart';
+import Language from '../Graphics/Language';
 import Shield from '../Graphics/Shield';
+import Condition from '../Graphics/Condition';
 
 import './Character.less';
 
@@ -48,11 +51,20 @@ export function Character({
   };
 
   const renderExtraSenses = () => {
-    const extraSenses = getSensesDisplay(data);
-    return extraSenses ? (
+    const extraSenses = getExtraSenses(data);
+    return extraSenses.length ? (
       <>
         <h4>Extra Senses</h4>
-        <div>{extraSenses}</div>
+        <ol>
+          {extraSenses.map((extraSense) => (
+            <li>
+              <span className="bullet_icon eye_icon">
+                <Eye />
+              </span>
+              {extraSense}
+            </li>
+          ))}
+        </ol>
       </>
     ) : null;
   };
@@ -61,33 +73,51 @@ export function Character({
     const resistances = getResistances(data);
     const immunities = getImmunities(data);
     const vulnerabilities = getVulnerabilities(data);
-    if (resistances || immunities || vulnerabilities) {
+    if (resistances.length || immunities.length || vulnerabilities.length) {
       return (
         <>
           <h4>Defenses</h4>
           <ol>
-            {resistances ? (
+            {resistances.length ? (
               <li className="resistances">
-                <div className="defense_icon resistance_icon">
-                  <Shield />
-                </div>
-                <p className="defense_value">{resistances}</p>
+                <ol>
+                  {resistances.map((resistance) => (
+                    <li>
+                      <span className="bullet_icon defense_icon resistance_icon">
+                        <Shield />
+                      </span>
+                      {resistance}
+                    </li>
+                  ))}
+                </ol>
               </li>
             ) : null}
-            {immunities ? (
+            {immunities.length ? (
               <li className="immunities">
-                <div className="defense_icon immunity_icon">
-                  <Shield />
-                </div>
-                <p className="defense_value">{immunities}</p>
+                <ol>
+                  {immunities.map((immunity) => (
+                    <li>
+                      <span className="bullet_icon defense_icon immunity_icon">
+                        <Shield />
+                      </span>
+                      {immunity}
+                    </li>
+                  ))}
+                </ol>
               </li>
             ) : null}
-            {vulnerabilities ? (
+            {vulnerabilities.length ? (
               <li className="vulnerabilities">
-                <div className="defense_icon vulnerability_icon">
-                  <Shield />
-                </div>
-                <p className="defense_value">{vulnerabilities}</p>
+                <ol>
+                  {vulnerabilities.map((vulnerability) => (
+                    <li>
+                      <span className="bullet_icon defense_icon vulnerability_icon">
+                        <Shield />
+                      </span>
+                      {vulnerability}
+                    </li>
+                  ))}
+                </ol>
               </li>
             ) : null}
           </ol>
@@ -99,10 +129,38 @@ export function Character({
 
   const renderConditions = () => {
     const conditions = getConditions(data);
-    return conditions ? (
+    return conditions.length ? (
       <>
         <h4>Conditions</h4>
-        <div>{conditions}</div>
+        <ol>
+          {conditions.map((condition) => (
+            <li>
+              <span className="bullet_icon condition_icon">
+                <Condition />
+              </span>
+              {condition}
+            </li>
+          ))}
+        </ol>
+      </>
+    ) : null;
+  };
+
+  const renderLanguages = () => {
+    const languages = getLanguages(data);
+    return languages.length ? (
+      <>
+        <h4>Languages</h4>
+        <ol>
+          {languages.map((language) => (
+            <li>
+              <span className="bullet_icon language_icon">
+                <Language />
+              </span>
+              {language}
+            </li>
+          ))}
+        </ol>
       </>
     ) : null;
   };
@@ -120,7 +178,7 @@ export function Character({
             <div>{primaryClasses}</div>
           </li>
           <li className="other_save_dcs">
-            {otherSpellSaveDCs ? (
+            {otherSpellSaveDCs?.length ? (
               <>
                 <h4>Other Save DCs</h4>
                 <ol>
@@ -208,12 +266,7 @@ export function Character({
           {renderConditions()}
         </li>
         <li className="languages">
-          <dl>
-            <div className="languages_list">
-              <dt>Languages</dt>
-              <dd>{getLanguages(data)}</dd>
-            </div>
-          </dl>
+          {renderLanguages()}
         </li>
         {renderSpellSaveDCItems()}
       </ol>
