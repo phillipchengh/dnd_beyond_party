@@ -1,0 +1,105 @@
+@import "@assets/imports";
+
+// special styling for updater's menu
+.MuiMenuItem-root.menu_item {
+  &:active,
+  &:focus,
+  &:hover,
+  &.Mui-selected.selected {
+    &.off {
+      border-left: 3px solid @red;
+      color: @red;
+    }
+  }
+
+  &.Mui-selected.selected {
+    .display_value {
+      .selected_icon {
+        display: block;
+      }
+    }
+  }
+
+  .display_value {
+    .selected_icon {
+      display: none;
+      height: 1rem;
+      position: absolute;
+      right: 0.5rem;
+      top: 0.5rem;
+      width: 1rem;
+    }
+  }
+}
+
+.updater {
+  display: inline-block;
+
+  .update_buttons {
+    background: @gray;
+    border: 1px solid @white;
+    display: inline-flex;
+
+   .manual_update_button {
+      .reset_button();
+
+      border-right: 1px solid @white;
+      cursor: pointer;
+      display: flex;
+      outline: 0;
+      padding: 0.5rem;
+
+      .refresh_svg {
+        height: 1rem;
+        width: 1rem;
+      }
+
+      .button_text {
+        .visually_hidden();
+      }
+
+      &.auto_update_on {
+        color: @green;
+      }
+
+      &.is_updating,
+      &:active,
+      &:focus,
+      &:hover {
+        animation: @party_animation;
+      }
+   }
+
+    .auto_update_button {
+      .reset_button();
+
+      cursor: pointer;
+      display: flex;
+      outline: 0;
+      padding: 0.5rem;
+
+      .button_text {
+        min-width: 3.5ch;
+      }
+
+      .caret_svg {
+        height: 1rem;
+        width: 1rem;
+      }
+
+      &.open {
+        .caret_svg {
+          transform: rotate(180deg);
+        }
+      }
+
+      &:active,
+      &:focus,
+      &:hover {
+        // make it noticeable on hover
+        // focus remains when they exit the menu, so not too noticeable
+        color: darken(@white, 20%);
+      }
+    }
+  }
+}
