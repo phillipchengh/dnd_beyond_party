@@ -108,6 +108,32 @@
   width: 1.1rem;
 }
 
+// creates a sketchy border look
+.box_border(
+  @border_color
+) {
+  border: 3px solid @border_color;
+  border-radius: 2% 6% 5% 4% e("/") 1% 1% 2% 4%;
+  position: relative;
+
+  &::before {
+    border: 2px solid darken(@border_color, 10%);
+    border-radius: 1% 1% 2% 4% e("/") 2% 6% 5% 4%;
+    content: '';
+    display: block;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    transform: scale(1.015) rotate(0.5deg);
+    width: 100%;
+  }
+}
+
+.primary_box_border() {
+  .box_border(@white);
+}
+
 .visually_hidden {
   clip: rect(0 0 0 0);
   clip-path: inset(50%);
