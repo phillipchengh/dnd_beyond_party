@@ -1,0 +1,27 @@
+@import "@assets/imports";
+
+.MuiMenu-paper.paper {
+  background: @lightGray;
+  color: @textPrimary;
+}
+
+.MuiMenuItem-root.menu_item {
+  // provide border space to avoid awkward menu movements when hovering
+  border-left: 3px solid transparent;
+  justify-content: flex-start;
+  padding-right: 2rem;
+  position: relative;
+
+  &:active,
+  &:focus,
+  &:hover,
+  &.Mui-selected.selected {
+    border-left: 3px solid @green;
+    color: @green;
+
+    &.off {
+      border-left: 3px solid @red;
+      color: @red;
+    }
+  }
+}
