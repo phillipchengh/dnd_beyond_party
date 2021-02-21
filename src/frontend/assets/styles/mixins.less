@@ -134,6 +134,43 @@
   .box_border(@white);
 }
 
+// creates a sketchy underline look
+.bottom_border(
+  @border_color
+) {
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.3rem;
+  position: relative;
+
+  &::before {
+    border-bottom: 2px solid darken(@border_color, 10%);
+    content: '';
+    display: block;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    transform: scale(1.015) rotate(1deg);
+    width: 100%;
+  }
+
+  &::after {
+    border-bottom: 2px solid darken(@border_color, 10%);
+    content: '';
+    display: block;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    transform: scale(1.015) rotate(-2deg);
+    width: 100%;
+  }
+}
+
+.primary_bottom_border() {
+  .bottom_border(@white);
+}
+
 .visually_hidden {
   clip: rect(0 0 0 0);
   clip-path: inset(50%);
