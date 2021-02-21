@@ -75,6 +75,7 @@
     "webpack-manifest-plugin": "2.2.0"
   },
   "dependencies": {
+    "@material-ui/core": "^4.11.3",
     "core-js": "^3.8.1",
     "lzutf8": "^0.5.6",
     "prop-types": "^15.7.2",
