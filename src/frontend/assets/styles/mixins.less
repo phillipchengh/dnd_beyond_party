@@ -17,6 +17,11 @@
 .link() {
   color: @blue;
   text-decoration: none;
+
+  &:focus,
+  &:hover {
+    animation: @party_animation;
+  }
 }
 
 .button(
