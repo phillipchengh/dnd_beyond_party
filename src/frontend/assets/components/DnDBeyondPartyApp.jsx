@@ -7,6 +7,8 @@ import * as selectors from '@assets/party/selectors';
 
 import '@assets/reset.less';
 
+import './DndBeyondPartyApp.less';
+
 import Main from './Main';
 
 export function DndBeyondPartyApp() {
