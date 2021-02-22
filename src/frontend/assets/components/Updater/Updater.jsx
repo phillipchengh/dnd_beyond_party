@@ -137,14 +137,18 @@ export function Updater() {
             <span className="button_text">Update Manually</span>
           </button>
         </Tooltip>
-        <button
-          className={`auto_update_button ${isMenuOpen ? 'open' : 'close'}`}
-          onClick={handleMenuOpen}
-          type="button"
+        <Tooltip
+          title="Set Auto Update"
         >
-          <div className="button_text">{autoUpdateDisplay}</div>
-          <Caret />
-        </button>
+          <button
+            className={`auto_update_button ${isMenuOpen ? 'open' : 'close'}`}
+            onClick={handleMenuOpen}
+            type="button"
+          >
+            <div className="button_text">{autoUpdateDisplay}</div>
+            <Caret />
+          </button>
+        </Tooltip>
       </div>
       <Menu
         anchorEl={menuAnchorElement}
