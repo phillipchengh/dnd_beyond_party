@@ -1,5 +1,64 @@
+@import "@assets/imports";
+
 .current_campaign {
   padding: 1rem;
+  width: 100%;
+
+  .title_container {
+    // match .site_header
+    text-align: center;
+
+    .dndbeyond_link {
+      .link();
+
+      display: inline-block;
+      font-weight: 700;
+      max-width: 100%;
+      position: relative;
+
+      .externallink_svg {
+        height: 1rem;
+        position: absolute;
+        right: 0.5rem;
+        top: 0.25rem;
+        width: 1rem;
+      }
+
+      .title {
+        font-size: 1.5rem;
+        padding-right: 2rem;
+      }
+    }
+
+    .delete_button {
+      .reset_button();
+
+      color: @red;
+      cursor: pointer;
+      height: 1rem;
+      outline: 0;
+      width: 1rem;
+
+      &:hover {
+        color: @darkRed;
+      }
+
+      .delete_button_text {
+        .visually_hidden();
+      }
+
+      .trash_svg {
+        color: inherit;
+        height: 100%;
+        width: 100%;
+      }
+    }
+  }
+
+  .last_update_text {
+    margin-bottom: 1rem;
+    text-align: center;
+  }
 
   .character_list {
     display: grid;
