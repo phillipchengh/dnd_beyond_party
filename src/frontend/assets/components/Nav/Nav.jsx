@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import PropTypes from 'prop-types';
 
 import PartyContext from '@assets/party/Context';
 import { hasCampaigns } from '@assets/party/selectors';
@@ -6,9 +7,13 @@ import { hasCampaigns } from '@assets/party/selectors';
 import ImportWizardModal from '@assets/components/ImportWizard/ImportWizardModal';
 import Campaigns from '@assets/components/Campaigns/Campaigns';
 
+import Drawer from '../Common/Drawer';
+
 import './Nav.less';
 
-export function Nav() {
+export function Nav({
+  desktopOpen, mobileOpen, onDesktopClose, onDesktopOpen, onMobileClose, onMobileOpen,
+}) {
   const { state } = useContext(PartyContext);
   const hasNoCampaigns = !hasCampaigns(state);
   // if they have no campaigns, force show them the modal
@@ -22,27 +27,70 @@ export function Nav() {
     setShowImportWizard(false);
   } : null;
 
+  // common nav content for desktop and mobile drawers
+  const renderNavContent = () => (
+    <>
+      <Campaigns campaigns={state.campaigns} />
+      <button
+        className="import_button"
+        onClick={handleOpenImportWizard}
+        type="button"
+      >
+        Import Campaign
+      </button>
+    </>
+  );
+
   return (
     <>
-      <div className="nav_overlay">
+      <ImportWizardModal
+        isOpen={showImportWizard}
+        onRequestClose={handleCloseImportWizard}
+      />
+      <Drawer
+        onClose={onDesktopClose}
+        onOpen={onDesktopOpen}
+        open={desktopOpen}
+        rootClass="desktop_drawer"
+      >
         <div className="nav">
-          <h1 className="header">D&D Beyond Party</h1>
-          <Campaigns campaigns={state.campaigns} />
           <button
-            className="import_button"
-            onClick={handleOpenImportWizard}
+            onClick={onDesktopClose}
             type="button"
           >
-            Import Campaign
+            Close
           </button>
-          <ImportWizardModal
-            isOpen={showImportWizard}
-            onRequestClose={handleCloseImportWizard}
-          />
+          {renderNavContent()}
         </div>
-      </div>
+      </Drawer>
+      <Drawer
+        onClose={onMobileClose}
+        onOpen={onMobileOpen}
+        open={mobileOpen}
+        rootClass="mobile_drawer"
+        variant="temporary"
+      >
+        <div className="nav">
+          <button
+            onClick={onMobileClose}
+            type="button"
+          >
+            Close
+          </button>
+          {renderNavContent()}
+        </div>
+      </Drawer>
     </>
   );
 }
+
+Nav.propTypes = {
+  desktopOpen: PropTypes.bool.isRequired,
+  mobileOpen: PropTypes.bool.isRequired,
+  onDesktopClose: PropTypes.func.isRequired,
+  onDesktopOpen: PropTypes.func.isRequired,
+  onMobileClose: PropTypes.func.isRequired,
+  onMobileOpen: PropTypes.func.isRequired,
+};
 
 export default Nav;

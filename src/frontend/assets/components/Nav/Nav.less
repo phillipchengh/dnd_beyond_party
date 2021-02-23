@@ -1,31 +1,20 @@
 @import "@assets/imports";
 
-.nav_overlay {
-  height: 100vh;
-  margin-right: 22rem;
+@media @phonesAndTabletSmall {
+  .desktop_drawer {
+    display: none;
+  }
+}
 
-  @media @phonesAndTablet {
-    margin-right: 0;
+@media not @phonesAndTabletSmall {
+  .mobile_drawer {
+    display: none;
   }
 }
 
 .nav {
-  height: 100vh;
   padding: 1rem;
   width: 20rem;
-  position: fixed;
-
-  @media @phonesAndTablet {
-    display: none;
-    max-width: 1rem;
-  }
-
-  .header {
-    color: @red;
-    font-family: "Gill Sans", sans-serif;
-    font-size: 2rem;
-    font-weight: 700;
-  }
 
   .import_button {
     .primary_button();
@@ -60,5 +49,11 @@
         width: 100%;
       }
     }
+  }
+}
+
+@media @phonesAndTabletSmall {
+  .nav {
+    width: 80vw;
   }
 }

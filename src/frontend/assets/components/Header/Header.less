@@ -1,0 +1,31 @@
+@import "@assets/imports";
+
+.site_header {
+  // match centering with .current_campaign
+  position: relative;
+  text-align: center;
+
+  .open_nav_button {
+    left: 0;
+    position: absolute;
+    top: 0;
+  }
+
+  .updater {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  @media @phonesAndTabletSmall {
+    .desktop_open_nav_button {
+      display: none;
+    }
+  }
+
+  @media not @phonesAndTabletSmall {
+    .mobile_open_nav_button {
+      display: none;
+    }
+  }
+}
