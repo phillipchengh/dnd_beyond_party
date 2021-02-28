@@ -1,0 +1,23 @@
+@import "@assets/imports";
+
+.open_nav_button {
+  .reset_button();
+
+  cursor: pointer;
+  outline: 0;
+
+  &:active,
+  &:focus,
+  &:hover {
+    animation: @party_animation;
+  }
+
+  .button_text {
+    .visually_hidden();
+  }
+
+  .dungeon_svg {
+    height: 2rem;
+    width: 2rem;
+  }
+}

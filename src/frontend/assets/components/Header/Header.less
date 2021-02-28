@@ -1,20 +1,58 @@
 @import "@assets/imports";
 
 .site_header {
+  margin: 1.5rem;
   // match centering with .current_campaign
   position: relative;
   text-align: center;
 
+  .header {
+    font-family: @main_title_font_family;
+    font-size: 2rem;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+
+    .icon_wrapper {
+      display: none;
+
+      .dragon_svg {
+        height: 2rem;
+        width: 2rem;
+      }
+    }
+  }
+
   .open_nav_button {
-    left: 0;
+    .reset_button();
+
+    left: 1rem;
     position: absolute;
     top: 0;
   }
 
   .updater {
     position: absolute;
-    right: 0;
+    right: 1rem;
     top: 0;
+  }
+
+  @media @phonesAndTablet {
+    margin: 1rem;
+
+    .header {
+      font-size: 1.5rem;
+    }
+
+    .open_nav_button {
+      left: 0;
+      top: -0.5rem;
+    }
+
+    .updater {
+      right: 0;
+      top: -0.5rem;
+    }
+
   }
 
   @media @phonesAndTabletSmall {
@@ -26,6 +64,26 @@
   @media not @phonesAndTabletSmall {
     .mobile_open_nav_button {
       display: none;
+    }
+  }
+
+  @media @phones {
+    .header {
+      .header_text {
+        .visually_hidden();
+      }
+
+      .icon_wrapper {
+        display: inline-block;
+      }
+    }
+
+    .open_nav_button {
+      top: 0;
+    }
+
+    .updater {
+      top: 0;
     }
   }
 }

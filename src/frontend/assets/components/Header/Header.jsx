@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Updater from '../Updater/Updater';
+import OpenNavButton from './OpenNavButton';
+import Tooltip from '../Common/Tooltip';
+import Dragon from '../Graphics/Dragon';
 
 import './Header.less';
 
@@ -12,22 +15,23 @@ export function Header({
     // 'header' is used elsewhere
     <header className="site_header">
       {!desktopNavOpen && (
-        <button
-          className="open_nav_button desktop_open_nav_button"
+        <OpenNavButton
+          className="desktop_open_nav_button"
           onClick={onDesktopNavOpen}
-          type="button"
-        >
-          Desktop Hamburger
-        </button>
+        />
       )}
-      <button
-        className="open_nav_button mobile_open_nav_button"
+      <OpenNavButton
+        className="mobile_open_nav_button"
         onClick={onMobileNavOpen}
-        type="button"
-      >
-        Mobile Hamburger
-      </button>
-      <h1 className="header">D&D Beyond Party</h1>
+      />
+      <h1 className="header">
+        <div className="header_text">D&D Beyond Party</div>
+        <Tooltip title="D&D Beyond Party">
+          <div className="icon_wrapper">
+            <Dragon />
+          </div>
+        </Tooltip>
+      </h1>
       <Updater />
     </header>
   );
