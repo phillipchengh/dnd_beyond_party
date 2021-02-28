@@ -147,6 +147,14 @@ module.exports = function config(env = { development: true }) {
             },
           ],
         },
+        {
+          test: /\.(woff(2)?|ttf|eot|otf)(\?v=\d+\.\d+\.\d+)?$/,
+          use: [
+            {
+              loader: 'file-loader',
+            },
+          ],
+        },
       ],
     },
     optimization: {
