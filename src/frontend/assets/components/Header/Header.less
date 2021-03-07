@@ -7,10 +7,7 @@
   text-align: center;
 
   .header {
-    font-family: @main_title_font_family;
-    font-size: 2rem;
-    font-weight: 900;
-    letter-spacing: 1.5px;
+    .main_title();
 
     .icon_wrapper {
       display: none;
@@ -38,10 +35,6 @@
 
   @media @phonesAndTablet {
     margin: 1rem;
-
-    .header {
-      font-size: 1.5rem;
-    }
 
     .open_nav_button {
       left: 0;
