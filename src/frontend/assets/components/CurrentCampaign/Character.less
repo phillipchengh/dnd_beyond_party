@@ -1,15 +1,18 @@
 @import "@assets/imports";
 
 .character {
-  border: 1px solid @white;
+  .primary_box_border();
+
   height: 100%;
+  padding: 1rem;
 
   .header {
     display: flex;
-    padding: 1rem;
     position: relative;
 
     .avatar {
+      .primary_box_border();
+
       height: 4.5rem;
       width: 4.5rem;
     }
@@ -71,11 +74,15 @@
   }
 
   .grid_info {
-    align-items: center;
     display: grid;
     gap: 1rem;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     justify-items: center;
+    margin-top: 1rem;
+  }
+
+  .bullet_icon {
+    .bullet_point_icon();
   }
 
   .senses {
@@ -114,7 +121,7 @@
     height: 6rem;
     justify-content: center;
     // size of temp hit points area
-    margin-right: 3rem;
+    margin-right: 4rem;
     position: relative;
     text-align: center;
     width: 6rem;
@@ -144,6 +151,16 @@
     }
   }
 
+  .extra_senses {
+    .eye_icon {
+      .eye_svg {
+        color: @cyan;
+        height: 0.9rem;
+        width: 0.9rem;
+      }
+    }
+  }
+
   .defenses {
     .defense_icon {
       align-items: center;
@@ -152,6 +169,7 @@
       height: 1rem;
       justify-content: center;
       position: relative;
+      vertical-align: text-top;
       // odd number seems to center the letter better
       width: 1.1rem;
 
@@ -180,6 +198,14 @@
       content: 'I';
     }
 
+    .resistance_icon {
+      color: @green;
+    }
+
+    .immunity_icon {
+      color: @cyan;
+    }
+
     .vulnerability_icon {
       color: @red;
     }
@@ -187,10 +213,13 @@
     .vulnerability_icon:before {
       content: 'V';
     }
+  }
 
-    .defense_value {
-      display: inline;
-      vertical-align: text-top;
+  .condition_icon {
+    .condition_svg {
+      color: @red;
+      height: 0.8rem;
+      width: 0.8rem;
     }
   }
 
@@ -208,12 +237,11 @@
     }
   }
 
-  .languages {
-    .languages_list {
-      align-items: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+  .language_icon {
+    .language_svg {
+      color: @cyan;
+      height: 0.8rem;
+      width: 0.8rem;
     }
   }
 }

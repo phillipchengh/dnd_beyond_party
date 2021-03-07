@@ -28,6 +28,8 @@ import {
   getRaw,
 } from '@assets/character/selectors';
 
+import StatHeader from './StatHeader';
+
 import ExternalLink from '../Graphics/ExternalLink';
 import Eye from '../Graphics/Eye';
 import Heart from '../Graphics/Heart';
@@ -44,7 +46,7 @@ export function Character({
     const temp = getTemporaryHitPoints(data);
     return temp ? (
       <div className="temp_hit_points">
-        <h4>Temp</h4>
+        <StatHeader bottomBorder={false}>Temp</StatHeader>
         <div>{`+${temp}`}</div>
       </div>
     ) : null;
@@ -54,7 +56,7 @@ export function Character({
     const extraSenses = getExtraSenses(data);
     return extraSenses.length ? (
       <>
-        <h4>Extra Senses</h4>
+        <StatHeader>Extra Senses</StatHeader>
         <ol>
           {extraSenses.map((extraSense) => (
             <li>
@@ -76,7 +78,7 @@ export function Character({
     if (resistances.length || immunities.length || vulnerabilities.length) {
       return (
         <>
-          <h4>Defenses</h4>
+          <StatHeader>Defenses</StatHeader>
           <ol>
             {resistances.length ? (
               <li className="resistances">
@@ -131,7 +133,7 @@ export function Character({
     const conditions = getConditions(data);
     return conditions.length ? (
       <>
-        <h4>Conditions</h4>
+        <StatHeader>Conditions</StatHeader>
         <ol>
           {conditions.map((condition) => (
             <li>
@@ -150,7 +152,7 @@ export function Character({
     const languages = getLanguages(data);
     return languages.length ? (
       <>
-        <h4>Languages</h4>
+        <StatHeader>Languages</StatHeader>
         <ol>
           {languages.map((language) => (
             <li>
@@ -173,14 +175,14 @@ export function Character({
       return (
         <>
           <li className="primary_save_dc">
-            <h4>Save DC</h4>
+            <StatHeader>Save DC</StatHeader>
             <div>{primaryValue}</div>
             <div>{primaryClasses}</div>
           </li>
           <li className="other_save_dcs">
             {otherSpellSaveDCs?.length ? (
               <>
-                <h4>Other Save DCs</h4>
+                <StatHeader>Other Save DCs</StatHeader>
                 <ol>
                   {otherSpellSaveDCs.map(([value, classes]) => (
                     <li>
@@ -225,7 +227,7 @@ export function Character({
       </header>
       <ol className="grid_info">
         <li className="senses">
-          <h4>Passive Senses</h4>
+          <StatHeader>Passive Senses</StatHeader>
           <dl>
             <div className="passive_score">
               <dt>Perception</dt>
@@ -244,14 +246,14 @@ export function Character({
         <li className="armor_class">
           <Shield />
           <div className="armor_class_info">
-            <h4>AC</h4>
+            <StatHeader bottomBorder={false}>AC</StatHeader>
             <div>{getArmorClass(data)}</div>
           </div>
         </li>
         <li className="hit_points">
           <Heart />
           <div className="hit_points_info">
-            <h4>HP</h4>
+            <StatHeader bottomBorder={false}>HP</StatHeader>
             <div>{`${getCurrentHitPoints(data)} / ${getMaxHitPoints(data)}`}</div>
           </div>
           {renderTemporaryHitPoints()}
