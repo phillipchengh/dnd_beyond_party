@@ -148,26 +148,28 @@
   position: relative;
 
   &::before {
-    border-bottom: 2px solid darken(@border_color, 10%);
+    border-bottom: 2px solid @border_color;
     content: '';
     display: block;
     height: 100%;
     left: 0;
     position: absolute;
     top: 0;
-    transform: scale(1.015) rotate(1deg);
+    transform: scaleX(@scaleX_border) rotate(@before_border_deg);
+    transform-origin: 0% 50%;
     width: 100%;
   }
 
   &::after {
-    border-bottom: 2px solid darken(@border_color, 10%);
+    border-bottom: 2px solid @border_color;
     content: '';
     display: block;
     height: 100%;
     left: 0;
     position: absolute;
     top: 0;
-    transform: scale(1.015) rotate(-2deg);
+    transform: scaleX(@scaleX_border) rotate(@after_border_deg);
+    transform-origin: 100% 50%;
     width: 100%;
   }
 }
