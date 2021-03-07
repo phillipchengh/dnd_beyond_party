@@ -28,7 +28,7 @@ export function NavContent({
         type="button"
       >
         <div className="button_text">
-          <div className="beer_wrapper beer_before">
+          <div className="wizardhat_wrapper">
             <WizardHat />
           </div>
           Import Campaign
