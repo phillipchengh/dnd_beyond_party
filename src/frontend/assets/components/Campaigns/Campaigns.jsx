@@ -11,16 +11,13 @@ export function Campaigns() {
   const { state } = useContext(PartyContext);
 
   return (
-    <>
-      <h2>Campaigns</h2>
-      <ol role="menu">
-        {getSortedCampaignIds(state).map((campaignId) => (
-          <li role="menuitem" key={campaignId}>
-            <Campaign campaignId={campaignId} />
-          </li>
-        ))}
-      </ol>
-    </>
+    <ol role="menu">
+      {getSortedCampaignIds(state).map((campaignId) => (
+        <li role="menuitem" key={campaignId}>
+          <Campaign campaignId={campaignId} />
+        </li>
+      ))}
+    </ol>
   );
 }
 

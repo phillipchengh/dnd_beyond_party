@@ -21,11 +21,13 @@ export function Campaign({ campaignId }) {
 
   return (
     <button
-      className={`campaign ${currentCampaignId === campaignId ? 'active' : ''}`}
+      className={`campaign ${currentCampaignId === campaignId ? 'active' : 'inactive'}`}
       onClick={handleSetCurrentCampaign}
       type="button"
     >
-      {getCampaignName(state, campaignId)}
+      <div className="button_text">
+        {getCampaignName(state, campaignId)}
+      </div>
     </button>
   );
 }

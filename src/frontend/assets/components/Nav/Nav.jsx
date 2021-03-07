@@ -5,9 +5,8 @@ import PartyContext from '@assets/party/Context';
 import { hasCampaigns } from '@assets/party/selectors';
 
 import ImportWizardModal from '@assets/components/ImportWizard/ImportWizardModal';
-import Campaigns from '@assets/components/Campaigns/Campaigns';
-
 import Drawer from '../Common/Drawer';
+import NavContent from './NavContent';
 
 import './Nav.less';
 
@@ -27,20 +26,6 @@ export function Nav({
     setShowImportWizard(false);
   } : null;
 
-  // common nav content for desktop and mobile drawers
-  const renderNavContent = () => (
-    <>
-      <Campaigns campaigns={state.campaigns} />
-      <button
-        className="import_button"
-        onClick={handleOpenImportWizard}
-        type="button"
-      >
-        Import Campaign
-      </button>
-    </>
-  );
-
   return (
     <>
       <ImportWizardModal
@@ -54,13 +39,10 @@ export function Nav({
         rootClass="desktop_drawer"
       >
         <div className="nav">
-          <button
-            onClick={onDesktopClose}
-            type="button"
-          >
-            Close
-          </button>
-          {renderNavContent()}
+          <NavContent
+            onClose={onDesktopClose}
+            onImport={handleOpenImportWizard}
+          />
         </div>
       </Drawer>
       <Drawer
@@ -71,13 +53,10 @@ export function Nav({
         variant="temporary"
       >
         <div className="nav">
-          <button
-            onClick={onMobileClose}
-            type="button"
-          >
-            Close
-          </button>
-          {renderNavContent()}
+          <NavContent
+            onClose={onMobileClose}
+            onImport={handleOpenImportWizard}
+          />
         </div>
       </Drawer>
     </>

@@ -178,7 +178,81 @@
   .bottom_border(@white);
 }
 
-.visually_hidden {
+.invisible_nav_bottom_border() {
+  .bottom_border(@background);
+}
+
+.add_hover_nav_bottom_border_animation() {
+  &::before {
+    animation: ease-in-out sketch_border_before 250ms;
+    animation-fill-mode: forwards;
+    border-bottom: 2px solid @lightGray;
+  }
+
+  &::after {
+    animation: ease-in-out sketch_border_after 250ms;
+    animation-delay: 250ms;
+    animation-fill-mode: forwards;
+    border-bottom: 2px solid @lightGray;
+  }
+}
+
+.nav_button() {
+  .reset_button();
+
+  cursor: pointer;
+  outline: 0;
+  padding: 0.5rem;
+  width: 100%;
+
+  .button_text {
+    .fancy_text();
+    .invisible_nav_bottom_border();
+
+    display: inline-block;
+    font-size: 1.4rem;
+  }
+
+  &:focus,
+  &:hover {
+    background-color: @lightGray;
+  }
+
+  &.inactive {
+    &:focus,
+    &:hover {
+      .button_text {
+        .add_hover_nav_bottom_border_animation();
+      }
+    }
+  }
+
+  &.active {
+    background-color: @lightGray;
+
+    .button_text {
+      .primary_bottom_border();
+    }
+  }
+}
+
+.nav_cta_button() {
+  .reset_button();
+
+  background-color: @veryFadedPurple;
+  cursor: pointer;
+  outline: 0;
+  padding: 1rem 0;
+  width: 100%;
+
+  &:active,
+  &:focus,
+  &:hover {
+    background-color: @fadedPurple;
+  }
+}
+
+.visually_hidden() {
   clip: rect(0 0 0 0);
   clip-path: inset(50%);
   height: 1px;

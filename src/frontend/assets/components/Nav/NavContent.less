@@ -1,0 +1,59 @@
+@import "@assets/imports";
+
+.nav_content {
+  .campaigns_header_wrapper {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin: 1.5rem;
+
+    .header {
+      .main_title();
+    }
+  }
+
+  .import_button {
+    .nav_cta_button();
+
+    .button_text {
+      .fancy_text();
+
+      display: inline-block;
+      font-size: 1.4rem;
+      position: relative;
+
+      .beer_wrapper {
+        height: 1.4rem;
+        // margin: 0 0.5rem 0.2rem;
+        transition: transform 250ms ease-in-out;
+        width: 1.4rem;
+        position: absolute;
+        left: -2rem;
+        top: -0.1rem;
+
+        .beer_svg {
+          height: 1.4rem;
+          width: 1.4rem;
+        }
+      }
+    }
+
+    &:hover {
+      .button_text {
+        .beer_wrapper {
+          transform: translateY(-0.1rem);
+        }
+      }
+    }
+  }
+
+  // .import_button_wrapper {
+  //   margin-top: 1rem;
+  //   text-align: center;
+
+  //   .import_button {
+  //     // .primary_button(@veryLightGray);
+  //     .primary_button(@purple);
+  //   }
+  // }
+}
