@@ -43,3 +43,27 @@
     transform: scaleX(@scaleX_border) rotate(@after_border_deg);
   }
 }
+
+@keyframes blinking {
+  12.5% {
+    opacity: 0.625;
+  }
+  25% {
+    opacity: 0.75;
+  }
+  37.5% {
+    opacity: 0.625;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  62.5% {
+    opacity: 0.375;
+  }
+  75% {
+    opacity: 0.25;
+  }
+  87.5% {
+    opacity: 0.375;
+  }
+}
