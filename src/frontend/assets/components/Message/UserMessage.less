@@ -1,0 +1,35 @@
+@import "@assets/imports";
+
+.user_message {
+  align-items: flex-end;
+  display: flex;
+  font-size: 1.2rem;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  scroll-margin-bottom: 1rem;
+
+  .user_wrapper {
+    align-items: center;
+    background: @darkGreen;
+    border-radius: 0.2rem;
+    display: flex;
+    height: 2.5rem;
+    justify-content: center;
+    margin-left: 0.5rem;
+    min-width: 2.5rem;
+
+    .user_svg {
+      color: @veryDarkGreen;
+      height: 2rem;
+    }
+  }
+
+  .message {
+    background: @veryDarkGreen;
+    border-right: 6px solid @darkGreen;
+    border-radius: 0.2rem;
+    display: inline-block;
+    min-height: 2.5rem;
+    padding: 0.5rem 1rem;
+  }
+}
