@@ -9,14 +9,18 @@ export function WizardMessageDelay({ onDone, children }) {
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      setDelaying(false);
-      onDone();
+      if (delaying) {
+        setDelaying(false);
+        onDone();
+      }
     }, 1000);
 
     return () => {
-      clearTimeout(timeoutId);
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
     };
-  }, [onDone]);
+  }, [children, delaying, onDone]);
 
   return (
     <>
