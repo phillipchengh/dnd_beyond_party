@@ -1,0 +1,48 @@
+@import "@assets/imports";
+
+.ReactModal__Body--open {
+  overflow: hidden;
+}
+
+.modal {
+  background: @background;
+  border-radius: 0.5rem;
+  bottom: 4rem;
+  left: 4rem;
+  overflow: auto;
+  outline: 0;
+  padding: 20px;
+  position: absolute;
+  right: 4rem;
+  top: 4rem;
+  z-index: 2400;
+}
+
+@media @phonesAndTablet {
+  .modal {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+  }
+}
+
+.overlay {
+  background: fade(black, 50%);
+  bottom: 0;
+  left: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 2400;
+}
+
+.modal.interstitial {
+  border-radius: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+}
