@@ -5,7 +5,7 @@ import { getCampaignCharacters } from './selectors';
 import { getEmptyCampaign } from './utilities';
 
 // increment this when the state structure changes to force update stored values
-const schemaVersion = 7;
+const schemaVersion = 9;
 // campaign data is compressed and stored under the campaigns key
 // everything else is uncompressed and stored under the party key
 const LOCAL_STORAGE_KEY = 'party';
@@ -17,7 +17,7 @@ function getInitialState() {
     // if our versions match, use the cached data
     if (parseInt(localStorageState?.schemaVersion, 10) === schemaVersion) {
       // campaigns is stored specially compressed under the campaigns key
-      const campaigns = JSON.parse(lzutf8.decompress(localStorage.getItem(LOCAL_STORAGE_CAMPAIGNS), { inputEncoding: 'Base64' }));
+      const campaigns = JSON.parse(lzutf8.decompress(localStorage.getItem(LOCAL_STORAGE_CAMPAIGNS), { inputEncoding: 'BinaryString' }));
       // our state schema should look like one object like the empty case below
       return {
         ...localStorageState,
@@ -206,15 +206,10 @@ const withLocalStorage = (wrappedReducer) => (
       // compressing is an expensive operation, so we want to avoid it as much as possible
       // action.storeCampaigns is specially set by the storeCampaigns function above
       if (action.storeCampaigns) {
-        lzutf8.compressAsync(JSON.stringify(campaigns), { outputEncoding: 'Base64' }, (compressedCampaigns, error) => {
-          if (error) {
-            throw error;
-          }
-          // campaigns data
-          localStorage.setItem(LOCAL_STORAGE_CAMPAIGNS, compressedCampaigns);
-          // everything else in party state
-          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(localStorageState));
-        });
+        // campaigns data
+        localStorage.setItem(LOCAL_STORAGE_CAMPAIGNS, lzutf8.compress(JSON.stringify(campaigns), { outputEncoding: 'BinaryString' }));
+        // everything else in party state
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(localStorageState));
       } else {
         // if not storing any new campaigns, just store everything else in party state
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(localStorageState));
