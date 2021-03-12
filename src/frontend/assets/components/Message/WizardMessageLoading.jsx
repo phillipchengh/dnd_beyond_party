@@ -6,7 +6,7 @@ import './WizardMessageLoading.less';
 
 export function WizardMessageLoading() {
   return (
-    <WizardMessage className="wizard_message_loading">
+    <WizardMessage className="wizard_message_loading" scrollIntoView>
       {/* for unsighted users */}
       <span className="loading_text">Loading</span>
       <span className="typing_dot" />
