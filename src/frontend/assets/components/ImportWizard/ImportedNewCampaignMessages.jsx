@@ -35,7 +35,9 @@ export function ImportedNewCampaignMessages({
           <Fragment key={getId(data)}>
             <Toggle show={index <= showCharacterMessageIndex}>
               <WizardMessageDelay onDone={showNextCharacter}>
-                {`${characterName} ${characterTitle}has joined the fray!`}
+                <p>
+                  {`${characterName} ${characterTitle}has joined the fray!`}
+                </p>
               </WizardMessageDelay>
             </Toggle>
           </Fragment>
