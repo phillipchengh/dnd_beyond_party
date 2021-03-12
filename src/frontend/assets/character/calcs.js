@@ -56,6 +56,18 @@ export function getRace({ race }) {
   return race.fullName || race.baseName;
 }
 
+// can return '' (newbie), 'race', 'race class'
+export function getRaceClassDisplay(character) {
+  const raceDisplay = getRace(character);
+  const { classes } = character;
+  if (!classes.length) {
+    return raceDisplay;
+  }
+  const startingClassIndex = classes.findIndex(({ isStartingClass }) => isStartingClass);
+  const startingClassDisplay = `${classes[startingClassIndex].definition.name}`;
+  return `${raceDisplay} ${startingClassDisplay}`;
+}
+
 // matching examples
 // modifiers.background[].componentId === background.definition.id
 // modifiers.background[].componentId === customBackground.id

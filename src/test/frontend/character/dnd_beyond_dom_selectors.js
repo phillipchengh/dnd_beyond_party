@@ -240,3 +240,7 @@ export function getConditions(document) {
     (condition) => (condition !== 'Add Active Conditions'),
   ) ?? null;
 }
+
+export function getRaceClassDisplay() {
+  return null;
+}
