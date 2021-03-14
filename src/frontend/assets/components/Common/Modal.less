@@ -7,23 +7,30 @@
 .modal {
   background: @background;
   border-radius: 0.5rem;
-  bottom: 4rem;
+  bottom: auto;
   left: 4rem;
+  margin: 0 auto 1rem;
+  max-width: 560px;
   overflow: auto;
   outline: 0;
-  padding: 20px;
+  padding: 2rem;
   position: absolute;
   right: 4rem;
   top: 4rem;
+  width: calc(~'100% - 1rem');
   z-index: 2400;
 }
 
-@media @phonesAndTablet {
+@media @phonesAndTabletSmall {
   .modal {
+    border-radius: 0;
     bottom: 0;
     left: 0;
+    margin: 0;
+    max-width: 100%;
     right: 0;
     top: 0;
+    width: 100%;
   }
 }
 
@@ -43,6 +50,9 @@
   border-radius: 0;
   bottom: 0;
   left: 0;
+  max-width: 100%;
+  margin: 0;
   right: 0;
   top: 0;
+  width: 100%;
 }
