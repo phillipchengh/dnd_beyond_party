@@ -6,6 +6,8 @@ import { getRaceClassDisplay, getId, getName } from '@assets/character/calcs';
 import Toggle from './Toggle';
 import WizardMessageDelay from '../Message/WizardMessageDelay';
 
+import './ImportedNewCampaignMessages.less';
+
 export function ImportedNewCampaignMessages({
   campaignCharacters, onDone,
 }) {
@@ -24,26 +26,33 @@ export function ImportedNewCampaignMessages({
   };
 
   return (
-    <>
+    <div className="imported_new_campaign_messages">
       {campaignCharacters.map(({ data }, index) => {
         const characterName = getName(data);
         const characterRaceClass = getRaceClassDisplay(data);
         // could be a newbie character, so no title
-        const characterTitle = characterRaceClass ? `the ${characterRaceClass} ` : '';
+        const characterTitle = characterRaceClass ? (
+          <>
+            {' the '}
+            <strong className="character_emphasis">{characterRaceClass}</strong>
+          </>
+        ) : '';
 
         return (
           <Fragment key={getId(data)}>
             <Toggle show={index <= showCharacterMessageIndex}>
               <WizardMessageDelay onDone={showNextCharacter}>
                 <p>
-                  {`${characterName} ${characterTitle}has joined the fray!`}
+                  <strong className="character_emphasis">{characterName}</strong>
+                  {characterTitle}
+                  {' has joined the fray!'}
                 </p>
               </WizardMessageDelay>
             </Toggle>
           </Fragment>
         );
       })}
-    </>
+    </div>
   );
 }
 
