@@ -25,7 +25,6 @@ import ImportCharacterDescriptionMessages from './ImportCharacterDescriptionMess
 import ImportCharacterMessage from './ImportCharacterMessage';
 import ImportedCampaignMessages from './ImportedCampaignMessages';
 
-import UserMessage from '../Message/UserMessage';
 import UserMessageButton from '../Message/UserMessageButton';
 import WizardMessageDelay from '../Message/WizardMessageDelay';
 import WizardMessageDanger from '../Message/WizardMessageDanger';
