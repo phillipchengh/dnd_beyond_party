@@ -28,7 +28,9 @@ export function ImportedCampaignMessages({
   if (isEmptyCampaign(campaign)) {
     return (
       <WizardMessageDanger>
-        {'We found no active characters in the imported character\'s campaign. Please refresh and try another character.'}
+        <p>
+          {'We found no active characters in the imported character\'s campaign. Please refresh and try another character.'}
+        </p>
       </WizardMessageDanger>
     );
   }
@@ -39,11 +41,13 @@ export function ImportedCampaignMessages({
   if (areSoloAdventurers(campaign)) {
     return (
       <WizardMessageDelay className="imported_campaign_messages" onDone={onDone}>
-        {'I have added '}
-        <strong className="emphasis">{inputCharacterName}</strong>
-        {' to the campaign '}
-        <strong className="emphasis">Solo Adventurers</strong>
-        !
+        <p>
+          {'I have added '}
+          <strong className="emphasis">{inputCharacterName}</strong>
+          {' to the campaign '}
+          <strong className="emphasis">Solo Adventurers</strong>
+          !
+        </p>
       </WizardMessageDelay>
     );
   }
@@ -56,13 +60,15 @@ export function ImportedCampaignMessages({
   if (isExistingCampaign) {
     return (
       <WizardMessageDelay className="imported_campaign_messages" onDone={onDone}>
-        {'It looks like '}
-        <strong className="emphasis">{inputCharacterName}</strong>
-        {' is in '}
-        <strong className="emphasis">{name}</strong>
-        {'. I have updated '}
-        <strong className="emphasis">{name}</strong>
-        !
+        <p>
+          {'It looks like '}
+          <strong className="emphasis">{inputCharacterName}</strong>
+          {' is in '}
+          <strong className="emphasis">{name}</strong>
+          {'. I have updated '}
+          <strong className="emphasis">{name}</strong>
+          !
+        </p>
       </WizardMessageDelay>
     );
   }
@@ -75,9 +81,11 @@ export function ImportedCampaignMessages({
   return (
     <>
       <WizardMessageDelay className="imported_campaign_messages" onDone={setShowCharacters}>
-        {'I have invited everyone from '}
-        <strong className="emphasis">{name}</strong>
-        !
+        <p>
+          {'I have invited everyone from '}
+          <strong className="emphasis">{name}</strong>
+          !
+        </p>
       </WizardMessageDelay>
       {showCharacters && (
         <ImportedNewCampaignMessages
