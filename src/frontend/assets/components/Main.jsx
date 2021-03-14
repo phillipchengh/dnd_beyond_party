@@ -15,6 +15,9 @@ export function Main() {
 
   const handleWelcomeViewDone = () => {
     setShowWelcomeView(false);
+    // when we switch from WelcomeView to MainView, the scrolling position remains where they were
+    // start them at the top in the new view instead
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
