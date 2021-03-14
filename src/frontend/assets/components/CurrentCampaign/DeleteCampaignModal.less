@@ -1,0 +1,56 @@
+@import "@assets/imports";
+
+.delete_campaign_modal {
+  text-align: center;
+
+  .header {
+    .main_title();
+  }
+
+  .bookdead_svg {
+    color: @darkRed;
+    height: 15rem;
+    // margin-bottom: 5rem;
+    padding: 1rem;
+  }
+
+  .messages {
+    margin: 0 auto;
+    // margin-bottom: 5rem;
+    max-width: 767px;
+    text-align: left;
+
+    .emphasis {
+      font-weight: 900;
+    }
+  }
+
+  .buttons_wrapper {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+
+    .delete_button {
+      .primary_button(@red);
+
+      display: inline-flex;
+      margin-right: 1rem;
+
+      &.is_deleting {
+        align-items: center;
+
+        .loading_text {
+          .visually_hidden();
+        }
+
+        .loading_dot {
+          .blinking_dot(@darkGray);
+        }
+      }
+    }
+
+    .cancel_button {
+      .primary_button(@veryLightGray);
+    }
+  }
+}

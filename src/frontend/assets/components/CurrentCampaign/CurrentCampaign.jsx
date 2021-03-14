@@ -20,8 +20,9 @@ import {
 
 import Character from './Character';
 
+import DeleteCampaignModal from './DeleteCampaignModal';
 import ExternalLink from '../Graphics/ExternalLink';
-import Trash from '../Graphics/Trash';
+import Skull from '../Graphics/Skull';
 
 import './CurrentCampaign.less';
 
@@ -38,16 +39,32 @@ export function CurrentCampaign() {
     currentCampaignCharacters = getSortedCurrentCampaignCharacters(state);
   }
 
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteMessage, setDeleteMessage] = useState(null);
+
+  const handleOpenDeleteModal = () => {
+    setShowDeleteModal(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setShowDeleteModal(false);
+  };
 
   const handleDelete = () => {
     // use the campaign name before we lose it
     setDeleteMessage(`We deleted ${currentCampaignName}!`);
     dispatch(actions.deleteCurrentCampaign());
+    setShowDeleteModal(false);
   };
 
   return (
     <div className="current_campaign">
+      <DeleteCampaignModal
+        campaignName={currentCampaignName}
+        isOpen={showDeleteModal}
+        onDelete={handleDelete}
+        onRequestClose={handleCloseDeleteModal}
+      />
       {!showCurrentCampaign && (
         <>
           {deleteMessage && <p>{deleteMessage}</p>}
@@ -61,9 +78,9 @@ export function CurrentCampaign() {
               <h2 className="title">{currentCampaignName}</h2>
               <ExternalLink />
             </a>
-            <button className="delete_button" onClick={handleDelete} type="button">
+            <button className="delete_button" onClick={handleOpenDeleteModal} type="button">
               <span className="delete_button_text">Delete</span>
-              <Trash />
+              <Skull />
             </button>
           </div>
           <p className="last_update_text">
