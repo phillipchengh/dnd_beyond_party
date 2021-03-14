@@ -284,3 +284,29 @@
   white-space: nowrap;
   width: 1px;
 }
+
+.blinking_dot(@color) {
+  background: @color;
+  border-radius: 50%;
+  display: inline-block;
+  height: 1rem;
+  margin-right: 0.2rem;
+  opacity: 0.5;
+  width: 1rem;
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  &:nth-of-type(1) {
+    animation: 1s blinking infinite;
+  }
+
+  &:nth-of-type(2) {
+    animation: 1s blinking infinite 0.3333s;
+  }
+
+  &:nth-of-type(3) {
+    animation: 1s blinking infinite 0.6666s;
+  }
+}
