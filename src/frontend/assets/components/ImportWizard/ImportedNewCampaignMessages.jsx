@@ -5,21 +5,24 @@ import { getRaceClassDisplay, getId, getName } from '@assets/character/calcs';
 
 import Toggle from './Toggle';
 import WizardMessageDelay from '../Message/WizardMessageDelay';
+import useToggleLogic from './useToggleLogic';
 
 import './ImportedNewCampaignMessages.less';
 
 export function ImportedNewCampaignMessages({
-  campaignCharacters, onDone,
+  campaignCharacters, campaignName, onDone,
 }) {
   const [
     showCharacterMessageIndex,
     setShowCharacterMessageIndex,
   ] = useState(0);
 
+  const [showFinishMessage, setShowFinishMessage] = useToggleLogic();
+
   const showNextCharacter = () => {
     // we are done on the last character
     if ((showCharacterMessageIndex + 1) >= campaignCharacters.length) {
-      onDone();
+      setShowFinishMessage();
     } else {
       setShowCharacterMessageIndex((prevIndex) => (prevIndex + 1));
     }
@@ -52,12 +55,18 @@ export function ImportedNewCampaignMessages({
           </Fragment>
         );
       })}
+      <Toggle show={showFinishMessage}>
+        <WizardMessageDelay onDone={onDone}>
+          {`That looks like everyone active in ${campaignName}. We can check the party out now!`}
+        </WizardMessageDelay>
+      </Toggle>
     </div>
   );
 }
 
 ImportedNewCampaignMessages.propTypes = {
   campaignCharacters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  campaignName: PropTypes.string.isRequired,
   onDone: PropTypes.func.isRequired,
 };
 
