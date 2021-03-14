@@ -22,7 +22,11 @@ import Character from './Character';
 
 import DeleteCampaignModal from './DeleteCampaignModal';
 import ExternalLink from '../Graphics/ExternalLink';
+import WizardHat from '../Graphics/WizardHat';
 import Skull from '../Graphics/Skull';
+
+import WizardMessage from '../Message/WizardMessage';
+import WizardMessageDanger from '../Message/WizardMessageDanger';
 
 import './CurrentCampaign.less';
 
@@ -40,7 +44,7 @@ export function CurrentCampaign() {
   }
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deleteMessage, setDeleteMessage] = useState(null);
+  const [deletedCampaignName, setDeletedCampaignName] = useState(null);
 
   const handleOpenDeleteModal = () => {
     setShowDeleteModal(true);
@@ -52,7 +56,7 @@ export function CurrentCampaign() {
 
   const handleDelete = () => {
     // use the campaign name before we lose it
-    setDeleteMessage(`We deleted ${currentCampaignName}!`);
+    setDeletedCampaignName(currentCampaignName);
     dispatch(actions.deleteCurrentCampaign());
     setShowDeleteModal(false);
   };
@@ -65,11 +69,46 @@ export function CurrentCampaign() {
         onDelete={handleDelete}
         onRequestClose={handleCloseDeleteModal}
       />
-      {!showCurrentCampaign && (
-        <>
-          {deleteMessage && <p>{deleteMessage}</p>}
-          <p>Pick a Current Campaign from the left!</p>
-        </>
+      {!showCurrentCampaign && !deletedCampaignName && (
+        <div className="empty_campaign">
+          <div className="icon_wrapper">
+            <WizardHat />
+          </div>
+          <WizardMessage>
+            <p>
+              Select another campaign to view its party.
+            </p>
+          </WizardMessage>
+          <WizardMessage>
+            <p>
+              Or import another campaign to add to the fun.
+            </p>
+          </WizardMessage>
+        </div>
+      )}
+      {!showCurrentCampaign && deletedCampaignName && (
+        <div className="empty_campaign">
+          <div className="icon_wrapper">
+            <Skull />
+          </div>
+          <WizardMessageDanger>
+            <p>
+              {'Everyone in '}
+              <strong className="emphasis">{deletedCampaignName}</strong>
+              {' failed their death saves!'}
+            </p>
+          </WizardMessageDanger>
+          <WizardMessageDanger>
+            <p>
+              Select another campaign to view its party.
+            </p>
+          </WizardMessageDanger>
+          <WizardMessageDanger>
+            <p>
+              Or import another campaign.
+            </p>
+          </WizardMessageDanger>
+        </div>
       )}
       {showCurrentCampaign && (
         <>
