@@ -190,7 +190,7 @@ export function reducer(state = initialState, action) {
   }
 }
 
-const LOCAL_STORAGE_ERROR = 'Sorry, we could not save to your browser\'s local storage. Try removing some campaigns if it\'s full, or confirming your browser can store data.';
+const LOCAL_STORAGE_ERROR = 'Sorry, I could not save to your browser\'s local storage. Try removing some campaigns if it\'s full, or confirming your browser can store data.';
 
 // this will save state to localStorage, so if the page is revisited, initialState can get it
 const withLocalStorage = (wrappedReducer) => (
