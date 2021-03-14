@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+
+import PartyContext from '@assets/party/Context';
+import { getError } from '@assets/party/selectors';
 
 import Header from './Header/Header';
 import Nav from './Nav/Nav';
 import CurrentCampaign from './CurrentCampaign/CurrentCampaign';
+import WizardMessageDanger from './Message/WizardMessageDanger';
 
 import './MainView.less';
 
 export function MainView() {
+  const { state } = useContext(PartyContext);
+
   const [desktopNavOpen, setDesktopNavOpen] = useState(true);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
@@ -33,6 +39,8 @@ export function MainView() {
     mainClasses.push('desktop_nav_close');
   }
 
+  const error = getError(state);
+
   return (
     <>
       <div className={mainClasses.join(' ')}>
@@ -42,6 +50,13 @@ export function MainView() {
           onMobileNavOpen={handleMobileNavOpen}
         />
         <main>
+          {error && (
+            <WizardMessageDanger className="global_error_message">
+              <p>
+                {error}
+              </p>
+            </WizardMessageDanger>
+          )}
           <CurrentCampaign />
         </main>
       </div>
