@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import PartyContext from '@assets/party/Context';
 import { hasCampaigns } from '@assets/party/selectors';
 
-import ImportWizardModal from '@assets/components/ImportWizard/ImportWizardModal';
+import ImportWizardInterstitial from '@assets/components/ImportWizard/ImportWizardInterstitial';
 import Drawer from '../Common/Drawer';
 import NavContent from './NavContent';
 
@@ -28,7 +28,7 @@ export function Nav({
 
   return (
     <>
-      <ImportWizardModal
+      <ImportWizardInterstitial
         isOpen={showImportWizard}
         onRequestClose={handleCloseImportWizard}
       />
