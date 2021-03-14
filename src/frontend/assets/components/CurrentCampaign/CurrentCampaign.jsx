@@ -61,6 +61,8 @@ export function CurrentCampaign() {
     setShowDeleteModal(false);
   };
 
+  const campaignLink = getCurrentCampaignLink(state);
+
   return (
     <div className="current_campaign">
       <DeleteCampaignModal
@@ -113,10 +115,15 @@ export function CurrentCampaign() {
       {showCurrentCampaign && (
         <>
           <div className="title_container">
-            <a className="dndbeyond_link" href={getCurrentCampaignLink(state)}>
-              <h2 className="title">{currentCampaignName}</h2>
-              <ExternalLink />
-            </a>
+            {campaignLink && (
+              <a className="dndbeyond_link" href={getCurrentCampaignLink(state)}>
+                <h2 className="title">{currentCampaignName}</h2>
+                <ExternalLink />
+              </a>
+            )}
+            {!campaignLink && (
+              <h2 className="no_link_title">{currentCampaignName}</h2>
+            )}
             <button className="delete_button" onClick={handleOpenDeleteModal} type="button">
               <span className="delete_button_text">Delete</span>
               <Skull />
