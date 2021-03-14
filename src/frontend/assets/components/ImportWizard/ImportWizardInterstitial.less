@@ -1,6 +1,17 @@
 @import "@assets/imports";
 
 .import_wizard_interstitial {
+  .close_wizard_button {
+    position: absolute;
+    right: 2rem;
+    top: 2rem;
+
+    @media @phones {
+      right: 1rem;
+      top: 1rem;
+    }
+  }
+
   .header {
     .main_title();
 

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Modal from '../Common/Modal';
+import CloseWizardButton from './CloseWizardButton';
 import ImportWizard from './ImportWizard';
 
 import './ImportWizardInterstitial.less';
@@ -15,6 +16,7 @@ export function ImportWizardInterstitial({ isOpen, onRequestClose }) {
       overlayClassName="import_wizard_overlay"
       theme="interstitial"
     >
+      <CloseWizardButton onClick={onRequestClose} />
       <h2 className="header">Import Campaign Wizard</h2>
       <ImportWizard onAbort={onRequestClose} onDone={onRequestClose} />
     </Modal>
