@@ -19,7 +19,7 @@ export function ImportCharacterDescriptionMessages({
     <div className="import_character_description_messages">
       <WizardMessageDelay onDone={setShowFormats}>
         <p>
-          {'To import your campaign, the wizard needs to scry a public '}
+          {'To import your campaign, I need to scry a public '}
           <a className="dnd_beyond_link" href="https://www.dndbeyond.com/">D&D Beyond</a>
           {' character from your campaign.'}
         </p>
@@ -27,14 +27,15 @@ export function ImportCharacterDescriptionMessages({
       <Toggle show={showFormats}>
         <WizardMessageDelay onDone={setShowCharacterIds}>
           <p>
-            Acceptable formats are...
+            Acceptable input formats are...
           </p>
         </WizardMessageDelay>
       </Toggle>
       <Toggle show={showCharacterIds}>
         <WizardMessageDelay onDone={setShowShareableLinks}>
           <p>
-            A Character ID like 41160222...
+            {'A character ID like '}
+            <strong className="character_id_emphasis">41160222</strong>
           </p>
         </WizardMessageDelay>
       </Toggle>
