@@ -1,0 +1,63 @@
+@import "@assets/imports";
+
+.import_character {
+  label {
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .hidden_error_text {
+    .visually_hidden();
+  }
+
+  .input_submit_wrapper {
+    display: flex;
+    margin-bottom: 0.2rem;
+    width: 100%;
+
+    input {
+      border: 0;
+      border-radius: 1rem 0 0 1rem;
+      font-size: 1.2rem;
+      height: 1.5rem;
+      outline: 0;
+      padding: 1.5rem 0.5rem;
+      // for flexbox to behave correctly in small screens
+      width: 100%;
+
+      &[disabled] {
+        cursor: not-allowed;
+      }
+    }
+
+    .submit_button {
+      .reset_button();
+
+      background: @veryLightIndigo;
+      border-radius: 0 1rem 1rem 0;
+      cursor: pointer;
+      height: 3rem;
+      padding: 0.5rem;
+
+      &:focus,
+      &:hover {
+        background: @lightIndigo;
+        outline: 0;
+      }
+
+      &[disabled],
+      &[disabled]:visited,
+      &[disabled]:hover,
+      &[disabled]:focus,
+      &[disabled]:active {
+        background: @veryLightIndigo;
+        box-shadow: none;
+        cursor: default;
+        filter: none;
+        opacity: 0.5;
+        pointer-events: none;
+      }
+    }
+  }
+}
