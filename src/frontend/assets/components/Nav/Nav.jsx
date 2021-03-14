@@ -1,8 +1,5 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-
-import PartyContext from '@assets/party/Context';
-import { hasCampaigns } from '@assets/party/selectors';
 
 import ImportWizardInterstitial from '@assets/components/ImportWizard/ImportWizardInterstitial';
 import Drawer from '../Common/Drawer';
@@ -13,18 +10,15 @@ import './Nav.less';
 export function Nav({
   desktopOpen, mobileOpen, onDesktopClose, onDesktopOpen, onMobileClose, onMobileOpen,
 }) {
-  const { state } = useContext(PartyContext);
-  const hasNoCampaigns = !hasCampaigns(state);
-  // if they have no campaigns, force show them the modal
-  const [showImportWizard, setShowImportWizard] = useState(hasNoCampaigns);
+  const [showImportWizard, setShowImportWizard] = useState(false);
 
   const handleOpenImportWizard = () => {
     setShowImportWizard(true);
   };
 
-  const handleCloseImportWizard = !hasNoCampaigns ? () => {
+  const handleCloseImportWizard = () => {
     setShowImportWizard(false);
-  } : null;
+  };
 
   return (
     <>
