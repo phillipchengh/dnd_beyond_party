@@ -5,7 +5,7 @@ import './ShareableLinkExamples.less';
 export function ShareableLinkExamples() {
   return (
     <div className="shareable_link_examples">
-      <p>Or a shareable link like one of these...</p>
+      <p>Or a shareable link like one of these:</p>
       <ul>
         <li>
           <a className="link" href="https://ddb.ac/characters/41160222/vj9Xaj">
