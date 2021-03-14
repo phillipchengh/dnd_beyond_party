@@ -26,9 +26,12 @@ import ImportCharacterMessage from './ImportCharacterMessage';
 import ImportedCampaignMessages from './ImportedCampaignMessages';
 
 import UserMessage from '../Message/UserMessage';
+import UserMessageButton from '../Message/UserMessageButton';
 import WizardMessageDelay from '../Message/WizardMessageDelay';
 import WizardMessageDanger from '../Message/WizardMessageDanger';
 import WizardMessageMagic from '../Message/WizardMessageMagic';
+
+import ArrowRight from '../Graphics/ArrowRight';
 
 import './ImportWizard.less';
 
@@ -178,9 +181,11 @@ export function ImportWizard({ onAbort, onDone }) {
                 className="import_wizard_message"
                 onDone={setDoneFoundCharacterMessage}
               >
-                {'I found '}
-                <strong className="emphasis">{getName(foundCharacter)}</strong>
-                !
+                <p>
+                  {'I found '}
+                  <strong className="emphasis">{getName(foundCharacter)}</strong>
+                  !
+                </p>
               </WizardMessageDelay>
             )}
             {/* when importing the rest of the campaign */}
@@ -207,7 +212,12 @@ export function ImportWizard({ onAbort, onDone }) {
       {onAbort && error && (
         <>
           <WizardMessageDanger>{error}</WizardMessageDanger>
-          <UserMessage><button onClick={onAbort} type="button">Close</button></UserMessage>
+          <UserMessageButton onClick={onAbort}>
+            <div className="continue_button_wrapper">
+              Quit
+              <ArrowRight />
+            </div>
+          </UserMessageButton>
         </>
       )}
       {/* at this point we committed to importing the campaign, show the data and exit */}
@@ -221,11 +231,12 @@ export function ImportWizard({ onAbort, onDone }) {
       )}
       {/* done showing imported campaign, get them out */}
       {showImportDone && (
-        <UserMessage>
-          <button onClick={onDone} type="button">
+        <UserMessageButton onClick={onDone}>
+          <div className="continue_button_wrapper">
             {`View ${characterCampaign.name}`}
-          </button>
-        </UserMessage>
+            <ArrowRight />
+          </div>
+        </UserMessageButton>
       )}
     </div>
   );
