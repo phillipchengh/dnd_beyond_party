@@ -60,11 +60,16 @@ export function getRace({ race }) {
 export function getRaceClassDisplay(character) {
   const raceDisplay = getRace(character);
   const { classes } = character;
+  // either no race and no class or only race
   if (!classes.length) {
     return raceDisplay;
   }
   const startingClassIndex = classes.findIndex(({ isStartingClass }) => isStartingClass);
   const startingClassDisplay = `${classes[startingClassIndex].definition.name}`;
+  // no race and only class
+  if (!raceDisplay) {
+    return `${startingClassDisplay}`;
+  }
   return `${raceDisplay} ${startingClassDisplay}`;
 }
 
