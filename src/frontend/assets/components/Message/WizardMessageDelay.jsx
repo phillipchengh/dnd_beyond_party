@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import WizardMessage from './WizardMessage';
 import WizardMessageLoading from './WizardMessageLoading';
 
-export function WizardMessageDelay({ onDone, children }) {
+export function WizardMessageDelay({ className, onDone, children }) {
   const [delaying, setDelaying] = useState(true);
 
   useEffect(() => {
@@ -25,12 +25,13 @@ export function WizardMessageDelay({ onDone, children }) {
   return (
     <>
       {delaying && <WizardMessageLoading />}
-      {!delaying && <WizardMessage>{children}</WizardMessage>}
+      {!delaying && <WizardMessage className={className}>{children}</WizardMessage>}
     </>
   );
 }
 
 WizardMessageDelay.propTypes = {
+  className: PropTypes.string,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
@@ -39,6 +40,7 @@ WizardMessageDelay.propTypes = {
 };
 
 WizardMessageDelay.defaultProps = {
+  className: '',
   onDone: () => {},
 };
 
