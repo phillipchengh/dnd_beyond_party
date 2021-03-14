@@ -39,7 +39,7 @@ export function ImportCharacterMessage({ onSubmit }) {
 
   const invalid = input && !validCharacterId;
 
-  let labelText = 'D&D Beyond Character';
+  let labelText = 'Enter D&D Beyond Character';
 
   if (invalid) {
     labelText = 'Hmm, check your format.';
