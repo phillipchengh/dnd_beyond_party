@@ -17,7 +17,7 @@ export function isEmptyCampaign(campaign) {
 }
 
 export function areSoloAdventurers(campaign) {
-  return campaign.campaignId === 0;
+  return campaign.id === 0;
 }
 
 export function formatCampaignCharacters(characters) {
