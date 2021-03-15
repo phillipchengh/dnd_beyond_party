@@ -35,7 +35,10 @@ Tooltip.propTypes = {
   interactive: PropTypes.bool,
   leaveDelay: PropTypes.number,
   leaveTouchDelay: PropTypes.number,
-  title: PropTypes.string.isRequired,
+  title: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]).isRequired,
 };
 
 Tooltip.defaultProps = {
