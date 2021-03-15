@@ -1,7 +1,10 @@
 @import "@assets/imports";
 
 .current_campaign {
-  padding: 1rem;
+  // scrollbars are about 17.2 pixels apparently
+  // add horizontal padding probably greater than that so content doesn't shift when they're removed for a modal-like ui
+  // update: unsure if this works anymore (delete campaign modal) but whatever
+  padding: 0 1.5rem 1rem;
   width: 100%;
 
   .title_container {
