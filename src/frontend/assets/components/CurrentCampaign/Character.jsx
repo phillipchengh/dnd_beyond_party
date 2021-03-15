@@ -49,7 +49,7 @@ export function Character({
     return temp ? (
       <div className="temp_hit_points">
         <StatHeader bottomBorder={false}>Temp</StatHeader>
-        <div>{`+${temp}`}</div>
+        <div className="temp_hit_points_score">{`+${temp}`}</div>
       </div>
     ) : null;
   };
@@ -178,7 +178,7 @@ export function Character({
         <>
           <li className="primary_save_dc">
             <StatHeader>Save DC</StatHeader>
-            <div>{primaryValue}</div>
+            <div className="primary_save_dc_score">{primaryValue}</div>
             <div>{primaryClasses}</div>
           </li>
           <li className="other_save_dcs">
@@ -189,7 +189,7 @@ export function Character({
                   {otherSpellSaveDCs.map(([value, classes]) => (
                     <li>
                       <div className="other_save_dc_info">
-                        <div className="other_save_dc_value">{value}</div>
+                        <div className="other_save_dc_score">{value}</div>
                         <div className="other_save_dc_classes">{classes}</div>
                       </div>
                     </li>
@@ -234,17 +234,17 @@ export function Character({
         <li className="senses">
           <StatHeader>Passive Senses</StatHeader>
           <dl>
-            <div className="passive_score">
+            <div className="passive_score_row">
               <dt>Perception</dt>
-              <dd>{getPassivePerception(data)}</dd>
+              <dd className="passive_score">{getPassivePerception(data)}</dd>
             </div>
-            <div className="passive_score">
+            <div className="passive_score_row">
               <dt>Investigation</dt>
-              <dd>{getPassiveInvestigation(data)}</dd>
+              <dd className="passive_score">{getPassiveInvestigation(data)}</dd>
             </div>
-            <div className="passive_score">
+            <div className="passive_score_row">
               <dt>Insight</dt>
-              <dd>{getPassiveInsight(data)}</dd>
+              <dd className="passive_score">{getPassiveInsight(data)}</dd>
             </div>
           </dl>
         </li>
@@ -252,14 +252,14 @@ export function Character({
           <Shield />
           <div className="armor_class_info">
             <StatHeader bottomBorder={false}>AC</StatHeader>
-            <div>{getArmorClass(data)}</div>
+            <div className="armor_class_score">{getArmorClass(data)}</div>
           </div>
         </li>
         <li className="hit_points">
           <Heart />
           <div className="hit_points_info">
             <StatHeader bottomBorder={false}>HP</StatHeader>
-            <div>{`${getCurrentHitPoints(data)} / ${getMaxHitPoints(data)}`}</div>
+            <div className="hit_points_score">{`${getCurrentHitPoints(data)} / ${getMaxHitPoints(data)}`}</div>
           </div>
           {renderTemporaryHitPoints()}
         </li>

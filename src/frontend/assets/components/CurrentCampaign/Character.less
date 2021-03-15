@@ -86,9 +86,13 @@
   }
 
   .senses {
-    .passive_score {
+    .passive_score_row {
       display: flex;
       justify-content: space-between;
+
+      .passive_score {
+        .score();
+      }
     }
   }
 
@@ -112,11 +116,18 @@
     .armor_class_info {
       display: flex;
       flex-direction: column-reverse;
+
+      .armor_class_score {
+        .score();
+
+        font-size: 1.5rem;
+      }
     }
   }
 
   .hit_points {
     align-items: center;
+    // color: @red;
     display: flex;
     height: 6rem;
     justify-content: center;
@@ -137,6 +148,10 @@
     .hit_points_info {
       display: flex;
       flex-direction: column-reverse;
+
+      .hit_points_score {
+        .score();
+      }
     }
 
     .temp_hit_points {
@@ -148,6 +163,10 @@
       top: 0;
       position: absolute;
       right: -3rem;
+
+      .temp_hit_points_score {
+        .score();
+      }
     }
   }
 
@@ -225,11 +244,21 @@
 
   .primary_save_dc {
     text-align: center;
+
+    .primary_save_dc_score {
+      .score();
+
+      font-size: 1.5rem;
+    }
   }
 
   .other_save_dcs {
     .other_save_dc_info {
       display: flex;
+
+      .other_save_dc_score {
+        .score();
+      }
 
       .other_save_dc_classes {
         margin-left: 0.5rem;
