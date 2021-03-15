@@ -25,7 +25,7 @@ import {
 import {
   getAvatarUrl,
   getLink,
-  getRaw,
+  // getRaw, // uncomment for json links
 } from '@assets/character/selectors';
 
 import StatHeader from './StatHeader';
@@ -220,7 +220,8 @@ export function Character({
           <div className="class">{getClassDisplay(data)}</div>
           <div className="race_json_row">
             <div className="race">{getRace(data)}</div>
-            <a className="json" href={getRaw(data)}>JSON</a>
+            {/* uncomment to reveal json links */}
+            {/* <a className="json" href={getRaw(data)}>JSON</a> */}
           </div>
           <dd>{getLevelDisplay(data)}</dd>
         </div>
