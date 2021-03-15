@@ -227,7 +227,7 @@ export function Character({
             {/* uncomment to reveal json links */}
             {/* <a className="json" href={getRaw(data)}>JSON</a> */}
           </div>
-          <dd>{getLevelDisplay(data)}</dd>
+          <div>{getLevelDisplay(data)}</div>
         </div>
       </header>
       <ol className="grid_info">
