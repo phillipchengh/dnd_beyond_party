@@ -28,6 +28,8 @@ import Skull from '../Graphics/Skull';
 import WizardMessage from '../Message/WizardMessage';
 import WizardMessageDanger from '../Message/WizardMessageDanger';
 
+import Tooltip from '../Common/Tooltip';
+
 import './CurrentCampaign.less';
 
 export function CurrentCampaign() {
@@ -124,10 +126,12 @@ export function CurrentCampaign() {
             {!campaignLink && (
               <h2 className="no_link_title">{currentCampaignName}</h2>
             )}
-            <button className="delete_button" onClick={handleOpenDeleteModal} type="button">
-              <span className="delete_button_text">Delete</span>
-              <Skull />
-            </button>
+            <Tooltip title={`Delete ${currentCampaignName}`}>
+              <button className="delete_button" onClick={handleOpenDeleteModal} type="button">
+                <span className="delete_button_text">Delete</span>
+                <Skull />
+              </button>
+            </Tooltip>
           </div>
           <p className="last_update_text">
             {`last updated ${formatDistanceToNow(currentCampaignLastUpdate)} ago`}
