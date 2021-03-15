@@ -15,6 +15,8 @@ export function Campaign({ campaignId }) {
 
   const handleSetCurrentCampaign = () => {
     dispatch(actions.setCurrentCampaign(campaignId));
+    // scroll to top when switching to new campaign
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const currentCampaignId = getCurrentCampaignId(state);
