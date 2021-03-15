@@ -102,7 +102,7 @@ export async function updateCampaign({ dispatch, state }, campaignId) {
   if (!characters.length) {
     const deletedCampaignName = getCampaignName(state, campaignId);
     dispatch(actions.deleteCampaign(campaignId));
-    throw new Error(`${deletedCampaignName} has no active characters so it was removed. Please check your campaign on D&D Beyond!`);
+    throw new Error(`${deletedCampaignName} has no active characters so it was removed. Please check your campaign on D&D Beyond.`);
   } else {
     dispatch(actions.updateCampaign(campaignId, characters));
   }
