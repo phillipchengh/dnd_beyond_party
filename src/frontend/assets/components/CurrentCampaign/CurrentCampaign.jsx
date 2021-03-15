@@ -118,10 +118,12 @@ export function CurrentCampaign() {
         <>
           <div className="title_container">
             {campaignLink && (
-              <a className="dndbeyond_link" href={getCurrentCampaignLink(state)}>
-                <h2 className="title">{currentCampaignName}</h2>
-                <ExternalLink />
-              </a>
+              <Tooltip title="View campaign on D&D Beyond">
+                <a className="dndbeyond_link" href={getCurrentCampaignLink(state)}>
+                  <h2 className="title">{currentCampaignName}</h2>
+                  <ExternalLink />
+                </a>
+              </Tooltip>
             )}
             {!campaignLink && (
               <h2 className="no_link_title">{currentCampaignName}</h2>
