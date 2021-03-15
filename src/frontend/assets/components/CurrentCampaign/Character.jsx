@@ -61,7 +61,7 @@ export function Character({
         <StatHeader>Extra Senses</StatHeader>
         <ol>
           {extraSenses.map((extraSense) => (
-            <li>
+            <li key={extraSense}>
               <span className="bullet_icon eye_icon">
                 <Eye />
               </span>
@@ -86,7 +86,7 @@ export function Character({
               <li className="resistances">
                 <ol>
                   {resistances.map((resistance) => (
-                    <li>
+                    <li key={resistance}>
                       <span className="bullet_icon defense_icon resistance_icon">
                         <Shield />
                       </span>
@@ -100,7 +100,7 @@ export function Character({
               <li className="immunities">
                 <ol>
                   {immunities.map((immunity) => (
-                    <li>
+                    <li key={immunity}>
                       <span className="bullet_icon defense_icon immunity_icon">
                         <Shield />
                       </span>
@@ -114,7 +114,7 @@ export function Character({
               <li className="vulnerabilities">
                 <ol>
                   {vulnerabilities.map((vulnerability) => (
-                    <li>
+                    <li key={vulnerability}>
                       <span className="bullet_icon defense_icon vulnerability_icon">
                         <Shield />
                       </span>
@@ -138,7 +138,7 @@ export function Character({
         <StatHeader>Conditions</StatHeader>
         <ol>
           {conditions.map((condition) => (
-            <li>
+            <li key={condition}>
               <span className="bullet_icon condition_icon">
                 <Condition />
               </span>
@@ -157,7 +157,7 @@ export function Character({
         <StatHeader>Languages</StatHeader>
         <ol>
           {languages.map((language) => (
-            <li>
+            <li key={language}>
               <span className="bullet_icon language_icon">
                 <Language />
               </span>
@@ -187,7 +187,7 @@ export function Character({
                 <StatHeader>Other Save DCs</StatHeader>
                 <ol>
                   {otherSpellSaveDCs.map(([value, classes]) => (
-                    <li>
+                    <li key={classes}>
                       <div className="other_save_dc_info">
                         <div className="other_save_dc_score">{value}</div>
                         <div className="other_save_dc_classes">{classes}</div>
