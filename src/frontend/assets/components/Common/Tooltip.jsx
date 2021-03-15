@@ -5,7 +5,9 @@ import { Tooltip as MaterialTooltip } from '@material-ui/core';
 
 import './Tooltip.less';
 
-export function Tooltip({ children, popperClassName, title }) {
+export function Tooltip({
+  children, interactive, leaveDelay, leaveTouchDelay, popperClassName, title,
+}) {
   return (
     <MaterialTooltip
       arrow
@@ -14,6 +16,9 @@ export function Tooltip({ children, popperClassName, title }) {
         popper: `popper ${popperClassName}`,
         tooltip: 'tooltip',
       }}
+      interactive={interactive}
+      leaveDelay={leaveDelay}
+      leaveTouchDelay={leaveTouchDelay}
       title={title}
     >
       {children}
@@ -27,10 +32,16 @@ Tooltip.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
   ]).isRequired,
+  interactive: PropTypes.bool,
+  leaveDelay: PropTypes.number,
+  leaveTouchDelay: PropTypes.number,
   title: PropTypes.string.isRequired,
 };
 
 Tooltip.defaultProps = {
+  interactive: false,
+  leaveDelay: null,
+  leaveTouchDelay: null,
   popperClassName: '',
 };
 
