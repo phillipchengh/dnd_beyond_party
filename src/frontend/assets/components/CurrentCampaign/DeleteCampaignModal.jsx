@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Modal from '../Common/Modal';
 import BookDead from '../Graphics/BookDead';
 
+import CloseDeleteCampaignModalButton from './CloseDeleteCampaignModalButton';
 import WizardMessageDanger from '../Message/WizardMessageDanger';
 
 import './DeleteCampaignModal.less';
@@ -32,6 +33,7 @@ export function DeleteCampaignModal({
       isOpen={isOpen}
       onRequestClose={!isDeleting ? onRequestClose : null}
     >
+      <CloseDeleteCampaignModalButton disabled={isDeleting} onClick={onRequestClose} />
       <h2 className="header">Delete Campaign</h2>
       <BookDead />
       <div className="messages">

@@ -1,0 +1,32 @@
+@import "@assets/imports";
+
+.close_delete_campaign_modal_button {
+  .reset_button();
+
+  cursor: pointer;
+  height: 1.5rem;
+  margin-top: 0.2rem;
+  outline: 0;
+  width: 1.5rem;
+
+  &:active,
+  &:focus,
+  &:hover {
+    color: @darkWhite;
+  }
+
+  .button_text {
+    .visually_hidden();
+  }
+
+  .close_svg {
+    height: 1.5rem;
+    width: 1.5rem;
+  }
+}
+
+// google and facebook components don't play well with each other
+// have google tooltip match facebook modal's z-index
+.MuiTooltip-popper.popper.delete_campaign_modal {
+  z-index: 2400;
+}
