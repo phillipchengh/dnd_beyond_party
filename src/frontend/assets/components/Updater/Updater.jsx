@@ -4,6 +4,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import PropTypes from 'prop-types';
 
 import PartyContext from '@assets/party/Context';
 import { actions } from '@assets/party/ducks';
@@ -25,7 +26,7 @@ import {
   AUTO_UPDATE_OPTIONS,
 } from './utilities';
 
-export function Updater() {
+export function Updater({ onUpdateError }) {
   const context = useContext(PartyContext);
   const { dispatch, state } = context;
   const [secondsElapsed, setSecondsElapsed] = useState(0);
@@ -41,7 +42,8 @@ export function Updater() {
   const clearErrors = useCallback(() => {
     dispatch(actions.clearError());
     setRequestError(null);
-  }, [dispatch]);
+    onUpdateError(null);
+  }, [dispatch, onUpdateError]);
 
   const handleUpdate = useCallback(async () => {
     if (isUpdating || !hasCurrentCampaignToUpdate) {
@@ -54,10 +56,11 @@ export function Updater() {
       setSecondsElapsed(0);
     } catch (e) {
       setRequestError(e.message);
+      onUpdateError(e.message);
     } finally {
       setIsUpdating(false);
     }
-  }, [clearErrors, context, hasCurrentCampaignToUpdate, isUpdating]);
+  }, [clearErrors, context, hasCurrentCampaignToUpdate, isUpdating, onUpdateError]);
 
   const handleAutoUpdate = (intervalSeconds) => {
     clearErrors();
@@ -175,11 +178,12 @@ export function Updater() {
           );
         })}
       </Menu>
-      {error && (
-        <p>{error}</p>
-      )}
     </div>
   );
 }
+
+Updater.propTypes = {
+  onUpdateError: PropTypes.func.isRequired,
+};
 
 export default Updater;

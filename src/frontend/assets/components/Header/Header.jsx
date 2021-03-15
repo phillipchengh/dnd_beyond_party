@@ -9,7 +9,7 @@ import Dragon from '../Graphics/Dragon';
 import './Header.less';
 
 export function Header({
-  desktopNavOpen, onDesktopNavOpen, onMobileNavOpen,
+  desktopNavOpen, onDesktopNavOpen, onMobileNavOpen, onUpdateError,
 }) {
   return (
     // 'header' is used elsewhere
@@ -32,7 +32,7 @@ export function Header({
           </div>
         </Tooltip>
       </h1>
-      <Updater />
+      <Updater onUpdateError={onUpdateError} />
     </header>
   );
 }
@@ -41,6 +41,7 @@ Header.propTypes = {
   desktopNavOpen: PropTypes.bool,
   onDesktopNavOpen: PropTypes.func.isRequired,
   onMobileNavOpen: PropTypes.func.isRequired,
+  onUpdateError: PropTypes.func.isRequired,
 };
 
 Header.defaultProps = {

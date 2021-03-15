@@ -39,7 +39,13 @@ export function MainView() {
     mainClasses.push('desktop_nav_close');
   }
 
-  const error = getError(state);
+  const [updateError, setUpdateError] = useState(null);
+
+  const handleUpdateError = (errorMessage) => {
+    setUpdateError(errorMessage);
+  };
+
+  const error = updateError || getError(state);
 
   return (
     <>
@@ -48,6 +54,7 @@ export function MainView() {
           desktopNavOpen={desktopNavOpen}
           onDesktopNavOpen={handleDesktopNavOpen}
           onMobileNavOpen={handleMobileNavOpen}
+          onUpdateError={handleUpdateError}
         />
         <main>
           {error && (
