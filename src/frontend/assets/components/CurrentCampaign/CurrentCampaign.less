@@ -103,6 +103,34 @@
   .character_list {
     display: grid;
     gap: 1rem;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+@media @tablet {
+  .current_campaign {
+    .character_list {
+      // 480px starts to become too big here
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    }
+  }
+}
+
+@media @phonesAndTabletSmall {
+  .current_campaign {
+    padding: 0 1rem 1rem;
+  }
+}
+
+@media @phones {
+  .current_campaign {
+    padding: 0.2rem;
+
+    .character_list {
+      // not really supported, but once we go to really small widths, just take up the space
+      grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+    }
   }
 }
