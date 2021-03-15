@@ -37,6 +37,8 @@ import Language from '../Graphics/Language';
 import Shield from '../Graphics/Shield';
 import Condition from '../Graphics/Condition';
 
+import Tooltip from '../Common/Tooltip';
+
 import './Character.less';
 
 export function Character({
@@ -211,12 +213,14 @@ export function Character({
           src={getAvatarUrl(data)}
         />
         <div className="info">
-          <a className="dndbeyond_link" href={getLink(data)}>
-            <h3 className="name">
-              {getName(data)}
-            </h3>
-            <ExternalLink />
-          </a>
+          <Tooltip title={`View ${getName(data)} on D&D Beyond`}>
+            <a className="dndbeyond_link" href={getLink(data)}>
+              <h3 className="name">
+                {getName(data)}
+              </h3>
+              <ExternalLink />
+            </a>
+          </Tooltip>
           <div className="class">{getClassDisplay(data)}</div>
           <div className="race_json_row">
             <div className="race">{getRace(data)}</div>
