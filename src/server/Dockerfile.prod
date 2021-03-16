@@ -1,0 +1,9 @@
+FROM golang:latest
+
+WORKDIR /dnd_beyond_party/server
+
+COPY ./src/server/ .
+
+RUN go build -o ./server ./*.go
+
+CMD ["./server"]

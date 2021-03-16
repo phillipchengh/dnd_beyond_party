@@ -1,0 +1,35 @@
+version: "3.8"
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: src/nginx/Dockerfile.prod
+    container_name: prod_nginx
+    image: nginx
+    ports:
+      - '80:80'
+    restart: always
+    depends_on:
+      - frontend
+      - backend
+  frontend:
+    build:
+      context: .
+      dockerfile: src/frontend/Dockerfile.prod
+    container_name: prod_frontend
+    image: frontend
+    volumes:
+      - assets:/dnd_beyond_party/src/frontend/public
+  backend:
+    build:
+      context: .
+      dockerfile: src/server/Dockerfile.prod
+    container_name: prod_backend
+    image: backend
+    restart: always
+    volumes:
+      - assets:/dnd_beyond_party/server/public
+    ports:
+      - '1337:1337'
+volumes:
+  assets:

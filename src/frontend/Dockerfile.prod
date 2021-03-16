@@ -1,0 +1,14 @@
+FROM node:lts
+WORKDIR /dnd_beyond_party
+
+# frontend stuff
+COPY ./package.json .
+COPY ./package-lock.json .
+COPY ./src/frontend/ ./src/frontend/
+COPY ./babel.config.js ./babel.config.js
+COPY ./postcss.config.js ./postcss.config.js
+COPY ./webpack.config.js ./webpack.config.js
+COPY .eslintrc.js .
+
+RUN ["npm", "install"]
+CMD ["npm", "run", "build"]
