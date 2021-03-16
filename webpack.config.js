@@ -4,7 +4,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
-module.exports = function config(env = { development: true }) {
+module.exports = (env = { production: false }) => {
   const distPath = 'src/frontend/public/dist';
   const buildPath = `${__dirname}/${distPath}`;
   const entrypointsPath = './src/frontend/entrypoints';
@@ -189,4 +189,4 @@ module.exports = function config(env = { development: true }) {
   };
 };
 
-console.log(module.exports(), null, 2);
+// console.log(module.exports(), null, 2);
