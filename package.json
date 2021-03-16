@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "rm -rf src/frontend/assets/public/dist",
     "dev": "npm run clean && webpack-dev-server --config ./webpack.config.js",
-    "build": "webpack --config ./webpack.config.js",
+    "build": "NODE_ENV=production webpack --env.production --config ./webpack.config.js",
     "relock": "rm package-lock.json && npm install --package-lock-only",
     "reinstall": "rm -rf node_modules && npm run clean && npm install && npm run relock",
     "test": "jest -c ./jest.config.js"
