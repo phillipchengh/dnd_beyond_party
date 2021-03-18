@@ -11,4 +11,4 @@ COPY ./webpack.config.js ./webpack.config.js
 COPY .eslintrc.js .
 
 RUN ["npm", "install"]
-CMD ["npm", "run", "build"]
+RUN ["npm", "run", "build"]
