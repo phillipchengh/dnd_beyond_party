@@ -4,4 +4,4 @@ WORKDIR /etc/nginx/templates
 
 # nginx image will apply environment variables from docker-compose to this template
 # it will output to /etc/nginx/conf.d
-COPY ./src/nginx/nginx.prod.conf.template ./nginx.conf.template
+COPY ./src/nginx/nginx.prod.conf.template ./default.conf.template
