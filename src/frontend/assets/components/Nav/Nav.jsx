@@ -14,6 +14,8 @@ export function Nav({
 
   const handleOpenImportWizard = () => {
     setShowImportWizard(true);
+    // the mobile drawer still open when they open the import modal will block that modal
+    onMobileClose();
   };
 
   const handleCloseImportWizard = () => {
