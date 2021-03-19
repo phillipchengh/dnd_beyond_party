@@ -18,14 +18,17 @@ export function WizardMessage({ className, children, scrollIntoView }) {
   }, [scrollIntoView]);
 
   return (
-    <div className={`wizard_message ${className}`} ref={container}>
-      <div className="wand_wrapper">
-        <Wand />
+    <>
+      <div className={`wizard_message ${className}`}>
+        <div className="wand_wrapper">
+          <Wand />
+        </div>
+        <div className="message">
+          {children}
+        </div>
       </div>
-      <div className="message">
-        {children}
-      </div>
-    </div>
+      <div className="scroll_to_element" ref={container} />
+    </>
   );
 }
 

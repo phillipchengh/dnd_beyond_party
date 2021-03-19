@@ -16,14 +16,17 @@ export function UserMessage({ children }) {
   }, []);
 
   return (
-    <div className="user_message" ref={container}>
-      <div className="message">
-        {children}
+    <>
+      <div className="user_message">
+        <div className="message">
+          {children}
+        </div>
+        <div className="user_wrapper">
+          <User />
+        </div>
       </div>
-      <div className="user_wrapper">
-        <User />
-      </div>
-    </div>
+      <div className="scroll_to_element" ref={container} />
+    </>
   );
 }
 

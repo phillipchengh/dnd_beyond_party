@@ -16,18 +16,21 @@ export function UserMessage({ children, onClick }) {
   }, []);
 
   return (
-    <div className="user_message_button" ref={container}>
-      <button
-        className="user_button"
-        onClick={onClick}
-        type="button"
-      >
-        {children}
-      </button>
-      <div className="user_wrapper">
-        <User />
+    <>
+      <div className="user_message_button">
+        <button
+          className="user_button"
+          onClick={onClick}
+          type="button"
+        >
+          {children}
+        </button>
+        <div className="user_wrapper">
+          <User />
+        </div>
       </div>
-    </div>
+      <div className="scroll_to_element" ref={container} />
+    </>
   );
 }
 
