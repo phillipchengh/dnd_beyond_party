@@ -43,8 +43,8 @@ Tooltip.propTypes = {
 
 Tooltip.defaultProps = {
   interactive: false,
-  leaveDelay: null,
-  leaveTouchDelay: null,
+  leaveDelay: 0,
+  leaveTouchDelay: 1500,
   popperClassName: '',
 };
 
