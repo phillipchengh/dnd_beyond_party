@@ -9,8 +9,9 @@ module.exports = (env = { production: false }) => {
   const buildPath = `${__dirname}/${distPath}`;
   const entrypointsPath = './src/frontend/entrypoints';
   const hotUpdatePath = 'hot-update';
-  const outputCssName = '[name].css';
-  const outputJsName = '[name].js';
+  const chunkhash = env.production ? '.[chunkhash:8]' : '';
+  const outputCssName = `[name]${chunkhash}.css`;
+  const outputJsName = `[name]${chunkhash}.js`;
   const sourceMap = true;
 
   const plugins = [
