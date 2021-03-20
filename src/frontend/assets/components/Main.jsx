@@ -17,6 +17,7 @@ export function Main() {
     setShowWelcomeView(false);
     // when we switch from WelcomeView to MainView, the scrolling position remains where they were
     // start them at the top in the new view instead
+    // NOTE THIS DOESN'T SEEM TO WORK ON FIREFOX (nor later useEffects as a toggle)
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
