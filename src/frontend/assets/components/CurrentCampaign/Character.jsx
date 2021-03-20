@@ -44,15 +44,16 @@ import './Character.less';
 export function Character({
   data,
 }) {
-  const renderTemporaryHitPoints = () => {
-    const temp = getTemporaryHitPoints(data);
-    return temp ? (
+  const tempHitPoints = getTemporaryHitPoints(data);
+
+  const renderTemporaryHitPoints = () => (
+    tempHitPoints ? (
       <div className="temp_hit_points">
         <StatHeader bottomBorder={false}>Temp</StatHeader>
-        <div className="temp_hit_points_score">{`+${temp}`}</div>
+        <div className="temp_hit_points_score">{`+${tempHitPoints}`}</div>
       </div>
-    ) : null;
-  };
+    ) : null
+  );
 
   const renderExtraSenses = () => {
     const extraSenses = getExtraSenses(data);
@@ -261,7 +262,7 @@ export function Character({
             <div className="armor_class_score">{getArmorClass(data)}</div>
           </div>
         </li>
-        <li className="hit_points">
+        <li className={`hit_points ${tempHitPoints ? 'has_temp_hit_points' : ''}`}>
           <Heart />
           <div className="hit_points_info">
             <StatHeader bottomBorder={false}>HP</StatHeader>
