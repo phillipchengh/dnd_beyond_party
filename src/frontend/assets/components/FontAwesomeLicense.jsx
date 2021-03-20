@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
+
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 import D20 from './Graphics/D20';
 import Tooltip from './Common/Tooltip';
@@ -14,17 +16,41 @@ export function FontAwesomeLicense() {
     </span>
   );
 
+  const [open, setOpen] = useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
   return (
-    <Tooltip
-      interactive
-      leaveDelay={1000}
-      leaveTouchDelay={1500}
-      title={TooltipTitle}
-    >
-      <div className="font_awesome_license">
-        <D20 />
+    <ClickAwayListener onClickAway={handleClose}>
+      {/* div used for click away ref */}
+      <div>
+        <Tooltip
+          disableFocusListener
+          disableHoverListener
+          disableTouchListener
+          interactive
+          leaveDelay={2000}
+          leaveTouchDelay={2000}
+          onClose={handleClose}
+          open={open}
+          title={TooltipTitle}
+        >
+          <button
+            className="font_awesome_license"
+            onClick={handleOpen}
+            type="button"
+          >
+            <D20 />
+          </button>
+        </Tooltip>
       </div>
-    </Tooltip>
+    </ClickAwayListener>
   );
 }
 
