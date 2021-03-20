@@ -274,3 +274,50 @@
     }
   }
 }
+
+@media @phones {
+  .character {
+    .grid_info {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+
+      // reorder grid items around in this mode
+      .senses {
+        order: 3;
+      }
+
+      .armor_class {
+        order: 1;
+      }
+
+      .hit_points {
+        order: 2;
+      }
+
+      .extra_senses {
+        order: 4;
+      }
+
+      .defenses {
+        order: 5;
+      }
+
+      .conditions {
+        order: 6;
+      }
+
+      .languages {
+        order: 7;
+      }
+
+      .primary_save_dc {
+        order: 8;
+      }
+
+      // we have an odd number of grid items, have this one take up 2 columns if it exists
+      .other_save_dcs {
+        grid-column: auto / span 2;
+        order: 9;
+      }
+    }
+  }
+}
