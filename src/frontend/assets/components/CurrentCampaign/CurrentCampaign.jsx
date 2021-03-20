@@ -118,7 +118,13 @@ export function CurrentCampaign() {
         <>
           <div className="title_container">
             {campaignLink && (
-              <Tooltip title="View campaign on D&D Beyond">
+              <Tooltip
+                // these listeners suck for links
+                // use only hover
+                disableFocusListener
+                disableTouchListener
+                title="View campaign on D&D Beyond"
+              >
                 <a className="dndbeyond_link" href={getCurrentCampaignLink(state)}>
                   <h2 className="title">{currentCampaignName}</h2>
                   <ExternalLink />

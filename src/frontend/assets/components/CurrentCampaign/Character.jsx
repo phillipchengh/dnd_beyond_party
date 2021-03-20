@@ -213,7 +213,13 @@ export function Character({
           src={getAvatarUrl(data)}
         />
         <div className="info">
-          <Tooltip title={`View ${getName(data)} on D&D Beyond`}>
+          <Tooltip
+            // these listeners suck for links
+            // use only hover
+            disableFocusListener
+            disableTouchListener
+            title={`View ${getName(data)} on D&D Beyond`}
+          >
             <a className="dndbeyond_link" href={getLink(data)}>
               <h3 className="name">
                 {getName(data)}
