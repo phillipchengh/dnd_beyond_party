@@ -16,6 +16,7 @@ export function WelcomeView({ onDone }) {
       <main>
         <ImportWizard
           onDone={onDone}
+          showWelcomeMessage
         />
       </main>
     </div>

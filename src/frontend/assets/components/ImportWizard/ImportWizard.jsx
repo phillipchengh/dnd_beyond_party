@@ -34,7 +34,9 @@ import ArrowRight from '../Graphics/ArrowRight';
 
 import './ImportWizard.less';
 
-export function ImportWizard({ onAbort, onDone }) {
+export function ImportWizard({
+  onAbort, onDone, showWelcomeMessage,
+}) {
   const { dispatch, state } = useContext(PartyContext);
   const [characterToImport, setCharacterToImport] = useState(null);
   const [isExistingCampaign, setIsExistingCampaign] = useState(false);
@@ -67,6 +69,12 @@ export function ImportWizard({ onAbort, onDone }) {
 
   // this error is probably local storage bad news
   const error = getError(state);
+
+  const [showDescription, setShowDescription] = useState(!showWelcomeMessage);
+
+  const handleWelcomeMessageDone = () => {
+    setShowDescription(true);
+  };
 
   const [showImportCharacter, setShowImportCharacter] = useToggleLogic();
 
@@ -160,9 +168,23 @@ export function ImportWizard({ onAbort, onDone }) {
         <WizardHat />
       </div>
       {/* all components below should be messages only... */}
-      <ImportCharacterDescriptionMessages
-        onDone={handleDescriptionDone}
-      />
+      <Toggle show={showWelcomeMessage}>
+        <WizardMessageDelay
+          className="welcome_message"
+          onDone={handleWelcomeMessageDone}
+        >
+          <p>
+            {'Welcome to '}
+            <strong className="emphasis">D&D Beyond Party</strong>
+            , where you can view your party all in one screen!
+          </p>
+        </WizardMessageDelay>
+      </Toggle>
+      <Toggle show={showDescription}>
+        <ImportCharacterDescriptionMessages
+          onDone={handleDescriptionDone}
+        />
+      </Toggle>
       <Toggle show={showImportCharacter}>
         <ImportCharacterMessage
           onSubmit={handleCharacterImport}
@@ -244,10 +266,12 @@ export function ImportWizard({ onAbort, onDone }) {
 ImportWizard.propTypes = {
   onAbort: PropTypes.func,
   onDone: PropTypes.func.isRequired,
+  showWelcomeMessage: PropTypes.bool,
 };
 
 ImportWizard.defaultProps = {
   onAbort: null,
+  showWelcomeMessage: false,
 };
 
 export default ImportWizard;
