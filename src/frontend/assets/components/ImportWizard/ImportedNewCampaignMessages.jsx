@@ -17,12 +17,13 @@ export function ImportedNewCampaignMessages({
     setShowCharacterMessageIndex,
   ] = useState(0);
 
+  const [showActivePartyMessage, setShowActivePartyMessage] = useToggleLogic();
   const [showFinishMessage, setShowFinishMessage] = useToggleLogic();
 
   const showNextCharacter = () => {
     // we are done on the last character
     if ((showCharacterMessageIndex + 1) >= campaignCharacters.length) {
-      setShowFinishMessage();
+      setShowActivePartyMessage();
     } else {
       setShowCharacterMessageIndex((prevIndex) => (prevIndex + 1));
     }
@@ -37,7 +38,7 @@ export function ImportedNewCampaignMessages({
         const characterTitle = characterRaceClass ? (
           <>
             {' the '}
-            <strong className="character_emphasis">{characterRaceClass}</strong>
+            <strong className="emphasis">{characterRaceClass}</strong>
           </>
         ) : '';
 
@@ -46,7 +47,7 @@ export function ImportedNewCampaignMessages({
             <Toggle show={index <= showCharacterMessageIndex}>
               <WizardMessageDelay onDone={showNextCharacter}>
                 <p>
-                  <strong className="character_emphasis">{characterName}</strong>
+                  <strong className="emphasis">{characterName}</strong>
                   {characterTitle}
                   {' has joined the fray!'}
                 </p>
@@ -55,9 +56,20 @@ export function ImportedNewCampaignMessages({
           </Fragment>
         );
       })}
+      <Toggle show={showActivePartyMessage}>
+        <WizardMessageDelay onDone={setShowFinishMessage}>
+          <p>
+            {'That looks like your active party in '}
+            <strong className="emphasis">{campaignName}</strong>
+            .
+          </p>
+        </WizardMessageDelay>
+      </Toggle>
       <Toggle show={showFinishMessage}>
         <WizardMessageDelay onDone={onDone}>
-          {`That looks like everyone active in ${campaignName}. We can check the party out now!`}
+          <p>
+            I have saved your party to your browser. We can check them out now!
+          </p>
         </WizardMessageDelay>
       </Toggle>
     </div>
