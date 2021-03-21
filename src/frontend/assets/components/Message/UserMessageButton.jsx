@@ -5,7 +5,7 @@ import User from '../Graphics/User';
 
 import './UserMessageButton.less';
 
-export function UserMessage({ children, onClick }) {
+export function UserMessageButton({ children, onClick }) {
   const container = useRef(null);
 
   useEffect(() => {
@@ -34,7 +34,7 @@ export function UserMessage({ children, onClick }) {
   );
 }
 
-UserMessage.propTypes = {
+UserMessageButton.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
@@ -42,4 +42,4 @@ UserMessage.propTypes = {
   onClick: PropTypes.func.isRequired,
 };
 
-export default UserMessage;
+export default UserMessageButton;
