@@ -6,15 +6,25 @@ services:
       dockerfile: src/nginx/Dockerfile.prod
     container_name: prod_nginx
     image: nginx
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    volumes:
+      - ./data/certbot/conf:/etc/nginx/ssl
+      - ./data/certbot/data:/var/www/certbot
     ports:
       - '80:80'
-    environment:
-      - NGINX_HOST=0.0.0.0
-      - NGINX_PORT=80
+      - '443:443'
     restart: always
     depends_on:
       - frontend
       - backend
+  certbot:
+    image: certbot/certbot
+    container_name: prod_certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/logs:/var/log/letsencrypt
+      - ./data/certbot/data:/var/www/certbot
   frontend:
     build:
       context: .
@@ -32,7 +42,5 @@ services:
     restart: always
     volumes:
       - assets:/dnd_beyond_party/server/public
-    ports:
-      - '1337:1337'
 volumes:
   assets:

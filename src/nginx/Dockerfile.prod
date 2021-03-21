@@ -1,7 +1,6 @@
 FROM nginx:latest
 
-WORKDIR /etc/nginx/templates
+WORKDIR /etc/nginx/conf.d
 
-# nginx image will apply environment variables from docker-compose to this template
-# it will output to /etc/nginx/conf.d
-COPY ./src/nginx/nginx.prod.conf.template ./default.conf.template
+COPY ./src/nginx/nginx.prod.conf ./default.conf
+
