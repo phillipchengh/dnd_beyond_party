@@ -4,6 +4,7 @@ import PartyContext from '@assets/party/Context';
 import { getError } from '@assets/party/selectors';
 
 import Header from './Header/Header';
+import Footer from './Footer/Footer';
 import Nav from './Nav/Nav';
 import CurrentCampaign from './CurrentCampaign/CurrentCampaign';
 import WizardMessageDanger from './Message/WizardMessageDanger';
@@ -66,6 +67,7 @@ export function MainView() {
           )}
           <CurrentCampaign />
         </main>
+        <Footer />
       </div>
       <Nav
         desktopOpen={desktopNavOpen}
