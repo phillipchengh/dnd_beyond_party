@@ -3,9 +3,13 @@ import PropTypes from 'prop-types';
 
 import Wand from '../Graphics/Wand';
 
+import useWizardBottomScroll from './useWizardBottomScroll';
+
 import './WizardMessage.less';
 
-export function WizardMessage({ className, children, scrollIntoView }) {
+export function WizardMessage({
+  className, children, scrollIntoView, scrollToWizardBottom,
+}) {
   const container = useRef(null);
 
   useEffect(() => {
@@ -16,6 +20,8 @@ export function WizardMessage({ className, children, scrollIntoView }) {
       });
     }
   }, [scrollIntoView]);
+
+  useWizardBottomScroll(scrollToWizardBottom);
 
   return (
     <>
@@ -39,11 +45,13 @@ WizardMessage.propTypes = {
     PropTypes.node,
   ]).isRequired,
   scrollIntoView: PropTypes.bool,
+  scrollToWizardBottom: PropTypes.bool,
 };
 
 WizardMessage.defaultProps = {
   className: '',
   scrollIntoView: false,
+  scrollToWizardBottom: false,
 };
 
 export default WizardMessage;

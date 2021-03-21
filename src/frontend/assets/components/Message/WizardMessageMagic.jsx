@@ -31,7 +31,7 @@ export function WizardMessageMagic({ children }) {
   }, []);
 
   return (
-    <WizardMessage className="wizard_message_magic" scrollIntoView>
+    <WizardMessage className="wizard_message_magic" scrollToWizardBottom>
       {`${children}${dots}`}
     </WizardMessage>
   );

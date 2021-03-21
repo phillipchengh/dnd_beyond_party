@@ -163,103 +163,106 @@ export function ImportWizard({
   const [showImportDone, setShowImportDone] = useToggleLogic();
 
   return (
-    <div className="import_wizard">
-      <div className="wizardhat_wrapper">
-        <WizardHat />
-      </div>
-      {/* all components below should be messages only... */}
-      <Toggle show={showWelcomeMessage}>
-        <WizardMessageDelay
-          className="welcome_message"
-          onDone={handleWelcomeMessageDone}
-        >
-          <p>
-            {'Welcome to '}
-            <strong className="emphasis">D&D Beyond Party</strong>
-            , where you can view your party all in one screen!
-          </p>
-        </WizardMessageDelay>
-      </Toggle>
-      <Toggle show={showDescription}>
-        <ImportCharacterDescriptionMessages
-          onDone={handleDescriptionDone}
-        />
-      </Toggle>
-      <Toggle show={showImportCharacter}>
-        <ImportCharacterMessage
-          onSubmit={handleCharacterImport}
-        />
-        {submitTries.map(({
-          doneFoundCharacterMessage, foundCharacter, loading, errorMessage,
-        }, index) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <Fragment key={index}>
-            {/* show loading while we are querying the character */}
-            {loading && !foundCharacter && <WizardMessageMagic>Scrying</WizardMessageMagic>}
-            {/* flip from loading to this message if we found a character */}
-            {foundCharacter && (
-              <WizardMessageDelay
-                className="import_wizard_message"
-                onDone={setDoneFoundCharacterMessage}
-              >
-                <p>
-                  {'I found '}
-                  <strong className="emphasis">{getName(foundCharacter)}</strong>
-                  !
-                </p>
-              </WizardMessageDelay>
-            )}
-            {/* when importing the rest of the campaign */}
-            {loading && doneFoundCharacterMessage && (
-              <WizardMessageMagic>
-                Scrying for other party members
-              </WizardMessageMagic>
-            )}
-            {/* error when something happened during the import */}
-            {/* we haven't committed to importing yet, so add another form message to try again */}
-            {errorMessage && (
-              <>
-                <WizardMessageDanger>{errorMessage}</WizardMessageDanger>
-                <ImportCharacterMessage
-                  onSubmit={handleCharacterImport}
-                />
-              </>
-            )}
-          </Fragment>
-        ))}
-      </Toggle>
-      {/* if in modal, offer exit immediately */}
-      {/* otherwise.... show the error somewhere else :( */}
-      {onAbort && error && (
-        <>
-          <WizardMessageDanger>{error}</WizardMessageDanger>
-          <UserMessageButton onClick={onAbort}>
+    <>
+      <div className="import_wizard">
+        <div className="wizardhat_wrapper">
+          <WizardHat />
+        </div>
+        {/* all components below should be messages only... */}
+        <Toggle show={showWelcomeMessage}>
+          <WizardMessageDelay
+            className="welcome_message"
+            onDone={handleWelcomeMessageDone}
+          >
+            <p>
+              {'Welcome to '}
+              <strong className="emphasis">D&D Beyond Party</strong>
+              , where you can view your party all in one screen!
+            </p>
+          </WizardMessageDelay>
+        </Toggle>
+        <Toggle show={showDescription}>
+          <ImportCharacterDescriptionMessages
+            onDone={handleDescriptionDone}
+          />
+        </Toggle>
+        <Toggle show={showImportCharacter}>
+          <ImportCharacterMessage
+            onSubmit={handleCharacterImport}
+          />
+          {submitTries.map(({
+            doneFoundCharacterMessage, foundCharacter, loading, errorMessage,
+          }, index) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <Fragment key={index}>
+              {/* show loading while we are querying the character */}
+              {loading && !foundCharacter && <WizardMessageMagic>Scrying</WizardMessageMagic>}
+              {/* flip from loading to this message if we found a character */}
+              {foundCharacter && (
+                <WizardMessageDelay
+                  className="import_wizard_message"
+                  onDone={setDoneFoundCharacterMessage}
+                >
+                  <p>
+                    {'I found '}
+                    <strong className="emphasis">{getName(foundCharacter)}</strong>
+                    !
+                  </p>
+                </WizardMessageDelay>
+              )}
+              {/* when importing the rest of the campaign */}
+              {loading && doneFoundCharacterMessage && (
+                <WizardMessageMagic>
+                  Scrying for other party members
+                </WizardMessageMagic>
+              )}
+              {/* error when something happened during the import */}
+              {/* we haven't committed to importing yet, so add another form message to try again */}
+              {errorMessage && (
+                <>
+                  <WizardMessageDanger>{errorMessage}</WizardMessageDanger>
+                  <ImportCharacterMessage
+                    onSubmit={handleCharacterImport}
+                  />
+                </>
+              )}
+            </Fragment>
+          ))}
+        </Toggle>
+        {/* if in modal, offer exit immediately */}
+        {/* otherwise.... show the error somewhere else :( */}
+        {onAbort && error && (
+          <>
+            <WizardMessageDanger>{error}</WizardMessageDanger>
+            <UserMessageButton onClick={onAbort}>
+              <div className="continue_button_wrapper">
+                Quit
+                <ArrowRight />
+              </div>
+            </UserMessageButton>
+          </>
+        )}
+        {/* at this point we committed to importing the campaign, show the data and exit */}
+        {importedCampaign && isFoundCharacterMessageDone() && (
+          <ImportedCampaignMessages
+            campaign={characterCampaign}
+            inputCharacter={characterToImport}
+            isExistingCampaign={isExistingCampaign}
+            onDone={setShowImportDone}
+          />
+        )}
+        {/* done showing imported campaign, get them out */}
+        {showImportDone && (
+          <UserMessageButton onClick={onDone} scrollToWizardBottom>
             <div className="continue_button_wrapper">
-              Quit
+              {`View ${characterCampaign.name}`}
               <ArrowRight />
             </div>
           </UserMessageButton>
-        </>
-      )}
-      {/* at this point we committed to importing the campaign, show the data and exit */}
-      {importedCampaign && isFoundCharacterMessageDone() && (
-        <ImportedCampaignMessages
-          campaign={characterCampaign}
-          inputCharacter={characterToImport}
-          isExistingCampaign={isExistingCampaign}
-          onDone={setShowImportDone}
-        />
-      )}
-      {/* done showing imported campaign, get them out */}
-      {showImportDone && (
-        <UserMessageButton onClick={onDone}>
-          <div className="continue_button_wrapper">
-            {`View ${characterCampaign.name}`}
-            <ArrowRight />
-          </div>
-        </UserMessageButton>
-      )}
-    </div>
+        )}
+      </div>
+      <div className="scroll_to_wizard_bottom" />
+    </>
   );
 }
 

@@ -50,7 +50,7 @@ export function ImportCharacterMessage({ onSubmit }) {
   }
 
   return (
-    <UserMessage>
+    <UserMessage scrollToWizardBottom>
       <form className="import_character" onSubmit={handleSubmit}>
         <label htmlFor={inputId}>{labelText}</label>
         <span

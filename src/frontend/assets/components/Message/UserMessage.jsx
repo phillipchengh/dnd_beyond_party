@@ -3,17 +3,23 @@ import PropTypes from 'prop-types';
 
 import User from '../Graphics/User';
 
+import useWizardBottomScroll from './useWizardBottomScroll';
+
 import './UserMessage.less';
 
-export function UserMessage({ children }) {
+export function UserMessage({ children, scrollIntoView, scrollToWizardBottom }) {
   const container = useRef(null);
 
   useEffect(() => {
-    container?.current.scrollIntoView({
-      behavior: 'smooth',
-      block: 'end',
-    });
-  }, []);
+    if (scrollIntoView) {
+      container?.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+      });
+    }
+  }, [scrollIntoView]);
+
+  useWizardBottomScroll(scrollToWizardBottom);
 
   return (
     <>
@@ -35,6 +41,13 @@ UserMessage.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
   ]).isRequired,
+  scrollIntoView: PropTypes.bool,
+  scrollToWizardBottom: PropTypes.bool,
+};
+
+UserMessage.defaultProps = {
+  scrollIntoView: false,
+  scrollToWizardBottom: false,
 };
 
 export default UserMessage;

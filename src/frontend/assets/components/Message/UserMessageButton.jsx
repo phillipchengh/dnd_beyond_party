@@ -5,7 +5,9 @@ import User from '../Graphics/User';
 
 import './UserMessageButton.less';
 
-export function UserMessageButton({ children, onClick }) {
+export function UserMessageButton({
+  children, onClick, scrollIntoView, scrollToWizardBottom,
+}) {
   const container = useRef(null);
 
   useEffect(() => {
@@ -40,6 +42,13 @@ UserMessageButton.propTypes = {
     PropTypes.node,
   ]).isRequired,
   onClick: PropTypes.func.isRequired,
+  scrollIntoView: PropTypes.bool,
+  scrollToWizardBottom: PropTypes.bool,
+};
+
+UserMessageButton.defaultProps = {
+  scrollIntoView: false,
+  scrollToWizardBottom: false,
 };
 
 export default UserMessageButton;
