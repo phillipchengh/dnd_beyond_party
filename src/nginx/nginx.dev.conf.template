@@ -2,23 +2,28 @@ server {
   listen ${NGINX_PORT};
   server_name ${NGINX_HOST};
 
+  # gzip all static content
   gzip on;
   gzip_min_length 1000;
   gzip_types text/css text/javascript text/plain text/xml application/javascript application/json font/opentype font/ttf;
   gzip_disable "msie6";
 
+  # show index.html pretty much
   location / {
     proxy_pass http://backend:1337/;
   }
 
+  # for static assets directly in /static
   location /static/ {
     proxy_pass http://backend:1337/static/;
   }
 
+  # for webpack generated assets
   location /asset/ {
     proxy_pass http://frontend:8080/;
   }
 
+  # for webpack-dev-server hot reload
   location /sockjs-node {
     proxy_pass http://frontend:8080;
 
@@ -27,6 +32,7 @@ server {
     proxy_set_header Connection "upgrade";
   }
 
+  # for webpack-dev-server hot reload
   location /hot-update {
     proxy_pass http://frontend:8080;
   }
