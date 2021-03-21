@@ -1,0 +1,23 @@
+@import "@assets/imports";
+
+.mobile_header_icon {
+  display: none;
+}
+
+@media @phones {
+  .mobile_header_icon {
+    .reset_button();
+
+    display: inline-block;
+    cursor: pointer;
+    height: 2rem;
+    outline: 0;
+    width: 2rem;
+
+    &:hover {
+      .dragon_svg {
+        animation: @party_animation;
+      }
+    }
+  }
+}

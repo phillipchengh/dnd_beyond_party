@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 
 import Updater from '../Updater/Updater';
 import OpenNavButton from './OpenNavButton';
-import Tooltip from '../Common/Tooltip';
-import Dragon from '../Graphics/Dragon';
+// import Tooltip from '../Common/Tooltip';
+// import Dragon from '../Graphics/Dragon';
+import MobileHeaderIcon from './MobileHeaderIcon';
 
 import './Header.less';
 
@@ -26,11 +27,7 @@ export function Header({
       />
       <h1 className="header">
         <div className="header_text">D&D Beyond Party</div>
-        <Tooltip title="D&D Beyond Party">
-          <div className="icon_wrapper">
-            <Dragon />
-          </div>
-        </Tooltip>
+        <MobileHeaderIcon />
       </h1>
       <Updater onUpdateError={onUpdateError} />
     </header>
