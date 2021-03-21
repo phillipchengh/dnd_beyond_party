@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import User from '../Graphics/User';
 
+import useWizardBottomScroll from './useWizardBottomScroll';
+
 import './UserMessageButton.less';
 
 export function UserMessageButton({
@@ -11,11 +13,15 @@ export function UserMessageButton({
   const container = useRef(null);
 
   useEffect(() => {
-    container?.current.scrollIntoView({
-      behavior: 'smooth',
-      block: 'end',
-    });
-  }, []);
+    if (scrollIntoView) {
+      container?.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+      });
+    }
+  }, [scrollIntoView]);
+
+  useWizardBottomScroll(scrollToWizardBottom);
 
   return (
     <>
