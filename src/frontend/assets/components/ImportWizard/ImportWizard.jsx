@@ -217,7 +217,7 @@ export function ImportWizard({
                 </WizardMessageMagic>
               )}
               {/* error when something happened during the import */}
-              {/* we haven't committed to importing yet, so add another form message to try again */}
+              {/* we haven't committed to importing yet, so re-add form message to try again */}
               {errorMessage && (
                 <>
                   <WizardMessageDanger>{errorMessage}</WizardMessageDanger>
