@@ -93,7 +93,11 @@ export async function updateCampaign({ dispatch, state }, campaignId) {
   await Promise.all(Array.from(newCharacterIdsToRequest).map(async (characterId) => {
     try {
       const character = await getCharacter(characterId);
-      characters.push(character);
+      // the campaign character data can still be inaccurate if the character is active or not
+      // check the new character itself if it's still active
+      if (isActiveInCampaign(character, campaignId)) {
+        characters.push(character);
+      }
     } catch (error) {
       allowDndBeyondError(error);
     }
