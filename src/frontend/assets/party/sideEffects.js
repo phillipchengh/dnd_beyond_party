@@ -50,7 +50,9 @@ export async function importCampaign({ dispatch }, character) {
       // updateCampaign would also check for newly assigned characters
       // however, character data is probably fresh, so skip that
     } catch (error) {
-      allowDndBeyondError(error);
+      // when importing a new campaign, be lax about the errors here
+      // when updating, be a little more strict (see updateCampaign)
+      // it's just a bad user experience if one character had a problem here
     }
   }));
   if (!characters.length) {
@@ -87,6 +89,8 @@ export async function updateCampaign({ dispatch, state }, campaignId) {
         });
       }
     } catch (error) {
+      // notify about any unexpected errors
+      // some dndbeyond errors would perpetually appear (like bad auth), so don't nag about that
       allowDndBeyondError(error);
     }
   }));
